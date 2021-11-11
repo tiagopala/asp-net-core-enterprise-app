@@ -1,0 +1,12 @@
+C:\Users\Tiago Pala\source\Cursos\AspNetCoreEnterpriseApp\AspNetCoreEnterpriseApp\src\building blocks\EnterpriseApp.Core\bin\Debug\net5.0\EnterpriseApp.Core.deps.json
+C:\Users\Tiago Pala\source\Cursos\AspNetCoreEnterpriseApp\AspNetCoreEnterpriseApp\src\building blocks\EnterpriseApp.Core\bin\Debug\net5.0\EnterpriseApp.Core.dll
+C:\Users\Tiago Pala\source\Cursos\AspNetCoreEnterpriseApp\AspNetCoreEnterpriseApp\src\building blocks\EnterpriseApp.Core\bin\Debug\net5.0\ref\EnterpriseApp.Core.dll
+C:\Users\Tiago Pala\source\Cursos\AspNetCoreEnterpriseApp\AspNetCoreEnterpriseApp\src\building blocks\EnterpriseApp.Core\bin\Debug\net5.0\EnterpriseApp.Core.pdb
+C:\Users\Tiago Pala\source\Cursos\AspNetCoreEnterpriseApp\AspNetCoreEnterpriseApp\src\building blocks\EnterpriseApp.Core\obj\Debug\net5.0\EnterpriseApp.Core.csproj.AssemblyReference.cache
+C:\Users\Tiago Pala\source\Cursos\AspNetCoreEnterpriseApp\AspNetCoreEnterpriseApp\src\building blocks\EnterpriseApp.Core\obj\Debug\net5.0\EnterpriseApp.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Tiago Pala\source\Cursos\AspNetCoreEnterpriseApp\AspNetCoreEnterpriseApp\src\building blocks\EnterpriseApp.Core\obj\Debug\net5.0\EnterpriseApp.Core.AssemblyInfoInputs.cache
+C:\Users\Tiago Pala\source\Cursos\AspNetCoreEnterpriseApp\AspNetCoreEnterpriseApp\src\building blocks\EnterpriseApp.Core\obj\Debug\net5.0\EnterpriseApp.Core.AssemblyInfo.cs
+C:\Users\Tiago Pala\source\Cursos\AspNetCoreEnterpriseApp\AspNetCoreEnterpriseApp\src\building blocks\EnterpriseApp.Core\obj\Debug\net5.0\EnterpriseApp.Core.csproj.CoreCompileInputs.cache
+C:\Users\Tiago Pala\source\Cursos\AspNetCoreEnterpriseApp\AspNetCoreEnterpriseApp\src\building blocks\EnterpriseApp.Core\obj\Debug\net5.0\EnterpriseApp.Core.dll
+C:\Users\Tiago Pala\source\Cursos\AspNetCoreEnterpriseApp\AspNetCoreEnterpriseApp\src\building blocks\EnterpriseApp.Core\obj\Debug\net5.0\ref\EnterpriseApp.Core.dll
+C:\Users\Tiago Pala\source\Cursos\AspNetCoreEnterpriseApp\AspNetCoreEnterpriseApp\src\building blocks\EnterpriseApp.Core\obj\Debug\net5.0\EnterpriseApp.Core.pdb
