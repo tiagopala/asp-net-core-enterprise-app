@@ -25,7 +25,6 @@
   <ItemGroup>
     <Folder Include="Extensions\" />
     <Folder Include="Configurations\" />
-    <Folder Include="Models\" />
   </ItemGroup>
 
 </Project>
