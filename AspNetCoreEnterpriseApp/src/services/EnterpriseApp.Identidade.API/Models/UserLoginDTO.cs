@@ -4,12 +4,12 @@ namespace EnterpriseApp.Identidade.API.Models
 {
     public class UserLoginDTO
     {
-        [Required(ErrorMessage = "O campo {0} é obrigatório")]
-        [EmailAddress(ErrorMessage = "O campo {0} está em formato inválido.")]
+        [Required(ErrorMessage = "Field {0} is required.")]
+        [EmailAddress(ErrorMessage = "Field {0} is not in a valid format.")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "O campo {0} é obrigatório.")]
-        [StringLength(100, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres.", MinimumLength = 6)]
+        [Required(ErrorMessage = "Field {0} is required.")]
+        [StringLength(100, ErrorMessage = "Field {0} has to be between {2} and {1} characteres.", MinimumLength = 6)]
         public string Password { get; set; }
     }
 }

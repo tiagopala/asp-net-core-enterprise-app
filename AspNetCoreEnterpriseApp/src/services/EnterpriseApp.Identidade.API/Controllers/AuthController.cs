@@ -11,12 +11,12 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace EnterpriseApp.Identidade.API.Controllers
 {
-    [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : Controller
+    public class AuthController : MainController
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
@@ -36,10 +36,7 @@ namespace EnterpriseApp.Identidade.API.Controllers
         public async Task<ActionResult> Register([FromBody] UserRegisterDTO user)
         {
             if (!ModelState.IsValid)
-            {
-                var errors = ModelState.GetModelStateErrors();
-                return BadRequest(new { Errors = errors });
-            }
+                return CustomResponse(ModelState);
 
             var identityUser = new IdentityUser
             {
@@ -51,29 +48,26 @@ namespace EnterpriseApp.Identidade.API.Controllers
             var result = await _userManager.CreateAsync(identityUser, user.Password);
 
             if (!result.Succeeded)
-            {
-                var errors = result.GetIdentityErrors();
-                return BadRequest(new { Errors = errors });
-            }
+                return CustomResponse(result);    
 
-            await _signInManager.SignInAsync(identityUser, false);
-            return Ok(await GenerateToken(user.Email));
+            return CustomResponse(await GenerateToken(user.Email));
         }
 
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] UserLoginDTO user)
         {
             if (!ModelState.IsValid)
-            {
-                var errors = ModelState.GetModelStateErrors();
-                return BadRequest(new { Errors = errors });
-            }
+                return CustomResponse(ModelState);
 
             var result = await _signInManager.PasswordSignInAsync(user.Email, user.Password, false, true);
 
-            if (!result.Succeeded) return BadRequest();
+            if (!result.Succeeded)
+            {
+                AddError(result.GetSignInError());
+                return CustomResponse();
+            }
 
-            return Ok(await GenerateToken(user.Email));
+            return CustomResponse(await GenerateToken(user.Email));
         }
 
         private async Task<UserLoginResponseDTO> GenerateToken(string email)
