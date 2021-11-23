@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System;
 using System.Text;
 
 namespace EnterpriseApp.Identidade.API
@@ -57,8 +58,13 @@ namespace EnterpriseApp.Identidade.API
                     Version = "v1" });
             });
 
-            JwtConfig jwtConfig = new ();
-            Configuration.GetSection("Jwt").Bind(jwtConfig);
+            // Configurando o serviço para essa classe proveniente do AppSettings
+            var jwtConfigSection = Configuration.GetSection("Jwt");
+            services.Configure<JwtConfig>(jwtConfigSection);
+
+            JwtConfig jwtConfig = new();
+            jwtConfigSection.Bind(jwtConfig);
+
             var key = Encoding.ASCII.GetBytes(jwtConfig.Secret);
 
             // Configuração do JWT
