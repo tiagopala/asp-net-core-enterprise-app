@@ -1,4 +1,5 @@
-﻿using EnterpriseApp.Identidade.API.Models;
+﻿using EnterpriseApp.Identidade.API.Extensions;
+using EnterpriseApp.Identidade.API.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -23,7 +24,11 @@ namespace EnterpriseApp.Identidade.API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] UserRegisterDTO user)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.GetModelStateErrors();
+                return BadRequest(new { Errors = errors });
+            }
 
             var identityUser = new IdentityUser
             {
@@ -34,7 +39,11 @@ namespace EnterpriseApp.Identidade.API.Controllers
 
             var result = await _userManager.CreateAsync(identityUser, user.Password);
 
-            if (!result.Succeeded) return BadRequest();
+            if (!result.Succeeded)
+            {
+                var errors = result.GetIdentityErrors();
+                return BadRequest(new { Errors = errors });
+            }
 
             await _signInManager.SignInAsync(identityUser, false);
             return Ok();
@@ -43,7 +52,11 @@ namespace EnterpriseApp.Identidade.API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] UserLoginDTO user)
         {
-            if (!ModelState.IsValid) return BadRequest();
+            if (!ModelState.IsValid)
+            {
+                var errors = ModelState.GetModelStateErrors();
+                return BadRequest(new { Errors = errors });
+            }
 
             var result = await _signInManager.PasswordSignInAsync(user.Email, user.Password, false, true);
 

@@ -1,12 +1,17 @@
+using EnterpriseApp.Identidade.API.Configurations;
 using EnterpriseApp.Identidade.API.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 namespace EnterpriseApp.Identidade.API
 {
@@ -21,6 +26,12 @@ namespace EnterpriseApp.Identidade.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            // Removendo a validação automática de model states para conseguirmos customizar o retorno
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.SuppressModelStateInvalidFilter = true;
+            });
+
             services.AddRouting(options => options.LowercaseUrls = true);
 
             // Configuração do ApplicationDbContext
@@ -35,6 +46,7 @@ namespace EnterpriseApp.Identidade.API
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            // Configuração do Swagger
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo {
@@ -43,6 +55,30 @@ namespace EnterpriseApp.Identidade.API
                     Contact = new OpenApiContact { Name = "Tiago Pala", Email = "tiago_pala@outlook.com"},
                     License = new OpenApiLicense { Name = "MIT", Url = new System.Uri("https://opensource.org/licenses/MIT")},
                     Version = "v1" });
+            });
+
+            JwtConfig jwtConfig = new ();
+            Configuration.GetSection("Jwt").Bind(jwtConfig);
+            var key = Encoding.ASCII.GetBytes(jwtConfig.Secret);
+
+            // Configuração do JWT
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            }).AddJwtBearer(bearerOptions =>
+            {
+                bearerOptions.RequireHttpsMetadata = true;
+                bearerOptions.SaveToken = true;
+                bearerOptions.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = jwtConfig.Audience,
+                    ValidIssuer = jwtConfig.Issuer
+                };
             });
         }
 
