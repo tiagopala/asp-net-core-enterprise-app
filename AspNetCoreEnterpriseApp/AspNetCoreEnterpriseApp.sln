@@ -15,11 +15,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Identidade", "Identidade", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseApp.Identidade.API", "src\services\EnterpriseApp.Identidade.API\EnterpriseApp.Identidade.API.csproj", "{FD9B3990-6C0B-4C52-AF86-8ACB862DB737}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseApp.WebApp.MVC", "src\web\EnterpriseApp.WebApp.MVC\EnterpriseApp.WebApp.MVC.csproj", "{A5912FE7-535A-4E25-94DC-B82EC8A2996B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseApp.WebApp.MVC", "src\web\EnterpriseApp.WebApp.MVC\EnterpriseApp.WebApp.MVC.csproj", "{A5912FE7-535A-4E25-94DC-B82EC8A2996B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{7D333105-28DF-4CCC-894A-AEC2CE5816ED}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseApp.Core", "src\building blocks\EnterpriseApp.Core\EnterpriseApp.Core.csproj", "{F20F3581-B606-4CC5-B9FD-5C0DEC79B3D1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseApp.Core", "src\building blocks\EnterpriseApp.Core\EnterpriseApp.Core.csproj", "{F20F3581-B606-4CC5-B9FD-5C0DEC79B3D1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Carrinho", "Carrinho", "{4246330E-035F-4A80-847A-998119F16DD9}"
 EndProject
@@ -31,15 +31,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pagamento", "Pagamento", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pedido", "Pedido", "{76EEAFFD-D797-46A5-AA7D-751343310899}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseApp.Carrinho.API", "src\services\EnterpriseApp.Carrinho.API\EnterpriseApp.Carrinho.API.csproj", "{26E56892-BFFC-498D-BEC1-8F42BF571D34}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseApp.Carrinho.API", "src\services\EnterpriseApp.Carrinho.API\EnterpriseApp.Carrinho.API.csproj", "{26E56892-BFFC-498D-BEC1-8F42BF571D34}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseApp.Catalogo.API", "src\services\EnterpriseApp.Catalogo.API\EnterpriseApp.Catalogo.API.csproj", "{75E06C86-A411-40DF-8F76-594535813342}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseApp.Catalogo.API", "src\services\EnterpriseApp.Catalogo.API\EnterpriseApp.Catalogo.API.csproj", "{75E06C86-A411-40DF-8F76-594535813342}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseApp.Cliente.API", "src\services\EnterpriseApp.Cliente.API\EnterpriseApp.Cliente.API.csproj", "{4FC154EB-86BA-4664-A81F-EA60DB45682F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseApp.Cliente.API", "src\services\EnterpriseApp.Cliente.API\EnterpriseApp.Cliente.API.csproj", "{4FC154EB-86BA-4664-A81F-EA60DB45682F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseApp.Pagamento.API", "src\services\EnterpriseApp.Pagamento.API\EnterpriseApp.Pagamento.API.csproj", "{BE144C7F-27C6-42B8-923D-B333DC92B047}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseApp.Pagamento.API", "src\services\EnterpriseApp.Pagamento.API\EnterpriseApp.Pagamento.API.csproj", "{BE144C7F-27C6-42B8-923D-B333DC92B047}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseApp.Pedido.API", "src\services\EnterpriseApp.Pedido.API\EnterpriseApp.Pedido.API.csproj", "{C975FF4D-197F-4447-99BC-ED85C95206D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseApp.Pedido.API", "src\services\EnterpriseApp.Pedido.API\EnterpriseApp.Pedido.API.csproj", "{C975FF4D-197F-4447-99BC-ED85C95206D5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
