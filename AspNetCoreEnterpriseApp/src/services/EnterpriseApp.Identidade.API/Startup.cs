@@ -1,5 +1,6 @@
 using EnterpriseApp.Identidade.API.Configurations;
 using EnterpriseApp.Identidade.API.Data;
+using EnterpriseApp.Identidade.API.Extensions;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,6 +45,7 @@ namespace EnterpriseApp.Identidade.API
             // Configuração do Identity
             services.AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
+                .AddErrorDescriber<IdentityPortugueseMessagesExtension>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
