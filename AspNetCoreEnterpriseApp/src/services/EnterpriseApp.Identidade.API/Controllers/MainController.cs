@@ -8,7 +8,7 @@ using System.Linq;
 namespace EnterpriseApp.Identidade.API.Controllers
 {
     [ApiController]
-    public abstract class MainController : Controller
+    public abstract class MainController : ControllerBase
     {
         protected ICollection<string> Errors = new List<string>();
 
