@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
+using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
-using SignInResult = Microsoft.AspNetCore.Identity.SignInResult;
 
 namespace EnterpriseApp.Identidade.API.Controllers
 {
@@ -74,6 +74,15 @@ namespace EnterpriseApp.Identidade.API.Controllers
         {
             var user = await _userManager.FindByEmailAsync(email);
             var claims = await _userManager.GetClaimsAsync(user);
+
+            var identityClaims = await GetUserClaims(claims, user);
+            var encodedToken = GetToken(identityClaims);
+
+            return GetUserLoginResponse(encodedToken, user, claims);
+        }
+
+        private async Task<ClaimsIdentity> GetUserClaims(ICollection<Claim> claims, IdentityUser user)
+        {
             var roles = await _userManager.GetRolesAsync(user);
 
             claims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id));
@@ -90,9 +99,13 @@ namespace EnterpriseApp.Identidade.API.Controllers
             ClaimsIdentity identityClaims = new();
             identityClaims.AddClaims(claims);
 
+            return identityClaims;
+        }
+
+        private string GetToken(ClaimsIdentity identityClaims)
+        {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtConfig.Secret);
-
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
                 Issuer = _jwtConfig.Issuer,
@@ -102,9 +115,14 @@ namespace EnterpriseApp.Identidade.API.Controllers
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             });
 
+            return tokenHandler.WriteToken(token);
+        }
+
+        private UserLoginResponseDTO GetUserLoginResponse(string encodedToken, IdentityUser user, IList<Claim> claims)
+        {
             return new UserLoginResponseDTO
             {
-                AccessToken = tokenHandler.WriteToken(token),
+                AccessToken = encodedToken,
                 ExpiresIn = TimeSpan.FromHours(_jwtConfig.ExpirationHours).TotalSeconds,
                 UserToken = new UserTokenDTO
                 {
