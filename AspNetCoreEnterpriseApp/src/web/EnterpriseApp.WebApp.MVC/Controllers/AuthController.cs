@@ -1,4 +1,6 @@
-﻿using EnterpriseApp.WebApp.MVC.Models;
+﻿using EnterpriseApp.WebApp.MVC.Exceptions;
+using EnterpriseApp.WebApp.MVC.Models;
+using EnterpriseApp.WebApp.MVC.Services;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -9,6 +11,13 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
 {
     public class AuthController : Controller
     {
+        private readonly IAuthenticationService _authenticationService;
+
+        public AuthController(IAuthenticationService authenticationService)
+        {
+            _authenticationService = authenticationService;
+        }
+
         [HttpGet]
         [Route("new-account")]
         public IActionResult Register()
@@ -18,10 +27,18 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
         [Route("new-account")]
         public async Task<IActionResult> Register(UserRegisterDTO user)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return View(user);
 
-            // API - Realizar o SignIn
+            try
+            {
+                var response = await _authenticationService.Register(user);
+            }
+            catch (AuthException e)
+            {
+                var exception = e.Message;
+                return View(user);
+            }
 
             if (false)
                 return View(user);
@@ -40,10 +57,18 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
         [Route("login")]
         public async Task<IActionResult> Login(UserLoginDTO user)
         {
-            if (!ModelState.IsValid) 
+            if (!ModelState.IsValid)
                 return View(user);
 
-            // API - Realizar login
+            try
+            {
+                var response = await _authenticationService.Login(user);
+            }
+            catch (AuthException e)
+            {
+                var exception = e.Message;
+                return View(user);
+            }
 
             if (false)
                 return View(user);

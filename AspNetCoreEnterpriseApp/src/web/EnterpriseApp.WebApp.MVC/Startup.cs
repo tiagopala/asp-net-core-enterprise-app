@@ -18,8 +18,11 @@ namespace EnterpriseApp.WebApp.MVC
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<AuthAPIConfig>(Configuration.GetSection("AuthAPI"));
+            services.AddHttpClient();
             services.ResolveIdentity();
             services.AddControllersWithViews();
+            services.ResolveDependencyInjection();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
