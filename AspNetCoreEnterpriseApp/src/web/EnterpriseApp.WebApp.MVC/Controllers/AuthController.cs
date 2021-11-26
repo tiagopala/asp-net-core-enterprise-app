@@ -74,7 +74,7 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
 
             var claims = new List<Claim>
             {
-                new Claim("JWT", user.AccessToken)
+                new Claim("jwt", user.AccessToken)
             };
 
             claims.AddRange(token.Claims);
