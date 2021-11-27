@@ -10,7 +10,7 @@ namespace EnterpriseApp.WebApp.MVC.Exceptions
         public AuthException(string message) : base(message) { }
 
         public AuthException(IEnumerable<string> messages)
-            : this(string.Join(" ",messages))
+            : this(string.Join("\n",messages))
         {
             
         }

@@ -42,7 +42,12 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
             }
             catch (AuthException e)
             {
+                AddErrorsToModelState(e.Message);
                 return View(user);
+            }
+            catch (Exception)
+            {
+                AddErrorsToModelState("Errors happened during request. Try again later");
             }
 
             return RedirectToAction("Index", "Home");
@@ -67,7 +72,12 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
             }
             catch (AuthException e)
             {
+                AddErrorsToModelState(e.Message);
                 return View(user);
+            }
+            catch (Exception)
+            {
+                AddErrorsToModelState("Errors happened during request. Try again later");
             }
 
             return RedirectToAction("Index", "Home");
@@ -77,6 +87,7 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
         [Route("logout")]
         public async Task<IActionResult> Logout()
         {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
 
@@ -105,6 +116,15 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
         private static JwtSecurityToken GetToken(string jwt)
         {
             return new JwtSecurityTokenHandler().ReadToken(jwt) as JwtSecurityToken;
+        }
+
+        private void AddErrorsToModelState(string errors)
+        {
+            var errorsCollection = errors.Split("\n");
+            for (int i = 0; i < errorsCollection.Length; i++)
+            {
+                ModelState.AddModelError(string.Empty, errorsCollection[i]);
+            }
         }
     }
 }
