@@ -3,8 +3,6 @@ using EnterpriseApp.WebApp.MVC.Configuration;
 using EnterpriseApp.WebApp.MVC.Exceptions;
 using EnterpriseApp.WebApp.MVC.Models;
 using Microsoft.Extensions.Options;
-using System;
-using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -12,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace EnterpriseApp.WebApp.MVC.Services
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthenticationService : MainService, IAuthenticationService
     {
         private readonly HttpClient _httpClient;
         private readonly AuthAPIConfig _authAPIConfig;
@@ -35,12 +33,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
             var response = await _httpClient.PostAsync($"{_authAPIConfig.Endpoint}/api/auth/login", loginContent);
 
             if (!response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                var payload = JsonSerializer.Deserialize<ErrorApiResponse>(content, _jsonSerializerOptions);
-                var messages = payload.Errors.Messages;
-                throw new AuthException(messages);
-            }
+                throw new AuthException(GetErrorsResponse(response).Result);
 
             return JsonSerializer.Deserialize<UserLoginResponse>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions);
         }
@@ -52,12 +45,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
             var response = await _httpClient.PostAsync($"{_authAPIConfig.Endpoint}/api/auth/register", registerContent);
 
             if (!response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                var payload = JsonSerializer.Deserialize<ErrorApiResponse>(content, _jsonSerializerOptions);
-                var messages = payload.Errors.Messages;
-                throw new AuthException(messages);
-            }
+                throw new AuthException(GetErrorsResponse(response).Result);
 
             return JsonSerializer.Deserialize<UserLoginResponse>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions);
         }

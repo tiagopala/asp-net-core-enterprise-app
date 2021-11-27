@@ -35,9 +35,15 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
             if (!ModelState.IsValid)
                 return View(user);
 
-            var response = await _authenticationService.Register(user);
-
-            await Login(response);
+            try
+            {
+                var response = await _authenticationService.Register(user);
+                await Login(response);
+            }
+            catch (AuthException e)
+            {
+                return View(user);
+            }
 
             return RedirectToAction("Index", "Home");
         }
@@ -54,9 +60,15 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
             if (!ModelState.IsValid)
                 return View(user);
 
-            var response = await _authenticationService.Login(user);
-
-            await Login(response);
+            try
+            {
+                var response = await _authenticationService.Login(user);
+                await Login(response);
+            }
+            catch (AuthException e)
+            {
+                return View(user);
+            }
 
             return RedirectToAction("Index", "Home");
         }
