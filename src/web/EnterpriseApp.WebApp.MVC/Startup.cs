@@ -28,17 +28,13 @@ namespace EnterpriseApp.WebApp.MVC
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
             if (env.IsDevelopment())
-            {
                 app.UseDeveloperExceptionPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Error/500");
-                app.UseStatusCodePagesWithRedirects("/Error/{0}");
-                app.UseHsts();
-            }
+            
+            app.UseExceptionHandler("/Error/500");
+            app.UseStatusCodePagesWithRedirects("/Error/{0}");
+            app.UseHsts();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

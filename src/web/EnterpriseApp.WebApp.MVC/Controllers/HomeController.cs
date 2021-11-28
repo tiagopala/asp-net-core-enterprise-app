@@ -24,7 +24,7 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
             else if (statusCode == 404)
             {
                 error.Title = "Oops! Page not found.";
-                error.Message = "The page you are looking for does not existe.";
+                error.Message = "The page you are looking for does not exist.";
                 error.ErrorCode = statusCode;
             }
             else if (statusCode == 403)

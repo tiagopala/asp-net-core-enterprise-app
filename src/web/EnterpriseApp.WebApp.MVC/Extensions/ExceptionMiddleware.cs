@@ -30,7 +30,7 @@ namespace EnterpriseApp.WebApp.MVC.Extensions
         {
             if (exception.StatusCode.Equals(HttpStatusCode.Unauthorized))
             {
-                context.Response.Redirect("/login");
+                context.Response.Redirect($"/login?ReturnUrl={context.Request.Path}");
                 return;
             }
 

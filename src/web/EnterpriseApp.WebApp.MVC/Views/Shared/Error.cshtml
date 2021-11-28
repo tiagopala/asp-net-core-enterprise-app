@@ -7,14 +7,14 @@
     if (Model is null)
     {
         <div>
-            <h2>Oops! An error occurred.</h2>
+            <h4>Oops! An error occurred.</h4>
         </div>
     }
     else
     {
         ViewData["Title"] = Model.Title;
         <div>
-            <h2>@Html.Raw(Model.Message)</h2>
+            <h4>@Html.Raw(Model.Message)</h4>
         </div>
     }
 }

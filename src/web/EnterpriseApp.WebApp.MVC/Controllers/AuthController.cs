@@ -51,13 +51,18 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
 
         [HttpGet]
         [Route("login")]
-        public IActionResult Login()
-            => View();
+        public IActionResult Login(string returnUrl = null)
+        {
+            ViewData["ReturnUrl"] = returnUrl;
+            return View();
+        }
 
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login(UserLoginDTO user)
+        public async Task<IActionResult> Login(UserLoginDTO user, string returnUrl = null)
         {
+            ViewData["ReturnUrl"] = returnUrl;
+
             if (!ModelState.IsValid)
                 return View(user);
 
@@ -72,7 +77,10 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
                 return View(user);
             }
 
-            return RedirectToAction("Index", "Home");
+            if(string.IsNullOrEmpty(returnUrl))
+                return RedirectToAction("Index", "Home");
+
+            return LocalRedirect(returnUrl);
         }
 
         [HttpGet]
