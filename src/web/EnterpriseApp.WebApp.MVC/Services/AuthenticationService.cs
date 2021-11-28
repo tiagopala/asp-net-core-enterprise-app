@@ -2,6 +2,7 @@
 using EnterpriseApp.WebApp.MVC.Configuration;
 using EnterpriseApp.WebApp.MVC.Exceptions;
 using EnterpriseApp.WebApp.MVC.Models;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Net.Http;
 using System.Text;
@@ -33,7 +34,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
             var response = await _httpClient.PostAsync($"{_authAPIConfig.Endpoint}/api/auth/login", loginContent);
 
             if (!response.IsSuccessStatusCode)
-                throw new AuthException(GetErrorsResponse(response).Result);
+                await HandleErrorsResponse(response);
 
             return JsonSerializer.Deserialize<UserLoginResponse>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions);
         }
@@ -45,7 +46,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
             var response = await _httpClient.PostAsync($"{_authAPIConfig.Endpoint}/api/auth/register", registerContent);
 
             if (!response.IsSuccessStatusCode)
-                throw new AuthException(GetErrorsResponse(response).Result);
+                await HandleErrorsResponse(response);
 
             return JsonSerializer.Deserialize<UserLoginResponse>(await response.Content.ReadAsStringAsync(), _jsonSerializerOptions);
         }

@@ -45,10 +45,6 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
                 AddErrorsToModelState(e.Message);
                 return View(user);
             }
-            catch (Exception)
-            {
-                AddErrorsToModelState("Errors happened during request. Try again later");
-            }
 
             return RedirectToAction("Index", "Home");
         }
@@ -74,10 +70,6 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
             {
                 AddErrorsToModelState(e.Message);
                 return View(user);
-            }
-            catch (Exception)
-            {
-                AddErrorsToModelState("Errors happened during request. Try again later");
             }
 
             return RedirectToAction("Index", "Home");

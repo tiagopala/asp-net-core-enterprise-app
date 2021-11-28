@@ -35,6 +35,8 @@ namespace EnterpriseApp.Identidade.API.Controllers
         [HttpPost("register")]
         public async Task<ActionResult> Register([FromBody] UserRegisterDTO user)
         {
+            return new StatusCodeResult(401);
+
             if (!ModelState.IsValid)
                 return CustomResponse(ModelState);
 

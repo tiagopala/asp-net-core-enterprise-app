@@ -1,28 +1,44 @@
 ﻿using EnterpriseApp.WebApp.MVC.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 
 namespace EnterpriseApp.WebApp.MVC.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
-
-        public HomeController(ILogger<HomeController> logger)
-        {
-            _logger = logger;
-        }
-
         public IActionResult Index()
         {
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+        [Route("Error/{statusCode:length(3,3)}")]
+        public IActionResult Error(int statusCode)
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            var error = new ErrorViewModel();
+            
+            if (statusCode == 500)
+            {
+                error.Title = "An Error occurred!";
+                error.Message = "An Error occurred! Try again later.";
+                error.ErrorCode = statusCode;
+            }
+            else if (statusCode == 404)
+            {
+                error.Title = "Oops! Page not found.";
+                error.Message = "The page you are looking for does not existe.";
+                error.ErrorCode = statusCode;
+            }
+            else if (statusCode == 403)
+            {
+                error.Title = "Unauthorized";
+                error.Message = "You do not have permission to do this.";
+                error.ErrorCode = statusCode;
+            }
+            else
+            {
+                return StatusCode(404);
+            }
+
+            return View("Error", error);
         }
     }
 }

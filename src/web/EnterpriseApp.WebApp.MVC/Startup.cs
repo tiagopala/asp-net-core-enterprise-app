@@ -1,4 +1,5 @@
 using EnterpriseApp.WebApp.MVC.Configuration;
+using EnterpriseApp.WebApp.MVC.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -34,7 +35,8 @@ namespace EnterpriseApp.WebApp.MVC
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Error/500");
+                app.UseStatusCodePagesWithRedirects("/Error/{0}");
                 app.UseHsts();
             }
             app.UseHttpsRedirection();
@@ -43,6 +45,8 @@ namespace EnterpriseApp.WebApp.MVC
             app.UseRouting();
 
             app.ResolveIdentity();
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {
