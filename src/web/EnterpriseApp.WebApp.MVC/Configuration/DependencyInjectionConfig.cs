@@ -9,7 +9,7 @@ namespace EnterpriseApp.WebApp.MVC.Configuration
     {
         public static IServiceCollection ResolveDependencyInjection(this IServiceCollection services)
         {
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddHttpClient<IAuthenticationService, AuthenticationService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

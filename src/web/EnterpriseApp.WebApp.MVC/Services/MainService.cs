@@ -2,6 +2,7 @@
 using EnterpriseApp.WebApp.MVC.Exceptions;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
@@ -15,6 +16,12 @@ namespace EnterpriseApp.WebApp.MVC.Services
         {
             _jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
         }
+
+        protected StringContent GetContent(object obj)
+            => new(JsonSerializer.Serialize(obj), Encoding.UTF8, "application/json");
+
+        protected async Task<T> DeserializeResponseMessage<T>(HttpResponseMessage responseMessage)
+            => JsonSerializer.Deserialize<T>(await responseMessage.Content.ReadAsStringAsync(), _jsonSerializerOptions);
 
         protected async Task HandleErrorsResponse(HttpResponseMessage httpResponseMessage)
         {
