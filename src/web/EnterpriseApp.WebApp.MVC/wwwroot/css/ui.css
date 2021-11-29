@@ -1360,4 +1360,10 @@ a[class*='card']:hover .title { color: #3167eb; }
     display: block;
 }
 
+.display-4-error {
+    font-size: 2rem !important;
+    font-weight: 300 !important;
+    line-height: 1.2 !important;
+}
+
 /*# sourceMappingURL=ui.css.map */

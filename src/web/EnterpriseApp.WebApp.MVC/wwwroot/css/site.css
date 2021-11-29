@@ -76,3 +76,9 @@ file,
 textarea {
     max-width: 400px;
 }
+
+.display-4-error {
+    font-size: 2rem !important;
+    font-weight: 300 !important;
+    line-height: 1.2 !important;
+}

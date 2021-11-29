@@ -6,15 +6,15 @@
 @{
     if (Model is null)
     {
-        <div>
-            <h4>Oops! An error occurred.</h4>
+        <div class="text-center">
+            <h1 class="display-4-error">Oops! An error occurered.</h1>
         </div>
     }
     else
     {
         ViewData["Title"] = Model.Title;
-        <div>
-            <h4>@Html.Raw(Model.Message)</h4>
+        <div class="text-center" style="padding-top: 25px;">
+            <h1 class="display-4-error">@Html.Raw(Model.Message)</h1>
         </div>
     }
 }
