@@ -1,13 +1,11 @@
 ﻿using EnterpriseApp.WebApp.MVC.Exceptions;
 using EnterpriseApp.WebApp.MVC.Models;
-using EnterpriseApp.WebApp.MVC.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using IAuthenticationService = EnterpriseApp.WebApp.MVC.Services.IAuthenticationService;
