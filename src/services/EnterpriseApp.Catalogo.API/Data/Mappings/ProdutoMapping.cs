@@ -1,0 +1,28 @@
+﻿using EnterpriseApp.Catalogo.API.Models;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+
+namespace EnterpriseApp.Catalogo.API.Data.Mappings
+{
+    public class ProdutoMapping : IEntityTypeConfiguration<Produto>
+    {
+        public void Configure(EntityTypeBuilder<Produto> builder)
+        {
+            builder.HasKey(p => p.Id);
+
+            builder.Property(p => p.Name)
+                .IsRequired()
+                .HasColumnType("varchar(250)");
+
+            builder.Property(p => p.Description)
+                .IsRequired()
+                .HasColumnType("varchar(500)");
+
+            builder.Property(p => p.Image)
+                .IsRequired()
+                .HasColumnType("varchar(250)");
+
+            builder.ToTable("Produtos");
+        }
+    }
+}
