@@ -26,6 +26,7 @@ namespace EnterpriseApp.Catalogo.API
             services.AddDbContext<CatalogContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddRouting(x => x.LowercaseUrls = true);
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -33,7 +34,6 @@ namespace EnterpriseApp.Catalogo.API
             });
 
             services.AddScoped<IProductRepository, ProductRepository>();
-            services.AddScoped<CatalogContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
