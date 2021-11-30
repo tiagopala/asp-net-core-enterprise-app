@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EnterpriseApp.Catalogo.API.Migrations
 {
-    [DbContext(typeof(CatalogoContext))]
+    [DbContext(typeof(CatalogContext))]
     partial class CatalogoContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
@@ -19,7 +19,7 @@ namespace EnterpriseApp.Catalogo.API.Migrations
                 .HasAnnotation("ProductVersion", "5.0.12")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("EnterpriseApp.Catalogo.API.Models.Produto", b =>
+            modelBuilder.Entity("EnterpriseApp.Catalogo.API.Models.Product", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -51,7 +51,7 @@ namespace EnterpriseApp.Catalogo.API.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Produtos");
+                    b.ToTable("Products");
                 });
 #pragma warning restore 612, 618
         }

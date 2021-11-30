@@ -3,7 +3,7 @@ using System;
 
 namespace EnterpriseApp.Catalogo.API.Models
 {
-    public class Produto : Entity
+    public class Product : Entity, IAggregateRoot
     {
         public string Name { get; set; }
         public string Description { get; set; }

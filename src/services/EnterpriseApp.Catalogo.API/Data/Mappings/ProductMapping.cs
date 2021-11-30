@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace EnterpriseApp.Catalogo.API.Data.Mappings
 {
-    public class ProdutoMapping : IEntityTypeConfiguration<Produto>
+    public class ProductMapping : IEntityTypeConfiguration<Product>
     {
-        public void Configure(EntityTypeBuilder<Produto> builder)
+        public void Configure(EntityTypeBuilder<Product> builder)
         {
             builder.HasKey(p => p.Id);
 
@@ -22,7 +22,7 @@ namespace EnterpriseApp.Catalogo.API.Data.Mappings
                 .IsRequired()
                 .HasColumnType("varchar(250)");
 
-            builder.ToTable("Produtos");
+            builder.ToTable("Products");
         }
     }
 }
