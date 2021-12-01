@@ -44,8 +44,8 @@ namespace EnterpriseApp.API.Core.Authentication
 
         public static IApplicationBuilder UseAuthConfiguration(this IApplicationBuilder app)
         {
-            app.UseAuthorization();
             app.UseAuthentication();
+            app.UseAuthorization();
 
             return app;
         }
