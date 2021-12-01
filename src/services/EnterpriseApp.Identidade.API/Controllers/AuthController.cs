@@ -1,4 +1,4 @@
-﻿using EnterpriseApp.Identidade.API.Configurations;
+﻿using EnterpriseApp.API.Core.Authentication;
 using EnterpriseApp.Identidade.API.Extensions;
 using EnterpriseApp.Identidade.API.Models;
 using Microsoft.AspNetCore.Identity;
@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Net;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,12 +20,12 @@ namespace EnterpriseApp.Identidade.API.Controllers
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
-        private readonly JwtConfig _jwtConfig;
+        private readonly AuthConfig _jwtConfig;
 
         public AuthController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
-            IOptions<JwtConfig> jwtConfig)
+            IOptions<AuthConfig> jwtConfig)
         {
             _signInManager = signInManager;
             _userManager = userManager;

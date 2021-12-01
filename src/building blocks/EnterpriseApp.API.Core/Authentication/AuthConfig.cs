@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace EnterpriseApp.Identidade.API.Configurations
+﻿namespace EnterpriseApp.API.Core.Authentication
 {
-    public class JwtConfig
+    public class AuthConfig
     {
         public string Secret { get; set; }
         public int ExpirationHours { get; set; }

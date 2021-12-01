@@ -1,3 +1,5 @@
+using EnterpriseApp.API.Core.Authentication;
+using EnterpriseApp.API.Core.Documentation;
 using EnterpriseApp.Catalogo.API.Configurations;
 using EnterpriseApp.Catalogo.API.Data;
 using Microsoft.AspNetCore.Builder;
@@ -45,7 +47,8 @@ namespace EnterpriseApp.Catalogo.API
 
             services
                 .AddRouting(x => x.LowercaseUrls = true)
-                .AddSwagger()
+                .AddJwtConfiguration(Configuration)
+                .AddSwaggerConfig("EnterpriseApp Catalog API", "This API is responsible for manage EnterpriseApp's products")
                 .AddApplicationServices();
         }
 
@@ -56,12 +59,12 @@ namespace EnterpriseApp.Catalogo.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseSwagger();
+            app.UseSwaggerConfig();
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
-            app.UseAuthorization();
+            app.UseCors("Total");
+            app.UseAuthConfiguration();
 
             app.UseEndpoints(endpoints =>
             {

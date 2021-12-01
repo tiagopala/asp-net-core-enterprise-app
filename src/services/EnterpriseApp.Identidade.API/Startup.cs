@@ -1,3 +1,5 @@
+using EnterpriseApp.API.Core.Authentication;
+using EnterpriseApp.API.Core.Documentation;
 using EnterpriseApp.Identidade.API.Configurations;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -36,8 +38,9 @@ namespace EnterpriseApp.Identidade.API
 
             services
                 .AddRouting(options => options.LowercaseUrls = true)
-                .AddSwagger()
-                .ResolveIdentity(Configuration);
+                .AddIdentityConfig(Configuration)
+                .AddJwtConfiguration(Configuration)
+                .AddSwaggerConfig("EnterpriseApp Identity API", "This API is responsible for taking care of user authentication e authorization services");
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -45,10 +48,10 @@ namespace EnterpriseApp.Identidade.API
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
-            app.UseSwagger()
+            app.UseSwaggerConfig()
                .UseHttpsRedirection()
                .UseRouting()
-               .ResolveIdentity();
+               .UseAuthConfiguration();
 
             app.UseEndpoints(endpoints =>
             {

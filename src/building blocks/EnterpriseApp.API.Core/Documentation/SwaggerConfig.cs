@@ -2,11 +2,13 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace EnterpriseApp.Catalogo.API.Configurations
+namespace EnterpriseApp.API.Core.Documentation
 {
     public static class SwaggerConfig
     {
-        public static IServiceCollection AddSwagger(this IServiceCollection services)
+        public static IServiceCollection AddSwaggerConfig(this IServiceCollection services,
+            string title,
+            string descriptions)
         {
             services.AddSwaggerGen(c =>
             {
@@ -23,7 +25,7 @@ namespace EnterpriseApp.Catalogo.API.Configurations
             return services;
         }
 
-        public static IApplicationBuilder UseSwagger(this IApplicationBuilder app)
+        public static IApplicationBuilder UseSwaggerConfig(this IApplicationBuilder app)
         {
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1"));

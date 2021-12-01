@@ -43,6 +43,7 @@ namespace EnterpriseApp.WebApp.MVC.Extensions
 
         public string GetClaimValue(string claimType)
             => _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals(claimType))?.Value;
+        //  => _httpContextAccessor.HttpContext.User.FindFirst(claimType)?.Value; // Avaliar qual dos dois métodos é mais performático
 
         public IEnumerable<Claim> GetClaims()
             => _httpContextAccessor.HttpContext.User.Claims;

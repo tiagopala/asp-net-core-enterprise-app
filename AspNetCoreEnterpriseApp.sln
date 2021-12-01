@@ -41,6 +41,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseApp.Pagamento.API
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseApp.Pedido.API", "src\services\EnterpriseApp.Pedido.API\EnterpriseApp.Pedido.API.csproj", "{C975FF4D-197F-4447-99BC-ED85C95206D5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{FE1D9FA0-0675-44EA-B516-265DBC9C6997}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EnterpriseApp.API.Core", "src\building blocks\EnterpriseApp.API.Core\EnterpriseApp.API.Core.csproj", "{AFDE53ED-1F96-41BE-84D2-8B49AF4F6FE4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +83,10 @@ Global
 		{C975FF4D-197F-4447-99BC-ED85C95206D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C975FF4D-197F-4447-99BC-ED85C95206D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C975FF4D-197F-4447-99BC-ED85C95206D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFDE53ED-1F96-41BE-84D2-8B49AF4F6FE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFDE53ED-1F96-41BE-84D2-8B49AF4F6FE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFDE53ED-1F96-41BE-84D2-8B49AF4F6FE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFDE53ED-1F96-41BE-84D2-8B49AF4F6FE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -102,6 +110,8 @@ Global
 		{4FC154EB-86BA-4664-A81F-EA60DB45682F} = {D64B59BB-C060-4633-BDE3-DD4AA0FFE5CD}
 		{BE144C7F-27C6-42B8-923D-B333DC92B047} = {0B3AA128-E357-414F-9299-B9229FB926F0}
 		{C975FF4D-197F-4447-99BC-ED85C95206D5} = {76EEAFFD-D797-46A5-AA7D-751343310899}
+		{FE1D9FA0-0675-44EA-B516-265DBC9C6997} = {2B1CDB4B-6543-47C4-8D83-7CDF2BFA2E06}
+		{AFDE53ED-1F96-41BE-84D2-8B49AF4F6FE4} = {FE1D9FA0-0675-44EA-B516-265DBC9C6997}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {53CB3640-B9AD-4C0B-A45F-F59E4452DEB7}
