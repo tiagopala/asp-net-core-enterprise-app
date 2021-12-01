@@ -6,7 +6,7 @@ namespace EnterpriseApp.Catalogo.API.Configurations
 {
     public static class SwaggerConfig
     {
-        public static IServiceCollection ResolveSwagger(this IServiceCollection services)
+        public static IServiceCollection AddSwagger(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
@@ -23,7 +23,7 @@ namespace EnterpriseApp.Catalogo.API.Configurations
             return services;
         }
 
-        public static IApplicationBuilder ResolveSwagger(this IApplicationBuilder app)
+        public static IApplicationBuilder UseSwagger(this IApplicationBuilder app)
         {
             app.UseSwagger();
             app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1"));

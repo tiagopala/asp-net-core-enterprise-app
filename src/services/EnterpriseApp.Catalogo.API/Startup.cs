@@ -11,26 +11,44 @@ namespace EnterpriseApp.Catalogo.API
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
+        public Startup(IHostEnvironment hostEnvironment)
+        {
+            var builder = new ConfigurationBuilder()
+                .SetBasePath(hostEnvironment.ContentRootPath)
+                .AddJsonFile("appsettings.json", true, true)
+                .AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", true)
+                .AddEnvironmentVariables();
+
+            if (hostEnvironment.IsDevelopment())
+                builder.AddUserSecrets<Startup>();
+
+            Configuration = builder.Build();
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<CatalogContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddRouting(x => x.LowercaseUrls = true);
             services.AddControllers();
-            services.ResolveSwagger();
-            services.AddApplicationServices();
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("Total", builder =>
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader());
+            });
+
+            services
+                .AddRouting(x => x.LowercaseUrls = true)
+                .AddSwagger()
+                .AddApplicationServices();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -38,7 +56,7 @@ namespace EnterpriseApp.Catalogo.API
                 app.UseDeveloperExceptionPage();
             }
 
-            app.ResolveSwagger();
+            app.UseSwagger();
             app.UseHttpsRedirection();
 
             app.UseRouting();

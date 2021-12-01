@@ -36,7 +36,7 @@ namespace EnterpriseApp.Identidade.API
 
             services
                 .AddRouting(options => options.LowercaseUrls = true)
-                .ResolveSwagger()
+                .AddSwagger()
                 .ResolveIdentity(Configuration);
         }
 
@@ -45,7 +45,7 @@ namespace EnterpriseApp.Identidade.API
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 
-            app.ResolveSwagger()
+            app.UseSwagger()
                .UseHttpsRedirection()
                .UseRouting()
                .ResolveIdentity();
