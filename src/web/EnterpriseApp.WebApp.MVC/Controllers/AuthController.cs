@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using IAuthenticationService = EnterpriseApp.WebApp.MVC.Services.IAuthenticationService;
+using IAuthenticationService = EnterpriseApp.WebApp.MVC.Services.Interfaces.IAuthenticationService;
 
 namespace EnterpriseApp.WebApp.MVC.Controllers
 {

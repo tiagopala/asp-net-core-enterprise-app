@@ -1,5 +1,5 @@
-﻿@using EnterpriseApp.WebApp.MVC.Extensions
-@inject IUser AppUser
+﻿@using EnterpriseApp.WebApp.MVC.Services.Interfaces
+@inject IUserService AppUser
 
 @if (AppUser.IsAuthenticated())
 {

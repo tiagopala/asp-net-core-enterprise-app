@@ -1,28 +1,17 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using EnterpriseApp.WebApp.MVC.Services.Interfaces;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
-namespace EnterpriseApp.WebApp.MVC.Extensions
+namespace EnterpriseApp.WebApp.MVC.Services
 {
-    public interface IUser
-    {
-        string Name { get; }
-        Guid GetUserId();
-        string GetUserEmail();
-        string GetUserToken();
-        bool IsAuthenticated();
-        bool HasRole(string role);
-        IEnumerable<Claim> GetClaims();
-        HttpContext GetHttpContext();
-    }
-
-    public class AspNetUser : IUser
+    public class UserService : IUserService
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public AspNetUser(IHttpContextAccessor httpContextAccessor)
+        public UserService(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }

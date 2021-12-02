@@ -28,19 +28,18 @@ namespace EnterpriseApp.WebApp.MVC
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<AuthAPIConfig>(Configuration.GetSection("AuthAPI"));
-            services.Configure<CatalogApiConfig>(Configuration.GetSection("CatalogAPI"));
             services.ResolveIdentity();
             services.AddControllersWithViews();
-            services.ResolveDependencyInjection();
+            services.ResolveDependencyInjection(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
-            
-            app.UseExceptionHandler("/Error/500");
+            else
+                app.UseExceptionHandler("/Error/500");
+
             app.UseStatusCodePagesWithRedirects("/Error/{0}");
             app.UseHsts();
 

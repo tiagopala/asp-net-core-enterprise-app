@@ -1,7 +1,5 @@
-﻿using EnterpriseApp.WebApp.MVC.Configuration;
-using EnterpriseApp.WebApp.MVC.Models;
-using Microsoft.Extensions.Options;
-using System;
+﻿using EnterpriseApp.WebApp.MVC.Models;
+using EnterpriseApp.WebApp.MVC.Services.Interfaces;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -11,12 +9,9 @@ namespace EnterpriseApp.WebApp.MVC.Services
     {
         private readonly HttpClient _httpClient;
 
-        public AuthenticationService(
-            HttpClient httpClient,
-            IOptions<AuthAPIConfig> authAPIConfig)
+        public AuthenticationService(IHttpClientFactory httpClientFactory)
         {
-            httpClient.BaseAddress = new Uri(authAPIConfig.Value.Endpoint);
-            _httpClient = httpClient;
+            _httpClient = httpClientFactory.CreateClient("auth");
         }
 
         public async Task<UserLoginResponse> Login(UserLoginDTO user)

@@ -1,4 +1,4 @@
-﻿using EnterpriseApp.WebApp.MVC.Services;
+﻿using EnterpriseApp.WebApp.MVC.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;

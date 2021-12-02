@@ -1,7 +1,7 @@
 ﻿using EnterpriseApp.WebApp.MVC.Models;
 using System.Threading.Tasks;
 
-namespace EnterpriseApp.WebApp.MVC.Services
+namespace EnterpriseApp.WebApp.MVC.Services.Interfaces
 {
     public interface IAuthenticationService
     {

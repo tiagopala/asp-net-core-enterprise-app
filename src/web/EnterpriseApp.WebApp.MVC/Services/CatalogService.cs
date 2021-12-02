@@ -1,6 +1,5 @@
-﻿using EnterpriseApp.WebApp.MVC.Configuration;
-using EnterpriseApp.WebApp.MVC.Models;
-using Microsoft.Extensions.Options;
+﻿using EnterpriseApp.WebApp.MVC.Models;
+using EnterpriseApp.WebApp.MVC.Services.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -12,11 +11,8 @@ namespace EnterpriseApp.WebApp.MVC.Services
     {
         private readonly HttpClient _httpClient;
 
-        public CatalogService(
-            HttpClient httpClient,
-            IOptions<CatalogApiConfig> catalogAPIConfig)
+        public CatalogService(HttpClient httpClient, IHttpClientFactory clientFactory)
         {
-            httpClient.BaseAddress = new Uri(catalogAPIConfig.Value.Endpoint);
             _httpClient = httpClient;
         }
 
