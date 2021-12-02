@@ -5,11 +5,6 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
-        {
-            return View();
-        }
-
         [Route("Error/{statusCode:length(3,3)}")]
         public IActionResult Error(int statusCode)
         {

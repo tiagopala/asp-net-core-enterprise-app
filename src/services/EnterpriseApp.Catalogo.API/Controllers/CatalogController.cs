@@ -10,7 +10,7 @@ namespace EnterpriseApp.Catalogo.API.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CatalogController : ControllerBase
     {
         private readonly IProductRepository _productRepository;
@@ -26,7 +26,7 @@ namespace EnterpriseApp.Catalogo.API.Controllers
             => await _productRepository.GetProducts();
 
         [HttpGet("products/{id}")]
-        [ClaimsAuthorize("Catalog", "Viewer")]
+        [ClaimsAuthorize("Catalog", "View")]
         public async Task<Product> GetProduct(Guid id)
             => await _productRepository.GetProduct(id);
     }

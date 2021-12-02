@@ -10,6 +10,7 @@ namespace EnterpriseApp.WebApp.MVC.Configuration
         public static IServiceCollection ResolveDependencyInjection(this IServiceCollection services)
         {
             services.AddHttpClient<IAuthenticationService, AuthenticationService>();
+            services.AddHttpClient<ICatalogService, CatalogService>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

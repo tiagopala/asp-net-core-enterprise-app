@@ -44,7 +44,7 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
                 return View(user);
             }
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Catalog");
         }
 
         [HttpGet]
@@ -76,7 +76,7 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
             }
 
             if(string.IsNullOrEmpty(returnUrl))
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Catalog");
 
             return LocalRedirect(returnUrl);
         }
@@ -86,7 +86,7 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Catalog");
         }
 
         private async Task Login(UserLoginResponse user)

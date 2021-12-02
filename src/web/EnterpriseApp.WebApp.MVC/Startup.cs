@@ -29,6 +29,7 @@ namespace EnterpriseApp.WebApp.MVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<AuthAPIConfig>(Configuration.GetSection("AuthAPI"));
+            services.Configure<CatalogApiConfig>(Configuration.GetSection("CatalogAPI"));
             services.ResolveIdentity();
             services.AddControllersWithViews();
             services.ResolveDependencyInjection();
@@ -56,7 +57,7 @@ namespace EnterpriseApp.WebApp.MVC
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Catalog}/{action=Index}/{id?}");
             });
         }
     }
