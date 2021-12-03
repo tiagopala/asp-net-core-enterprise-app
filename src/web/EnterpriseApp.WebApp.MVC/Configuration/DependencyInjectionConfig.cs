@@ -5,6 +5,7 @@ using EnterpriseApp.WebApp.MVC.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
 using Refit;
 using System;
 
@@ -26,7 +27,8 @@ namespace EnterpriseApp.WebApp.MVC.Configuration
                 configure.BaseAddress = new Uri(configuration.GetSection("CatalogAPI").Get<CatalogApiConfig>().Endpoint);
             }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
               .AddTypedClient(RestService.For<ICatalogServiceRefit>)
-              .AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy());
+              .AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
+              .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

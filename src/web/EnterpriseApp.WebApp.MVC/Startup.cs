@@ -37,9 +37,8 @@ namespace EnterpriseApp.WebApp.MVC
         {
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
-            else
-                app.UseExceptionHandler("/Error/500");
 
+            app.UseExceptionHandler("/Error/500");
             app.UseStatusCodePagesWithRedirects("/Error/{0}");
             app.UseHsts();
 

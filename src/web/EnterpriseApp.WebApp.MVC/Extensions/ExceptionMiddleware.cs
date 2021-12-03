@@ -1,6 +1,8 @@
 ﻿using EnterpriseApp.WebApp.MVC.Exceptions;
 using Microsoft.AspNetCore.Http;
+using Polly.CircuitBreaker;
 using Refit;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -29,6 +31,15 @@ namespace EnterpriseApp.WebApp.MVC.Extensions
             {
                 HandleRequestExceptionAsync(httpContext, e.StatusCode);
             }
+            catch (BrokenCircuitException)
+            {
+                HandleBrokenCircuitException(httpContext);
+            }
+        }
+
+        private static void HandleBrokenCircuitException(HttpContext context)
+        {
+            context.Response.Redirect($"/app-unavailable");
         }
 
         private static void HandleRequestExceptionAsync(HttpContext context, HttpStatusCode statusCode)
