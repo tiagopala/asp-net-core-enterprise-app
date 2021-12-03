@@ -12,25 +12,23 @@ namespace EnterpriseApp.WebApp.MVC.Configuration
     {
         public static IServiceCollection ResolveDependencyInjection(this IServiceCollection services, IConfiguration configuration)
         {
-            AuthAPIConfig authApiConfig = new();
-            configuration.GetSection("AuthAPI").Bind(authApiConfig);
-
-            AuthAPIConfig catalogApiConfig = new();
-            configuration.GetSection("CatalogAPI").Bind(catalogApiConfig);
-
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 
-            services.AddHttpClient("auth", configure =>
+            services.AddHttpClient<IAuthenticationService, AuthenticationService>(configure =>
             {
-                configure.BaseAddress = new Uri(authApiConfig.Endpoint);
+                configure.BaseAddress = new Uri(configuration.GetSection("AuthAPI").Get<AuthAPIConfig>().Endpoint);
             });
 
-            services.AddHttpClient<ICatalogService, CatalogService>(configure => 
-            {
-                configure.BaseAddress = new Uri(catalogApiConfig.Endpoint);
-            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+            //services.AddHttpClient<ICatalogService, CatalogService>(configure => 
+            //{
+            //    configure.BaseAddress = new Uri(configuration.GetSection("CatalogAPI").Get<CatalogApiConfig>().Endpoint);
+            //}).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 
-            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddHttpClient("CatalogRefit", configure =>
+            {
+                configure.BaseAddress = new Uri(configuration.GetSection("CatalogAPI").Get<CatalogApiConfig>().Endpoint);
+            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+              .AddTypedClient(Refit.RestService.For<ICatalogServiceRefit>);
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

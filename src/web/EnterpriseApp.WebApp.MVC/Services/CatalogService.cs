@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace EnterpriseApp.WebApp.MVC.Services
 {
+    [Obsolete("This service is obsolete. Use ICatalogServiceRefit interface instead.", true)]
     public class CatalogService : MainService, ICatalogService
     {
         private readonly HttpClient _httpClient;

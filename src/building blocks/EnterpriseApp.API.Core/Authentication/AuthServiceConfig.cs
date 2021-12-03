@@ -14,8 +14,7 @@ namespace EnterpriseApp.API.Core.Authentication
             var jwtConfigSection = configuration.GetSection("Auth");
             services.Configure<AuthConfig>(jwtConfigSection);
 
-            AuthConfig jwtConfig = new();
-            jwtConfigSection.Bind(jwtConfig);
+            var jwtConfig = jwtConfigSection.Get<AuthConfig>();
 
             var key = Encoding.ASCII.GetBytes(jwtConfig.Secret);
 
