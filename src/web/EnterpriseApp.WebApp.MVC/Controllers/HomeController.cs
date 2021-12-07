@@ -5,9 +5,17 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        [Route("app-unavailable")]
+        public IActionResult AppUnavailable()
         {
-            return View();
+            var error = new ErrorViewModel
+            {
+                Title = "Oops! Apparently system is unavailable.",
+                Message = "Oops! Apparently system is unavailable. This could be happening due increase number of users. Please try again in a few minutes.",
+                ErrorCode = 500,
+            };
+
+            return View("Error", error);
         }
 
         [Route("Error/{statusCode:length(3,3)}")]
@@ -17,20 +25,20 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
             
             if (statusCode == 500)
             {
-                error.Title = "An Error occurred!";
+                error.Title = "An error occurred!";
                 error.Message = "An Error occurred! Try again later.";
                 error.ErrorCode = statusCode;
             }
             else if (statusCode == 404)
             {
                 error.Title = "Oops! Page not found.";
-                error.Message = "The page you are looking for does not exist.";
+                error.Message = "Oops! Page not found. The page you are looking for does not exist.";
                 error.ErrorCode = statusCode;
             }
             else if (statusCode == 403)
             {
                 error.Title = "Unauthorized";
-                error.Message = "You do not have permission to do this.";
+                error.Message = "Unauthorized. You do not have permission to do this.";
                 error.ErrorCode = statusCode;
             }
             else

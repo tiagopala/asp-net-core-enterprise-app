@@ -1,8 +1,7 @@
-﻿using EnterpriseApp.WebApp.MVC.Configuration;
-using EnterpriseApp.WebApp.MVC.Models;
-using Microsoft.Extensions.Options;
-using System;
+﻿using EnterpriseApp.WebApp.MVC.Models;
+using EnterpriseApp.WebApp.MVC.Services.Interfaces;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 
 namespace EnterpriseApp.WebApp.MVC.Services
@@ -11,19 +10,14 @@ namespace EnterpriseApp.WebApp.MVC.Services
     {
         private readonly HttpClient _httpClient;
 
-        public AuthenticationService(
-            HttpClient httpClient,
-            IOptions<AuthAPIConfig> authAPIConfig)
+        public AuthenticationService(HttpClient httpClient)
         {
-            httpClient.BaseAddress = new Uri(authAPIConfig.Value.Endpoint);
             _httpClient = httpClient;
         }
 
         public async Task<UserLoginResponse> Login(UserLoginDTO user)
         {
-            var loginContent = GetContent(user);
-
-            var response = await _httpClient.PostAsync("/api/auth/login", loginContent);
+            var response = await _httpClient.PostAsJsonAsync("/api/auth/login", user);
 
             if (!response.IsSuccessStatusCode)
                 await HandleErrorsResponse(response);
@@ -33,9 +27,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
 
         public async Task<UserLoginResponse> Register(UserRegisterDTO user)
         {
-            var registerContent = GetContent(user);
-
-            var response = await _httpClient.PostAsync("/api/auth/register", registerContent);
+            var response = await _httpClient.PostAsJsonAsync("/api/auth/register", user);
 
             if (!response.IsSuccessStatusCode)
                 await HandleErrorsResponse(response);
