@@ -2,9 +2,11 @@ using EnterpriseApp.WebApp.MVC.Configuration;
 using EnterpriseApp.WebApp.MVC.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Globalization;
 
 namespace EnterpriseApp.WebApp.MVC
 {
@@ -48,6 +50,14 @@ namespace EnterpriseApp.WebApp.MVC
             app.UseRouting();
 
             app.ResolveIdentity();
+
+            var supportedCultures = new[] { new CultureInfo("pt-Br") };
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("pt-Br"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures
+            });
 
             app.UseMiddleware<ExceptionMiddleware>();
 

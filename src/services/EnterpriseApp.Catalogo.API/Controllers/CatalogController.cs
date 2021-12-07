@@ -28,7 +28,6 @@ namespace EnterpriseApp.Catalogo.API.Controllers
         [HttpGet("products/{id}")]
         [ClaimsAuthorize("Catalog", "View")]
         public async Task<Product> GetProduct(Guid id)
-            => throw new Exception("Error");
-            //=> await _productRepository.GetProduct(id);
+            => await _productRepository.GetProduct(id);
     }
 }

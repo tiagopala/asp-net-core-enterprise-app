@@ -15,25 +15,25 @@
         <div class="container" style=" padding-top: 20px">
             <div class="row">
                 @{
-                    foreach (var produto in Model.OrderBy(p => p.Name))
+                    foreach (var product in Model.OrderBy(p => p.Name))
                     {
                         <div class="col-md-3">
                             <div href="#" class="card card-product-grid">
-                                <a asp-controller="Catalog" asp-action="ProductDetails" asp-route-id="@produto.Id" class="img-wrap">
-                                    <img src="~/images/produtos/@produto.Image" alt="@produto.Name">
+                                <a asp-controller="Catalog" asp-action="ProductDetails" asp-route-id="@product.Id" class="img-wrap">
+                                    <img src="~/images/produtos/@product.Image" alt="@product.Name">
                                 </a>
                                 <figcaption class="info-wrap">
-                                    <a asp-controller="Catalog" asp-action="ProductDetails" asp-route-id="@produto.Id" class="title">
-                                        <b> @produto.Name</b>
+                                    <a asp-controller="Catalog" asp-action="ProductDetails" asp-route-id="@product.Id" class="title">
+                                        <b> @product.Name</b>
                                     </a>
 
                                     <small class="card-text">
-                                        @produto.StockQuantity<br /><br />
-                                        @produto.Description
+                                        @this.StockMessage(product.StockQuantity)<br /><br />
+                                        @product.Description
                                     </small>
                                 </figcaption>
                                 <div class="card-footer price mt-1">
-                                    <h3>@produto.Price</h3>
+                                    <h3>@this.FormatCurrency(@product.Price)</h3>
                                 </div>
                             </div>
                         </div>
