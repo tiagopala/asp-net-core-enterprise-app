@@ -19,12 +19,12 @@ namespace EnterpriseApp.WebApp.MVC.Configuration
 
             services.AddHttpClient<IAuthenticationService, AuthenticationService>(configure =>
             {
-                configure.BaseAddress = new Uri(configuration.GetSection("AuthAPI").Get<AuthAPIConfig>().Endpoint);
+                configure.BaseAddress = new Uri(configuration["AuthAPI:Uri"]);
             });
 
             services.AddHttpClient("CatalogRefit", configure =>
             {
-                configure.BaseAddress = new Uri(configuration.GetSection("CatalogAPI").Get<CatalogApiConfig>().Endpoint);
+                configure.BaseAddress = new Uri(configuration["CatalogAPI:Uri"]);
             }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
               .AddTypedClient(RestService.For<ICatalogServiceRefit>)
               .AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
