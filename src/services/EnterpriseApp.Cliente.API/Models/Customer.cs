@@ -1,24 +1,32 @@
 ﻿using EnterpriseApp.Core.DomainObjects;
+using System;
 
 namespace EnterpriseApp.Cliente.API.Models
 {
     public class Customer : Entity, IAggregateRoot
     {
         public string Name { get; }
-        public string Email { get; }
-        public string Cpf { get; }
+        public Email Email { get; private set; }
+        public Cpf Cpf { get; }
         public bool Deleted { get; }
-        public Address Address { get; }
+        public Address Address { get; private set; }
 
         // Entity Framework Relation
         protected Customer() { }
 
-        public Customer(string name, string email, string cpf)
+        public Customer(Guid id, string name, string email, string cpf)
         {
+            Id = id;
             Name = name;
-            Email = email;
-            Cpf = cpf;
+            Email = new(email);
+            Cpf = new(cpf);
             Deleted = false;
         }
+
+        public void ChangeEmail(string email)
+            => Email = new(email);
+
+        public void SetAddress(Address address)
+            => Address = address;
     }
 }
