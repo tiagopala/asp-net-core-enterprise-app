@@ -9,7 +9,7 @@ namespace EnterpriseApp.Cliente.API.Models
         public string Number { get; }
         public string Complement { get; }
         public string Neighbourhood { get; }
-        public string CEP { get; }
+        public string Cep { get; }
         public string City { get; }
         public string State { get; }
         public Guid CustomerId { get; set; }
@@ -23,7 +23,7 @@ namespace EnterpriseApp.Cliente.API.Models
             Number = number;
             Complement = complement;
             Neighbourhood = neighbourhood;
-            CEP = cep;
+            Cep = cep;
             City = city;
             State = state;
         }

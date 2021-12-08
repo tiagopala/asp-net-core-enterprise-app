@@ -7,7 +7,7 @@ namespace EnterpriseApp.Cliente.API.Models
     {
         public string Name { get; }
         public Email Email { get; private set; }
-        public Cpf Cpf { get; }
+        public Cpf Cpf { get; private set; }
         public bool Deleted { get; }
         public Address Address { get; private set; }
 
