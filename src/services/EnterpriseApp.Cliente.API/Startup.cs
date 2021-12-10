@@ -1,6 +1,8 @@
 using EnterpriseApp.API.Core.Authentication;
 using EnterpriseApp.API.Core.Documentation;
+using EnterpriseApp.Cliente.API.Configuration;
 using EnterpriseApp.Cliente.API.Data;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -47,7 +49,9 @@ namespace EnterpriseApp.Cliente.API
             services
                 .AddRouting(x => x.LowercaseUrls = true)
                 .AddJwtConfiguration(Configuration)
-                .AddSwaggerConfig("EnterpriseApp Customer API", "This API is responsible for manage EnterpriseApp's customers");
+                .AddSwaggerConfig("EnterpriseApp Customer API", "This API is responsible for manage EnterpriseApp's customers")
+                .AddMediatR(typeof(Startup))
+                .AddAppServices();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
