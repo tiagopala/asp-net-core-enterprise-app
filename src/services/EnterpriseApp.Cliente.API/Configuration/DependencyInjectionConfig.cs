@@ -15,7 +15,6 @@ namespace EnterpriseApp.Cliente.API.Configuration
                 .AddScoped<IMediatorHandler, MediatorHandler>()
                 .AddScoped<IRequestHandler<RegisterCustomerCommand, ValidationResult>, RegisterCustomerHandler>();
 
-
             return services;
         }
     }
