@@ -1,6 +1,5 @@
 ﻿using EnterpriseApp.Core.DomainObjects;
-using EnterpriseApp.Core.Extensions;
-using FluentValidation.Results;
+using EnterpriseApp.Core.Mediator;
 using System.Threading.Tasks;
 
 namespace EnterpriseApp.Cliente.API.Application.Handlers
@@ -8,20 +7,21 @@ namespace EnterpriseApp.Cliente.API.Application.Handlers
     public abstract class BaseHandler<T> where T : Entity, IAggregateRoot
     {
         private readonly IRepository<T> _repository;
+        protected readonly IMediatorHandler MediatorHandler;
 
-        public BaseHandler(IRepository<T> repository)
+        public BaseHandler(
+            IRepository<T> repository,
+            IMediatorHandler mediatorHandler)
         {
             _repository = repository;
+            MediatorHandler = mediatorHandler;
         }
 
-        public async Task<ValidationResult> PersistData(ValidationResult validationResult)
+        public async Task<bool> PersistData()
         {
             var successfullCommit = await _repository.UnitOfWork.Commit();
 
-            if (successfullCommit is false)
-                validationResult.AddCustomError("The operation could not be completed. Try again later.");
-
-            return validationResult;
+            return successfullCommit;
         }
     }
 }

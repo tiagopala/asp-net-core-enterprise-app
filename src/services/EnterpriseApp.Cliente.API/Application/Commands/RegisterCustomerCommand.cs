@@ -10,7 +10,6 @@ namespace EnterpriseApp.Cliente.API.Application.Commands
         public string Name { get; private set; }
         public string Email { get; private set; }
         public string Cpf { get; private set; }
-        public RegisterCustomerCommandValidation ValidationRules { get; private set; }
 
         public RegisterCustomerCommand(Guid id, string name, string email, string cpf)
         {
@@ -19,12 +18,11 @@ namespace EnterpriseApp.Cliente.API.Application.Commands
             Name = name;
             Email = email;
             Cpf = cpf;
-            ValidationRules = new();
         }
 
         public override bool Validate()
         {
-            ValidationResult = ValidationRules.Validate(this);
+            ValidationResult = new RegisterCustomerCommandValidation().Validate(this);
 
             return ValidationResult.IsValid;
         }
