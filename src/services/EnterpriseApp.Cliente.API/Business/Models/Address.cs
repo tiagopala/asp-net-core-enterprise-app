@@ -1,7 +1,7 @@
 ﻿using EnterpriseApp.Core.DomainObjects;
 using System;
 
-namespace EnterpriseApp.Cliente.API.Models
+namespace EnterpriseApp.Cliente.API.Business.Models
 {
     public class Address : Entity
     {

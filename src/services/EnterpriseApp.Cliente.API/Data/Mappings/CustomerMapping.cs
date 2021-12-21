@@ -1,4 +1,4 @@
-﻿using EnterpriseApp.Cliente.API.Models;
+﻿using EnterpriseApp.Cliente.API.Business.Models;
 using EnterpriseApp.Core.DomainObjects;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

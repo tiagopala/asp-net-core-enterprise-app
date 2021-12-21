@@ -1,4 +1,4 @@
-﻿using EnterpriseApp.Cliente.API.Models;
+﻿using EnterpriseApp.Cliente.API.Business.Models;
 using EnterpriseApp.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;

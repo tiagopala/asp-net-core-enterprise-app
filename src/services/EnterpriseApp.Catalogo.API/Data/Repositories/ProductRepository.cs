@@ -11,12 +11,10 @@ namespace EnterpriseApp.Catalogo.API.Data.Repositories
     {
         private readonly CatalogContext _context;
 
-        public IUnitOfWork UnitOfWork => _context;
-
         public ProductRepository(CatalogContext context)
-        {
-            _context = context;
-        }
+            => _context = context;
+
+        public IUnitOfWork UnitOfWork => _context;
 
         public async Task<IEnumerable<Product>> GetProducts()
             => await _context.Products.AsNoTracking().ToListAsync();
