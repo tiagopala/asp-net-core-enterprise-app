@@ -1,4 +1,5 @@
-﻿using EnterpriseApp.Cliente.API.Application.Commands;
+﻿using EnterpriseApp.API.Core.Controllers;
+using EnterpriseApp.Cliente.API.Application.Commands;
 using EnterpriseApp.Core.Mediator;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
@@ -8,7 +9,7 @@ namespace EnterpriseApp.Cliente.API.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class CustomersController : ControllerBase
+    public class CustomersController : MainController
     {
         private readonly IMediatorHandler _mediator;
 
@@ -21,9 +22,9 @@ namespace EnterpriseApp.Cliente.API.Controllers
             var validationResult = await _mediator.SendCommand(command);
 
             if (validationResult.Errors.Any())
-                return BadRequest(new { Errors = validationResult.Errors.Select(x => x.ErrorMessage) });
+                return CustomResponse(validationResult);
 
-            return Ok();
+            return CustomResponse();
         }
     }
 }
