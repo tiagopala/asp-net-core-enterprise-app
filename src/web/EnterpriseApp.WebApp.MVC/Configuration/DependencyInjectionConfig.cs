@@ -3,6 +3,7 @@ using EnterpriseApp.WebApp.MVC.Services;
 using EnterpriseApp.WebApp.MVC.Services.Handlers;
 using EnterpriseApp.WebApp.MVC.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -15,6 +16,8 @@ namespace EnterpriseApp.WebApp.MVC.Configuration
     {
         public static IServiceCollection ResolveDependencyInjection(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSingleton<IValidationAttributeAdapterProvider, CpfValidationAttributeAdapterProvider>();
+
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 
             services.AddHttpClient<IAuthenticationService, AuthenticationService>(configure =>
