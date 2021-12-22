@@ -10,18 +10,13 @@ namespace EnterpriseApp.WebApp.MVC.Extensions
     public class CpfAttribute : ValidationAttribute
     {
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-        {
-            return Cpf.Validate(value.ToString()) ? ValidationResult.Success : new ValidationResult("Invalid CPF Format");
-        }
+            => Cpf.Validate(value.ToString()) ? ValidationResult.Success : new ValidationResult("Invalid CPF Format");
     }
 
     public class CpfAttributeAdapter : AttributeAdapterBase<CpfAttribute>
     {
+        public CpfAttributeAdapter(CpfAttribute attribute, IStringLocalizer stringLocalizer) : base(attribute, stringLocalizer) { }
 
-        public CpfAttributeAdapter(CpfAttribute attribute, IStringLocalizer stringLocalizer) : base(attribute, stringLocalizer)
-        {
-
-        }
         public override void AddValidation(ClientModelValidationContext context)
         {
             if (context == null)
@@ -32,10 +27,9 @@ namespace EnterpriseApp.WebApp.MVC.Extensions
             MergeAttribute(context.Attributes, "data-val", "true");
             MergeAttribute(context.Attributes, "data-val-cpf", GetErrorMessage(context));
         }
+
         public override string GetErrorMessage(ModelValidationContextBase validationContext)
-        {
-            return "CPF em formato inválido";
-        }
+            => "Invalid CPF format.";
     }
 
     public class CpfValidationAttributeAdapterProvider : IValidationAttributeAdapterProvider
