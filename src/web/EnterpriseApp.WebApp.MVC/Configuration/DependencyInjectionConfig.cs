@@ -3,6 +3,7 @@ using EnterpriseApp.WebApp.MVC.Services;
 using EnterpriseApp.WebApp.MVC.Services.Handlers;
 using EnterpriseApp.WebApp.MVC.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.DataAnnotations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Polly;
@@ -15,16 +16,18 @@ namespace EnterpriseApp.WebApp.MVC.Configuration
     {
         public static IServiceCollection ResolveDependencyInjection(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddSingleton<IValidationAttributeAdapterProvider, CpfValidationAttributeAdapterProvider>();
+
             services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
 
             services.AddHttpClient<IAuthenticationService, AuthenticationService>(configure =>
             {
-                configure.BaseAddress = new Uri(configuration.GetSection("AuthAPI").Get<AuthAPIConfig>().Endpoint);
+                configure.BaseAddress = new Uri(configuration["AuthAPI:Uri"]);
             });
 
             services.AddHttpClient("CatalogRefit", configure =>
             {
-                configure.BaseAddress = new Uri(configuration.GetSection("CatalogAPI").Get<CatalogApiConfig>().Endpoint);
+                configure.BaseAddress = new Uri(configuration["CatalogAPI:Uri"]);
             }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
               .AddTypedClient(RestService.For<ICatalogServiceRefit>)
               .AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())

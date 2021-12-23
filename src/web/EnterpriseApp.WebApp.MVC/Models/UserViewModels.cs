@@ -1,9 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using EnterpriseApp.WebApp.MVC.Extensions;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace EnterpriseApp.WebApp.MVC.Models
 {
     public class UserRegisterDTO
     {
+        [Required(ErrorMessage = "Field {0} is required.")]
+        [DisplayName("Full Name")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Field {0} is required.")]
+        [DisplayName("CPF")]
+        [Cpf]
+        public string Cpf { get; set; }
+
         [Required(ErrorMessage = "Field {0} is required.")]
         [EmailAddress(ErrorMessage = "Field {0} is not in a valid format.")]
         public string Email { get; set; }

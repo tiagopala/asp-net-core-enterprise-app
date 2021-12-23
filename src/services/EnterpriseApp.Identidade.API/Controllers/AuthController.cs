@@ -1,4 +1,5 @@
 ﻿using EnterpriseApp.API.Core.Authentication;
+using EnterpriseApp.API.Core.Controllers;
 using EnterpriseApp.Identidade.API.Extensions;
 using EnterpriseApp.Identidade.API.Models;
 using Microsoft.AspNetCore.Identity;

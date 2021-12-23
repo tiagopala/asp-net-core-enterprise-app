@@ -1,11 +1,12 @@
 ﻿using EnterpriseApp.Identidade.API.Extensions;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EnterpriseApp.Identidade.API.Controllers
+namespace EnterpriseApp.API.Core.Controllers
 {
     [ApiController]
     public abstract class MainController : ControllerBase
@@ -33,6 +34,13 @@ namespace EnterpriseApp.Identidade.API.Controllers
         protected ActionResult CustomResponse(IdentityResult result)
         {
             result.GetIdentityErrors().ToList().ForEach(e => AddError(e));
+
+            return CustomResponse();
+        }
+
+        protected ActionResult CustomResponse(ValidationResult validationResult)
+        {
+            validationResult.Errors.ForEach(x => AddError(x.ErrorMessage));
 
             return CustomResponse();
         }
