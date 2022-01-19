@@ -1,5 +1,7 @@
-﻿using EnterpriseApp.API.Core.Authentication;
+﻿using EasyNetQ;
+using EnterpriseApp.API.Core.Authentication;
 using EnterpriseApp.API.Core.Controllers;
+using EnterpriseApp.Core.Messages.Integration;
 using EnterpriseApp.Identidade.API.Extensions;
 using EnterpriseApp.Identidade.API.Models;
 using Microsoft.AspNetCore.Identity;
@@ -23,14 +25,18 @@ namespace EnterpriseApp.Identidade.API.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AuthConfig _jwtConfig;
 
+        private IBus _bus;
+
         public AuthController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
-            IOptions<AuthConfig> jwtConfig)
+            IOptions<AuthConfig> jwtConfig,
+            IBus bus)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _jwtConfig = jwtConfig.Value;
+            _bus = bus;
         }
 
         [HttpPost("register")]
@@ -46,12 +52,30 @@ namespace EnterpriseApp.Identidade.API.Controllers
                 EmailConfirmed = true
             };
 
-            var result = await _userManager.CreateAsync(identityUser, user.Password);
+            var userCreationResult = await _userManager.CreateAsync(identityUser, user.Password);
 
-            if (!result.Succeeded)
-                return CustomResponse(result);    
+            if (!userCreationResult.Succeeded)
+                return CustomResponse(userCreationResult);
+
+            var customerCreationResult = await RegisterCustomer(user);
+
+            if (!customerCreationResult.ValidationResult.IsValid)
+                return CustomResponse(customerCreationResult.ValidationResult);
 
             return CustomResponse(await GenerateToken(user.Email));
+        }
+
+        private async Task<ResponseMessage> RegisterCustomer(UserRegisterDTO userRegister)
+        {
+            var user = await _userManager.FindByEmailAsync(userRegister.Email);
+
+            var userRegisteredIntegrationEvent = new UserRegisteredIntegrationEvent(Guid.Parse(user.Id), userRegister.Name, userRegister.Email, userRegister.Cpf);
+
+            _bus = RabbitHutch.CreateBus("host=localhost:5672");
+
+            var result = await _bus.Rpc.RequestAsync<UserRegisteredIntegrationEvent, ResponseMessage>(userRegisteredIntegrationEvent);
+
+            return result;
         }
 
         [HttpPost("login")]
