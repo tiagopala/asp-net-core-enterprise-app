@@ -30,13 +30,12 @@ namespace EnterpriseApp.Identidade.API.Controllers
         public AuthController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
-            IOptions<AuthConfig> jwtConfig,
-            IBus bus)
+            IOptions<AuthConfig> jwtConfig)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _jwtConfig = jwtConfig.Value;
-            _bus = bus;
+
         }
 
         [HttpPost("register")]
