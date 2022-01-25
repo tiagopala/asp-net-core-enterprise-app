@@ -8,7 +8,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="EasyNetQ" Version="6.3.1" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.12" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Abstractions" Version="5.0.12" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.12">
@@ -32,6 +31,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\..\building blocks\EnterpriseApp.API.Core\EnterpriseApp.API.Core.csproj" />
 		<ProjectReference Include="..\..\building blocks\EnterpriseApp.Core\EnterpriseApp.Core.csproj" />
+		<ProjectReference Include="..\..\building blocks\EnterpriseApp.MessageBus\EnterpriseApp.MessageBus.csproj" />
 	</ItemGroup>
 
 </Project>

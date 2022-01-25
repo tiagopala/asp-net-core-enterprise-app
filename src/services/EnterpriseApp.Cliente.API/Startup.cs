@@ -51,6 +51,7 @@ namespace EnterpriseApp.Cliente.API
                 .AddJwtConfiguration(Configuration)
                 .AddSwaggerConfig("EnterpriseApp Customer API", "This API is responsible for manage EnterpriseApp's customers")
                 .AddMediatR(typeof(Startup))
+                .AddMessageBusConfig(Configuration)
                 .AddAppServices();
         }
 
