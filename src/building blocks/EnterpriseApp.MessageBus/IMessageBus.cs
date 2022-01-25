@@ -30,6 +30,6 @@ namespace EnterpriseApp.MessageBus
             where TRequest : IntegrationEvent
             where TResponse : ResponseMessage;
 
-        bool IsConnected { get; }
+        bool? IsConnected { get; }
     }
 }

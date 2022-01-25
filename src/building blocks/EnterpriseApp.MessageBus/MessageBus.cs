@@ -18,7 +18,7 @@ namespace EnterpriseApp.MessageBus
             TryConnect();
         }
 
-        public bool IsConnected => _bus.Advanced.IsConnected;
+        public bool? IsConnected => _bus?.Advanced?.IsConnected;
 
         public void Publish<T>(T message) where T : IntegrationEvent
         {
@@ -78,7 +78,7 @@ namespace EnterpriseApp.MessageBus
 
         private void TryConnect()
         {
-            if (IsConnected)
+            if (IsConnected.HasValue && IsConnected.Value)
                 return;
 
             var policy = Policy

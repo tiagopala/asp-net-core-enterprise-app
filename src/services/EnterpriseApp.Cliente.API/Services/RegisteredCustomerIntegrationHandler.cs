@@ -1,7 +1,7 @@
-﻿using EasyNetQ;
-using EnterpriseApp.Cliente.API.Application.Commands;
+﻿using EnterpriseApp.Cliente.API.Application.Commands;
 using EnterpriseApp.Core.Mediator;
 using EnterpriseApp.Core.Messages.Integration;
+using EnterpriseApp.MessageBus;
 using FluentValidation.Results;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -14,23 +14,24 @@ namespace EnterpriseApp.Cliente.API.Services
     public class RegisteredCustomerIntegrationHandler : BackgroundService
     {
         private readonly IServiceProvider _serviceProvider;
-        private IBus _bus;
+        private readonly IMessageBus _bus;
 
-        public RegisteredCustomerIntegrationHandler(IServiceProvider serviceProvider)
+        public RegisteredCustomerIntegrationHandler(
+            IServiceProvider serviceProvider,
+            IMessageBus bus)
         {
             _serviceProvider = serviceProvider;
+            _bus = bus;
         }
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _bus = RabbitHutch.CreateBus("host=localhost:5672");
-
-            _bus.Rpc.RespondAsync<UserRegisteredIntegrationEvent, ResponseMessage>(async request => new ResponseMessage(await RegisterCustomer(request)));
+            _bus.RespondAsync<UserRegisteredIntegrationEvent, ResponseMessage>(async request => await RegisterCustomer(request));
 
             return Task.CompletedTask;
         }
 
-        private async Task<ValidationResult> RegisterCustomer(UserRegisteredIntegrationEvent integrationEvent)
+        private async Task<ResponseMessage> RegisterCustomer(UserRegisteredIntegrationEvent integrationEvent)
         {
             ValidationResult result;
             var cmd = new RegisterCustomerCommand(integrationEvent.Id, integrationEvent.Name, integrationEvent.Email, integrationEvent.Cpf);
@@ -41,7 +42,7 @@ namespace EnterpriseApp.Cliente.API.Services
                 result = await mediator.SendCommand(cmd);
             }
 
-            return result;
+            return new ResponseMessage(result);
         }
     }
 }
