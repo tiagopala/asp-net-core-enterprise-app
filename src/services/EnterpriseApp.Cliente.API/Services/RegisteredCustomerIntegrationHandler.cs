@@ -26,8 +26,7 @@ namespace EnterpriseApp.Cliente.API.Services
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _bus.RespondAsync<UserRegisteredIntegrationEvent, ResponseMessage>(async request => await RegisterCustomer(request));
-
+            SetResponder();
             return Task.CompletedTask;
         }
 
@@ -44,5 +43,15 @@ namespace EnterpriseApp.Cliente.API.Services
 
             return new ResponseMessage(result);
         }
+
+        private void SetResponder()
+        {
+            _bus.RespondAsync<UserRegisteredIntegrationEvent, ResponseMessage>(async request => await RegisterCustomer(request));
+
+            _bus.AdvancedBus.Connected += OnConnect;
+        }
+
+        private void OnConnect(object sender, EventArgs args)
+            => SetResponder();
     }
 }
