@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace EnterpriseApp.Identidade.API.Models
+﻿namespace EnterpriseApp.Identidade.API.Models
 {
     public class UserLoginResponseDTO
     {

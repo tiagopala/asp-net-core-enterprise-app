@@ -3,6 +3,7 @@ using EnterpriseApp.Cliente.API.Application.Events;
 using EnterpriseApp.Cliente.API.Application.Handlers;
 using EnterpriseApp.Cliente.API.Business.Interfaces;
 using EnterpriseApp.Cliente.API.Data.Repositories;
+using EnterpriseApp.Cliente.API.Services;
 using EnterpriseApp.Core.Mediator;
 using FluentValidation.Results;
 using MediatR;
@@ -28,6 +29,10 @@ namespace EnterpriseApp.Cliente.API.Configuration
             #region Repositories
             services.AddScoped<ICustomerRepository, CustomerRepository>();
             #endregion;
+
+            #region Hoasted Services
+            services.AddHostedService<RegisteredCustomerIntegrationHandler>();
+            #endregion
 
             return services;
         }

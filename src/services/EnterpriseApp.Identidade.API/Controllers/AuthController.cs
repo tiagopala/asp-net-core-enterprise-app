@@ -1,7 +1,10 @@
 ﻿using EnterpriseApp.API.Core.Authentication;
 using EnterpriseApp.API.Core.Controllers;
+using EnterpriseApp.Core.Messages.Integration;
 using EnterpriseApp.Identidade.API.Extensions;
 using EnterpriseApp.Identidade.API.Models;
+using EnterpriseApp.MessageBus;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
@@ -22,15 +25,19 @@ namespace EnterpriseApp.Identidade.API.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly AuthConfig _jwtConfig;
+        private readonly IMessageBus _bus;
 
         public AuthController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
-            IOptions<AuthConfig> jwtConfig)
+            IOptions<AuthConfig> jwtConfig,
+            IMessageBus bus)
         {
             _signInManager = signInManager;
             _userManager = userManager;
             _jwtConfig = jwtConfig.Value;
+            _bus = bus;
+
         }
 
         [HttpPost("register")]
@@ -46,12 +53,39 @@ namespace EnterpriseApp.Identidade.API.Controllers
                 EmailConfirmed = true
             };
 
-            var result = await _userManager.CreateAsync(identityUser, user.Password);
+            var userCreationResult = await _userManager.CreateAsync(identityUser, user.Password);
 
-            if (!result.Succeeded)
-                return CustomResponse(result);    
+            if (!userCreationResult.Succeeded)
+                return CustomResponse(userCreationResult);
+
+            var customerCreationResult = await RegisterCustomer(user);
+
+            if (!customerCreationResult.IsValid)
+            {
+                await _userManager.DeleteAsync(identityUser);
+
+                return CustomResponse(customerCreationResult);
+            }
 
             return CustomResponse(await GenerateToken(user.Email));
+        }
+
+        private async Task<ValidationResult> RegisterCustomer(UserRegisterDTO userRegister)
+        {
+            var user = await _userManager.FindByEmailAsync(userRegister.Email);
+
+            var userRegisteredIntegrationEvent = new UserRegisteredIntegrationEvent(Guid.Parse(user.Id), userRegister.Name, userRegister.Email, userRegister.Cpf);
+
+            try
+            {
+                var response = await _bus.RequestAsync<UserRegisteredIntegrationEvent, ResponseMessage>(userRegisteredIntegrationEvent);
+                return response.ValidationResult;
+            }
+            catch
+            {
+                await _userManager.DeleteAsync(user);
+                throw;
+            }
         }
 
         [HttpPost("login")]
