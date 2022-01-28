@@ -1,8 +1,10 @@
 using EnterpriseApp.API.Core.Authentication;
 using EnterpriseApp.API.Core.Documentation;
 using EnterpriseApp.Carrinho.API.Configurations;
+using EnterpriseApp.Carrinho.API.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -30,6 +32,8 @@ namespace EnterpriseApp.Carrinho.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<ShoppingCartContext>(options => 
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
 
