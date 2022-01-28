@@ -1,11 +1,11 @@
-﻿using EnterpriseApp.WebApp.MVC.Services.Interfaces;
+﻿using EnterpriseApp.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
-namespace EnterpriseApp.WebApp.MVC.Services
+namespace EnterpriseApp.Core.Services
 {
     public class UserService : IUserService
     {
