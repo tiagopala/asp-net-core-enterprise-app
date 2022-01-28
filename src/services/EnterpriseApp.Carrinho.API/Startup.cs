@@ -66,7 +66,7 @@ namespace EnterpriseApp.Carrinho.API
 
             app.UseRouting();
             app.UseCors("Total");
-            app.UseAuthorization();
+            app.UseAuthConfiguration();
 
             app.UseEndpoints(endpoints =>
             {

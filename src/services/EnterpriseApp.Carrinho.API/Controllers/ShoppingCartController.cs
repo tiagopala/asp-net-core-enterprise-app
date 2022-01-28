@@ -1,8 +1,11 @@
 ﻿using EnterpriseApp.API.Core.Controllers;
+using EnterpriseApp.Carrinho.API.Data;
 using EnterpriseApp.Carrinho.API.Models;
 using EnterpriseApp.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EnterpriseApp.Carrinho.API.Controllers
@@ -12,18 +15,27 @@ namespace EnterpriseApp.Carrinho.API.Controllers
     public class ShoppingCartController : MainController
     {
         private readonly IUserService _userService;
+        private readonly ShoppingCartContext _context;
 
-        public ShoppingCartController(IUserService userService)
+        public ShoppingCartController(
+            IUserService userService,
+            ShoppingCartContext context)
         {
             _userService = userService;
+            _context = context;
         }
 
         [HttpGet]
-        public async Task<ShoppingCartCustomer> GetShoppingCart()
+        public async Task<IActionResult> GetShoppingCart()
         {
             var userId = _userService.GetUserId();
 
-            return null;
+            var shoppingCart = GetShoppingCartFromDatabase(userId);
+
+            if (shoppingCart is null)
+                return new NotFoundObjectResult(new ProblemDetails { Title = "ShoppingCartNotFound" });
+
+            return CustomResponse(shoppingCart);
         }
 
         [HttpPost]
@@ -43,5 +55,8 @@ namespace EnterpriseApp.Carrinho.API.Controllers
         {
             return Ok();
         }
+
+        private ShoppingCartCustomer GetShoppingCartFromDatabase(Guid customerId )
+            => _context.CartCustomer.First(x => x.CustomerId == customerId);
     }
 }
