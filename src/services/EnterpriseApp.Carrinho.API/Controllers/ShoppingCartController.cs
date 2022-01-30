@@ -44,6 +44,8 @@ namespace EnterpriseApp.Carrinho.API.Controllers
             else
                 UpdateShoppingCartWithExistentItem(shoppingCart, shoppingCartItem);
 
+            ValidateShoppingCart(shoppingCart);
+
             if (!CheckOperation()) 
                 return CustomResponse();
 
@@ -64,6 +66,11 @@ namespace EnterpriseApp.Carrinho.API.Controllers
 
             shoppingCart.UpdateQuantity(shoppingCartItem, item.Quantity);
 
+            ValidateShoppingCart(shoppingCart);
+
+            if (!CheckOperation())
+                return CustomResponse();
+
             _context.CartItems.Update(item);
             _context.CartCustomer.Update(shoppingCart);
 
@@ -80,6 +87,11 @@ namespace EnterpriseApp.Carrinho.API.Controllers
             var item = await GetValidatedShoppingCartItem(productId, cart);
 
             if (item is null)
+                return CustomResponse();
+
+            ValidateShoppingCart(cart);
+
+            if (!CheckOperation())
                 return CustomResponse();
 
             cart.RemoveShoppingCartItem(item);
@@ -157,6 +169,17 @@ namespace EnterpriseApp.Carrinho.API.Controllers
 
             if (result <= 0)
                 AddError("Database operation could not be completed.");
+        }
+
+        private bool ValidateShoppingCart(ShoppingCartCustomer cart)
+        {
+            var (isValid, validationResult) = cart.Validate();
+
+            if (isValid)
+                return true;
+
+            validationResult.Errors.ForEach(validationFaillure => AddError(validationFaillure.ErrorMessage));
+            return false;
         }
     }
 }

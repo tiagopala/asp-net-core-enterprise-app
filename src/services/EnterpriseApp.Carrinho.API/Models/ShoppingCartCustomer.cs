@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +13,15 @@ namespace EnterpriseApp.Carrinho.API.Models
         {
             Id = Guid.NewGuid();
             CustomerId = customerId;
+            Validator = new();
         }
         
         public Guid Id { get; set; }
         public decimal TotalPrice { get; set; }
         public IList<ShoppingCartItem> Items { get; set; } = new List<ShoppingCartItem>();
         public Guid CustomerId { get; set; }
+
+        public ShoppingCartCustomerValidator Validator { get; }
 
         public void CalculateTotalPrice()
             => TotalPrice = Items.Sum(item => item.CalculatePrice());
@@ -26,6 +31,17 @@ namespace EnterpriseApp.Carrinho.API.Models
 
         public ShoppingCartItem GetItem(Guid productId)
             => Items.FirstOrDefault(p => p.ProductId == productId);
+
+        public (bool isValid, ValidationResult validationResult) Validate()
+        {
+            var errors = Items.SelectMany(i => i.Validator.Validate(i).Errors).ToList();
+
+            errors.AddRange(Validator.Validate(this).Errors);
+
+            var validationResult = new ValidationResult(errors);
+
+            return (validationResult.IsValid, validationResult);
+        }
 
         public void AddShoppingCartItem(ShoppingCartItem shoppingCartItem)
         {
@@ -77,6 +93,25 @@ namespace EnterpriseApp.Carrinho.API.Models
             Items.Remove(item);
 
             CalculateTotalPrice();
+        }
+
+        public class ShoppingCartCustomerValidator : AbstractValidator<ShoppingCartCustomer>
+        {
+            public ShoppingCartCustomerValidator()
+            {
+                RuleFor(cart => cart.CustomerId)
+                    .NotEmpty()
+                    .NotEqual(Guid.Empty)
+                    .WithMessage("Unknown Customer Id");
+
+                RuleFor(cart => cart.Items.Count)
+                    .GreaterThan(0)
+                    .WithMessage("Car does not have any item");
+
+                RuleFor(cart => cart.TotalPrice)
+                    .GreaterThan(0)
+                    .WithMessage("Cart total price must be greather than 0");
+            }
         }
     }
 }

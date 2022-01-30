@@ -53,15 +53,15 @@ namespace EnterpriseApp.Carrinho.API.Models
 
                 RuleFor(item => item.Quantity)
                     .GreaterThan(0)
-                    .WithMessage("Item minimum quantity is 1");
+                    .WithMessage(item => $"Item {item.Name} minimum quantity is 1");
 
                 RuleFor(item => item.Quantity)
                     .LessThan(15)
-                    .WithMessage("Item maximum quantity is 15");
+                    .WithMessage(item => $"Item {item.Name} maximum quantity is 15");
 
                 RuleFor(item => item.Price)
                     .GreaterThan(0)
-                    .WithMessage("Item Price must be greater than 0.");
+                    .WithMessage(item => $"Item {item.Name} price must be greater than 0.");
             }
         }
     }
