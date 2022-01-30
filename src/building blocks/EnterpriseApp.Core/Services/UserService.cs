@@ -30,10 +30,6 @@ namespace EnterpriseApp.Core.Services
         public bool IsAuthenticated()
             => _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
 
-        public string GetClaimValue(string claimType)
-            => _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals(claimType))?.Value;
-        //  => _httpContextAccessor.HttpContext.User.FindFirst(claimType)?.Value; // Avaliar qual dos dois métodos é mais performático
-
         public IEnumerable<Claim> GetClaims()
             => _httpContextAccessor.HttpContext.User.Claims;
 
@@ -42,5 +38,16 @@ namespace EnterpriseApp.Core.Services
 
         public HttpContext GetHttpContext()
             => _httpContextAccessor.HttpContext;
+
+        public string GetClaimValue(string claimType)
+        {
+            var claimValue = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == claimType)?.Value;
+
+            if (claimValue is not null)
+                return claimValue;
+
+            // Se o claimType for do tipo do Identity o valor identificado pelo jwt ficará dentro do ShortTypeName
+            return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Properties["http://schemas.xmlsoap.org/ws/2005/05/identity/claimproperties/ShortTypeName"] == claimType)?.Value;
+        }
     }
 }
