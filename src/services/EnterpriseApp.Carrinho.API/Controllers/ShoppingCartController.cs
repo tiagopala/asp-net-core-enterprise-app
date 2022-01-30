@@ -37,7 +37,7 @@ namespace EnterpriseApp.Carrinho.API.Controllers
         [HttpPost]
         public async Task<IActionResult> AddItemToShoppingCart(ShoppingCartItem shoppingCartItem)
         {
-            var shoppingCart = GetShoppingCartFromDatabase();
+            var shoppingCart = await GetShoppingCartFromDatabase();
 
             if (shoppingCart is null)
                 CreateNewShoppingCartWithItem(shoppingCartItem);
