@@ -4,6 +4,7 @@ using EnterpriseApp.Carrinho.API.Models;
 using EnterpriseApp.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,7 +12,7 @@ using System.Threading.Tasks;
 namespace EnterpriseApp.Carrinho.API.Controllers
 {
     [Authorize]
-    [Route("[controller]/shopping-cart")]
+    [Route("[controller]")]
     public class ShoppingCartController : MainController
     {
         private readonly IUserService _userService;
@@ -28,35 +29,76 @@ namespace EnterpriseApp.Carrinho.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetShoppingCart()
         {
-            var userId = _userService.GetUserId();
+            var shoppingCart = GetShoppingCartFromDatabase();
 
-            var shoppingCart = GetShoppingCartFromDatabase(userId);
-
-            if (shoppingCart is null)
-                return new NotFoundObjectResult(new ProblemDetails { Title = "ShoppingCartNotFound" });
-
-            return CustomResponse(shoppingCart);
+            return shoppingCart is null ? CustomResponse(shoppingCart) : CustomResponse(new ShoppingCartCustomer());
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddItemToShoppingCart()
+        public async Task<IActionResult> AddItemToShoppingCart(ShoppingCartItem shoppingCartItem)
         {
-            return Ok();
+            var shoppingCart = GetShoppingCartFromDatabase();
+
+            if (shoppingCart is null)
+                CreateNewShoppingCartWithItem(shoppingCartItem);
+            else
+                UpdateShoppingCartWithExistentItem(shoppingCart, shoppingCartItem);
+
+            if (!CheckOperation()) 
+                return CustomResponse();
+
+            var result = await _context.SaveChangesAsync();
+
+            if (result <= 0)
+                AddError("Database operation could not be completed.");
+
+            return CustomResponse();
         }
 
         [HttpPut("{productId}")]
-        public async Task<IActionResult> UpdateItemFromShoppingCart()
+        public async Task<IActionResult> UpdateItemFromShoppingCart(Guid productId, ShoppingCartCustomer shoppingCart)
         {
             return Ok();
         }
 
         [HttpDelete("{productId}")]
-        public async Task<IActionResult> RemoveItemFromShoppingCart()
+        public async Task<IActionResult> RemoveItemFromShoppingCart(Guid productId)
         {
             return Ok();
         }
 
-        private ShoppingCartCustomer GetShoppingCartFromDatabase(Guid customerId )
-            => _context.CartCustomer.First(x => x.CustomerId == customerId);
+        private ShoppingCartCustomer GetShoppingCartFromDatabase()
+            => _context.CartCustomer
+                .Include(x => x.Items)
+                .FirstOrDefault(x => x.CustomerId == _userService.GetUserId());
+
+        private ShoppingCartCustomer CreateNewShoppingCartWithItem(ShoppingCartItem shoppingCartItem)
+        {
+            var shoppingCart = GetShoppingCartFromDatabase();
+
+            shoppingCart.AddShoppingCartItem(shoppingCartItem);
+
+            _context.CartCustomer.Add(shoppingCart);
+
+            return shoppingCart;
+        }
+
+        private void UpdateShoppingCartWithExistentItem(ShoppingCartCustomer shoppingCart, ShoppingCartItem shoppingCartItem)
+        {
+            var productExistentItem = shoppingCart.HasItem(shoppingCartItem.ProductId);
+
+            shoppingCart.AddShoppingCartItem(shoppingCartItem);
+
+            if (productExistentItem)
+            {
+                _context.CartItems.Update(shoppingCart.GetItem(shoppingCartItem.ProductId));
+            }
+            else
+            {
+                _context.CartItems.Add(shoppingCartItem);
+            }
+
+            _context.CartCustomer.Update(shoppingCart);
+        }
     }
 }
