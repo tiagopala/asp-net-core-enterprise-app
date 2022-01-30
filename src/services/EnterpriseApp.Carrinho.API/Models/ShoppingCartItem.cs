@@ -29,10 +29,13 @@ namespace EnterpriseApp.Carrinho.API.Models
         public decimal CalculatePrice()
             => Quantity * Price;
 
-        public void UpdateQuantity(int productUnities)
+        public void AddQuantity(int productUnities)
             => Quantity += productUnities;
 
-        public bool Validate()
+        public void UpdateQuantity(int productUnities)
+            => Quantity = productUnities;
+
+        public bool IsValid()
             => Validator.Validate(this).IsValid;
 
         public class ShoppingCartItemValidator : AbstractValidator<ShoppingCartItem>

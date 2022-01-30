@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace EnterpriseApp.Carrinho.API.Controllers
 {
     [Authorize]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class ShoppingCartController : MainController
     {
         private readonly IUserService _userService;
@@ -47,34 +47,59 @@ namespace EnterpriseApp.Carrinho.API.Controllers
             if (!CheckOperation()) 
                 return CustomResponse();
 
-            var result = await _context.SaveChangesAsync();
-
-            if (result <= 0)
-                AddError("Database operation could not be completed.");
+            await PersistData();
 
             return CustomResponse();
         }
 
         [HttpPut("{productId}")]
-        public async Task<IActionResult> UpdateItemFromShoppingCart(Guid productId, ShoppingCartCustomer shoppingCart)
+        public async Task<IActionResult> UpdateItemFromShoppingCart(Guid productId, ShoppingCartItem shoppingCartItem)
         {
-            return Ok();
+            var shoppingCart = await GetShoppingCartFromDatabase();
+
+            var item = await GetValidatedShoppingCartItem(productId, shoppingCart, shoppingCartItem);
+
+            if (item is null)
+                return CustomResponse();
+
+            shoppingCart.UpdateQuantity(shoppingCartItem, item.Quantity);
+
+            _context.CartItems.Update(item);
+            _context.CartCustomer.Update(shoppingCart);
+
+            await PersistData();
+
+            return CustomResponse();
         }
 
         [HttpDelete("{productId}")]
         public async Task<IActionResult> RemoveItemFromShoppingCart(Guid productId)
         {
-            return Ok();
+            var cart = await GetShoppingCartFromDatabase();
+
+            var item = await GetValidatedShoppingCartItem(productId, cart);
+
+            if (item is null)
+                return CustomResponse();
+
+            cart.RemoveShoppingCartItem(item);
+
+            _context.CartItems.Remove(item);
+            _context.CartCustomer.Update(cart);
+
+            await PersistData();
+
+            return CustomResponse();
         }
 
-        private ShoppingCartCustomer GetShoppingCartFromDatabase()
-            => _context.CartCustomer
+        private async Task<ShoppingCartCustomer> GetShoppingCartFromDatabase()
+            => await _context.CartCustomer
                 .Include(x => x.Items)
-                .FirstOrDefault(x => x.CustomerId == _userService.GetUserId());
+                .FirstOrDefaultAsync(x => x.CustomerId == _userService.GetUserId());
 
         private ShoppingCartCustomer CreateNewShoppingCartWithItem(ShoppingCartItem shoppingCartItem)
         {
-            var shoppingCart = GetShoppingCartFromDatabase();
+            var shoppingCart = new ShoppingCartCustomer();
 
             shoppingCart.AddShoppingCartItem(shoppingCartItem);
 
@@ -99,6 +124,39 @@ namespace EnterpriseApp.Carrinho.API.Controllers
             }
 
             _context.CartCustomer.Update(shoppingCart);
+        }
+
+        private async Task<ShoppingCartItem> GetValidatedShoppingCartItem(Guid productId, ShoppingCartCustomer shoppingCart, ShoppingCartItem item = null)
+        {
+            if (item is not null && productId != item.ProductId)
+            {
+                AddError("Distinct productId's.");
+                return null;
+            }
+
+            if (shoppingCart is null)
+            {
+                AddError("ShoppingCart not found.");
+                return null;
+            }
+
+            var itemFound = await _context.CartItems.FirstOrDefaultAsync(item => item.ShoppingCartId == item.Id && item.ProductId == productId);
+
+            if (itemFound is null || !shoppingCart.HasItem(item.ProductId))
+            {
+                AddError("Item not found at shopping cart.");
+                return null;
+            }
+
+            return itemFound;
+        }
+
+        private async Task PersistData()
+        {
+            var result = await _context.SaveChangesAsync();
+
+            if (result <= 0)
+                AddError("Database operation could not be completed.");
         }
     }
 }

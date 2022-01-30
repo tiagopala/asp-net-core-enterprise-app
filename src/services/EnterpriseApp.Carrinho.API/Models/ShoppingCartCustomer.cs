@@ -29,7 +29,7 @@ namespace EnterpriseApp.Carrinho.API.Models
 
         public void AddShoppingCartItem(ShoppingCartItem shoppingCartItem)
         {
-            if (shoppingCartItem.Validate())
+            if (shoppingCartItem.IsValid())
                 return;
 
             shoppingCartItem.LinkShoppingCartCustomer(Id);
@@ -38,7 +38,7 @@ namespace EnterpriseApp.Carrinho.API.Models
             {
                 var existentItem = GetItem(shoppingCartItem.ProductId);
 
-                existentItem.UpdateQuantity(shoppingCartItem.Quantity);
+                existentItem.AddQuantity(shoppingCartItem.Quantity);
 
                 shoppingCartItem = existentItem;
 
@@ -46,6 +46,35 @@ namespace EnterpriseApp.Carrinho.API.Models
             }
 
             Items.Add(shoppingCartItem);
+
+            CalculateTotalPrice();
+        }
+
+        private void UpdateShoppingCartItem(ShoppingCartItem item)
+        {
+            if (!item.IsValid())
+                return;
+
+            item.LinkShoppingCartCustomer(item.Id);
+
+            var existentItem = GetItem(item.ProductId);
+
+            Items.Remove(item);
+            Items.Add(existentItem);
+
+            CalculateTotalPrice();
+        }
+
+        public void UpdateQuantity(ShoppingCartItem item, int quantity)
+        {
+            item.UpdateQuantity(quantity);
+
+            UpdateShoppingCartItem(item);
+        }
+
+        public void RemoveShoppingCartItem(ShoppingCartItem item)
+        {
+            Items.Remove(item);
 
             CalculateTotalPrice();
         }
