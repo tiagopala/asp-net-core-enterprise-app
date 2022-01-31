@@ -25,13 +25,21 @@ namespace EnterpriseApp.WebApp.MVC.Configuration
             services.AddHttpClient<IAuthenticationService, AuthenticationService>(configure =>
             {
                 configure.BaseAddress = new Uri(configuration["AuthAPI:Uri"]);
-            });
+            }).AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
+              .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
             services.AddHttpClient("CatalogRefit", configure =>
             {
                 configure.BaseAddress = new Uri(configuration["CatalogAPI:Uri"]);
             }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
               .AddTypedClient(RestService.For<ICatalogServiceRefit>)
+              .AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
+              .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+
+            services.AddHttpClient<IShoppingCartService, ShoppingCartService>(configure =>
+            {
+                configure.BaseAddress = new Uri(configuration["ShoppingCartAPI:Uri"]);
+            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
               .AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
               .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
