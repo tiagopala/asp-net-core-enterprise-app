@@ -29,7 +29,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
         {
             var itemContent = GetContent(produto);
 
-            var response = await _httpClient.PostAsync("shoppingcart/", itemContent);
+            var response = await _httpClient.PostAsync("api/shoppingcart/", itemContent);
 
             if (!response.IsSuccessStatusCode)
                 return await DeserializeResponseMessage<ResponseResult>(response);

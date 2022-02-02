@@ -46,8 +46,13 @@ namespace EnterpriseApp.Core.Services
             if (claimValue is not null)
                 return claimValue;
 
-            // Se o claimType for do tipo do Identity o valor identificado pelo jwt ficará dentro do ShortTypeName
-            return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Properties["http://schemas.xmlsoap.org/ws/2005/05/identity/claimproperties/ShortTypeName"] == claimType)?.Value;
+            if (claimType == "sub")
+                return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Contains("nameidentifier"))?.Value;
+
+            if (claimType == "email")
+                return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Contains("email"))?.Value;
+
+            return claimValue;
         }
     }
 }
