@@ -17,7 +17,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
 
         public async Task<ShoppingCartViewModel> GetShoppingCart()
         {
-            var response = await _httpClient.GetAsync("shoppingcart/");
+            var response = await _httpClient.GetAsync("api/shoppingcart/");
 
             if(!response.IsSuccessStatusCode)
                 await HandleErrorsResponse(response);
@@ -41,7 +41,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
         {
             var itemContent = GetContent(produto);
 
-            var response = await _httpClient.PutAsync($"shoppingcart/{produto.ProductId}", itemContent);
+            var response = await _httpClient.PutAsync($"api/shoppingcart/{produto.ProductId}", itemContent);
 
             if (!response.IsSuccessStatusCode)
                 return await DeserializeResponseMessage<ResponseResult>(response);
@@ -51,7 +51,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
 
         public async Task<ResponseResult> RemoveShoppingCartItem(Guid produtoId)
         {
-            var response = await _httpClient.DeleteAsync($"shoppingcart/{produtoId}");
+            var response = await _httpClient.DeleteAsync($"api/shoppingcart/{produtoId}");
 
             if (!response.IsSuccessStatusCode)
                 return await DeserializeResponseMessage<ResponseResult>(response);

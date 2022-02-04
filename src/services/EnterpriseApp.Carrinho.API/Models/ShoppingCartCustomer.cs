@@ -3,6 +3,7 @@ using FluentValidation.Results;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using static EnterpriseApp.Carrinho.API.Models.ShoppingCartItem;
 
 namespace EnterpriseApp.Carrinho.API.Models
 {
@@ -13,15 +14,12 @@ namespace EnterpriseApp.Carrinho.API.Models
         {
             Id = Guid.NewGuid();
             CustomerId = customerId;
-            Validator = new();
         }
         
         public Guid Id { get; set; }
         public decimal TotalPrice { get; set; }
         public IList<ShoppingCartItem> Items { get; set; } = new List<ShoppingCartItem>();
         public Guid CustomerId { get; set; }
-
-        public ShoppingCartCustomerValidator Validator { get; }
 
         public void CalculateTotalPrice()
             => TotalPrice = Items.Sum(item => item.CalculatePrice());
@@ -34,9 +32,9 @@ namespace EnterpriseApp.Carrinho.API.Models
 
         public (bool isValid, ValidationResult validationResult) Validate()
         {
-            var errors = Items.SelectMany(i => i.Validator.Validate(i).Errors).ToList();
+            var errors = Items.SelectMany(i => new ShoppingCartItemValidator().Validate(i).Errors).ToList();
 
-            errors.AddRange(Validator.Validate(this).Errors);
+            errors.AddRange(new ShoppingCartCustomerValidator().Validate(this).Errors);
 
             var validationResult = new ValidationResult(errors);
 
@@ -45,9 +43,6 @@ namespace EnterpriseApp.Carrinho.API.Models
 
         public void AddShoppingCartItem(ShoppingCartItem shoppingCartItem)
         {
-            if (shoppingCartItem.IsValid())
-                return;
-
             shoppingCartItem.LinkShoppingCartCustomer(Id);
 
             if (HasItem(shoppingCartItem.ProductId))

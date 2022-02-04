@@ -1,5 +1,6 @@
 using FluentValidation;
 using System;
+using System.Text.Json.Serialization;
 
 namespace EnterpriseApp.Carrinho.API.Models
 {
@@ -8,7 +9,6 @@ namespace EnterpriseApp.Carrinho.API.Models
         public ShoppingCartItem()
         {
             Id = Guid.NewGuid();
-            Validator = new();
         }
 
         public Guid Id { get; set; }
@@ -19,8 +19,7 @@ namespace EnterpriseApp.Carrinho.API.Models
         public string Image { get; set; }
         public Guid ShoppingCartId { get; set; }
 
-        public ShoppingCartItemValidator Validator { get; }
-
+        [JsonIgnore]
         public ShoppingCartCustomer ShoppingCartCustomer { get; set; } // Entity Framework Relation
 
         public void LinkShoppingCartCustomer(Guid shoppingCartId)
@@ -36,7 +35,7 @@ namespace EnterpriseApp.Carrinho.API.Models
             => Quantity = productUnities;
 
         public bool IsValid()
-            => Validator.Validate(this).IsValid;
+            => new ShoppingCartItemValidator().Validate(this).IsValid;
 
         public class ShoppingCartItemValidator : AbstractValidator<ShoppingCartItem>
         {
@@ -56,8 +55,8 @@ namespace EnterpriseApp.Carrinho.API.Models
                     .WithMessage(item => $"Item {item.Name} minimum quantity is 1");
 
                 RuleFor(item => item.Quantity)
-                    .LessThan(15)
-                    .WithMessage(item => $"Item {item.Name} maximum quantity is 15");
+                    .LessThan(5)
+                    .WithMessage(item => $"Item {item.Name} maximum quantity is 5");
 
                 RuleFor(item => item.Price)
                     .GreaterThan(0)

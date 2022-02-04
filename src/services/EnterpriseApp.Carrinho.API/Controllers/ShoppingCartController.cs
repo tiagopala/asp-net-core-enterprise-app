@@ -29,9 +29,12 @@ namespace EnterpriseApp.Carrinho.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetShoppingCart()
         {
-            var shoppingCart = GetShoppingCartFromDatabase();
+            var shoppingCart = await GetShoppingCartFromDatabase();
 
-            return shoppingCart is null ? CustomResponse(shoppingCart) : CustomResponse(new ShoppingCartCustomer());
+            if (shoppingCart is null)
+                return CustomResponse(new ShoppingCartCustomer());
+
+            return CustomResponse(shoppingCart);
         }
 
         [HttpPost]
@@ -43,8 +46,6 @@ namespace EnterpriseApp.Carrinho.API.Controllers
                 CreateNewShoppingCartWithItem(shoppingCartItem);
             else
                 UpdateShoppingCartWithExistentItem(shoppingCart, shoppingCartItem);
-
-            ValidateShoppingCart(shoppingCart);
 
             if (!CheckOperation()) 
                 return CustomResponse();
@@ -111,9 +112,11 @@ namespace EnterpriseApp.Carrinho.API.Controllers
 
         private ShoppingCartCustomer CreateNewShoppingCartWithItem(ShoppingCartItem shoppingCartItem)
         {
-            var shoppingCart = new ShoppingCartCustomer();
+            var shoppingCart = new ShoppingCartCustomer(_userService.GetUserId());
 
             shoppingCart.AddShoppingCartItem(shoppingCartItem);
+
+            ValidateShoppingCart(shoppingCart);
 
             _context.CartCustomer.Add(shoppingCart);
 
@@ -125,6 +128,9 @@ namespace EnterpriseApp.Carrinho.API.Controllers
             var productExistentItem = shoppingCart.HasItem(shoppingCartItem.ProductId);
 
             shoppingCart.AddShoppingCartItem(shoppingCartItem);
+
+            ValidateShoppingCart(shoppingCart);
+
 
             if (productExistentItem)
             {
