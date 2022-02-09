@@ -1,5 +1,6 @@
 using FluentValidation;
 using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace EnterpriseApp.Carrinho.API.Models
@@ -20,6 +21,7 @@ namespace EnterpriseApp.Carrinho.API.Models
         public Guid ShoppingCartId { get; set; }
 
         [JsonIgnore]
+        [NotMapped]
         public ShoppingCartCustomer ShoppingCartCustomer { get; set; } // Entity Framework Relation
 
         public void LinkShoppingCartCustomer(Guid shoppingCartId)

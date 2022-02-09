@@ -65,12 +65,14 @@ namespace EnterpriseApp.Carrinho.API.Controllers
             if (item is null)
                 return CustomResponse();
 
-            shoppingCart.UpdateQuantity(shoppingCartItem, item.Quantity);
+            shoppingCart.UpdateQuantity(item, shoppingCartItem.Quantity);
 
             ValidateShoppingCart(shoppingCart);
 
             if (!CheckOperation())
                 return CustomResponse();
+
+            shoppingCart.Items.ToList().ForEach(x => x.ShoppingCartCustomer = null);
 
             _context.CartItems.Update(item);
             _context.CartCustomer.Update(shoppingCart);
@@ -110,7 +112,7 @@ namespace EnterpriseApp.Carrinho.API.Controllers
                 .Include(x => x.Items)
                 .FirstOrDefaultAsync(x => x.CustomerId == _userService.GetUserId());
 
-        private ShoppingCartCustomer CreateNewShoppingCartWithItem(ShoppingCartItem shoppingCartItem)
+        private void CreateNewShoppingCartWithItem(ShoppingCartItem shoppingCartItem)
         {
             var shoppingCart = new ShoppingCartCustomer(_userService.GetUserId());
 
@@ -120,7 +122,6 @@ namespace EnterpriseApp.Carrinho.API.Controllers
 
             _context.CartCustomer.Add(shoppingCart);
 
-            return shoppingCart;
         }
 
         private void UpdateShoppingCartWithExistentItem(ShoppingCartCustomer shoppingCart, ShoppingCartItem shoppingCartItem)
@@ -158,9 +159,9 @@ namespace EnterpriseApp.Carrinho.API.Controllers
                 return null;
             }
 
-            var itemFound = await _context.CartItems.FirstOrDefaultAsync(item => item.ShoppingCartId == item.Id && item.ProductId == productId);
+            var itemFound = await _context.CartItems.FirstOrDefaultAsync(item => item.Id == item.Id && item.ProductId == productId);
 
-            if (itemFound is null || !shoppingCart.HasItem(item.ProductId))
+            if (itemFound is null || !shoppingCart.HasItem(itemFound.ProductId))
             {
                 AddError("Item not found at shopping cart.");
                 return null;

@@ -56,6 +56,7 @@ namespace EnterpriseApp.Carrinho.API.Models
                 Items.Remove(existentItem);
             }
 
+            shoppingCartItem.ShoppingCartCustomer = null;
             Items.Add(shoppingCartItem);
 
             CalculateTotalPrice();
@@ -63,15 +64,12 @@ namespace EnterpriseApp.Carrinho.API.Models
 
         private void UpdateShoppingCartItem(ShoppingCartItem item)
         {
-            if (!item.IsValid())
-                return;
-
-            item.LinkShoppingCartCustomer(item.Id);
+            item.LinkShoppingCartCustomer(Id);
 
             var existentItem = GetItem(item.ProductId);
 
-            Items.Remove(item);
-            Items.Add(existentItem);
+            Items.Remove(existentItem);
+            Items.Add(item);
 
             CalculateTotalPrice();
         }
@@ -85,7 +83,9 @@ namespace EnterpriseApp.Carrinho.API.Models
 
         public void RemoveShoppingCartItem(ShoppingCartItem item)
         {
-            Items.Remove(item);
+            var itemFound = Items.ToList().Find(x => x.Id == item.Id && x.ProductId == item.ProductId && x.ShoppingCartId == item.ShoppingCartId);
+
+            Items.Remove(itemFound);
 
             CalculateTotalPrice();
         }

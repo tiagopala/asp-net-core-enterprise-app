@@ -1,4 +1,5 @@
 using EnterpriseApp.Carrinho.API.Models;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 
 namespace EnterpriseApp.Carrinho.API.Data
@@ -16,6 +17,8 @@ namespace EnterpriseApp.Carrinho.API.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Ignore<ValidationResult>();
+
             modelBuilder.Entity<ShoppingCartCustomer>()
                 .HasIndex(c => c.CustomerId)
                 .HasDatabaseName("IDX_Customer");
