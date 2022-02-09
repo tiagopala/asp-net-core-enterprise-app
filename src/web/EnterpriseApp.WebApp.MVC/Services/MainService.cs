@@ -1,5 +1,6 @@
 ﻿using EnterpriseApp.Core.Responses;
 using EnterpriseApp.WebApp.MVC.Exceptions;
+using EnterpriseApp.WebApp.MVC.Models;
 using System.Net;
 using System.Net.Http;
 using System.Text;
@@ -32,6 +33,11 @@ namespace EnterpriseApp.WebApp.MVC.Services
             var payload = JsonSerializer.Deserialize<ErrorApiResponse>(content, _jsonSerializerOptions);
             var messages = payload.Errors.Messages;
             throw new AuthException(messages);
+        }
+
+        protected ResponseResult RetornoOk()
+        {
+            return new ResponseResult();
         }
     }
 }

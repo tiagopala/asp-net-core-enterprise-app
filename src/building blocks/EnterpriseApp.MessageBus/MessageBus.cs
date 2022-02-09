@@ -18,7 +18,7 @@ namespace EnterpriseApp.MessageBus
             TryConnect();
         }
 
-        public bool? IsConnected => _bus?.Advanced?.IsConnected;
+        public bool IsConnected => _bus?.Advanced.IsConnected ?? false;
 
         public IAdvancedBus AdvancedBus => _bus?.Advanced;
 
@@ -80,7 +80,7 @@ namespace EnterpriseApp.MessageBus
 
         private void TryConnect()
         {
-            if (IsConnected.HasValue && IsConnected.Value)
+            if (IsConnected) 
                 return;
 
             var policy = Policy

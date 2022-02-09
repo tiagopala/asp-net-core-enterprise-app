@@ -9,7 +9,7 @@ using System.Linq;
 namespace EnterpriseApp.API.Core.Controllers
 {
     [ApiController]
-    public abstract class MainController : ControllerBase
+    public abstract class MainController : Controller
     {
         protected ICollection<string> Errors = new List<string>();
 

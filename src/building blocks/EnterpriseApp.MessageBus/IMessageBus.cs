@@ -7,7 +7,7 @@ namespace EnterpriseApp.MessageBus
 {
     public interface IMessageBus : IDisposable
     {
-        bool? IsConnected { get; }
+        bool IsConnected { get; }
 
         IAdvancedBus AdvancedBus { get; }
 

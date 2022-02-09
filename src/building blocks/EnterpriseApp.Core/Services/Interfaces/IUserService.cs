@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace EnterpriseApp.WebApp.MVC.Services.Interfaces
+namespace EnterpriseApp.Core.Services.Interfaces
 {
     public interface IUserService
     {

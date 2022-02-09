@@ -1,4 +1,4 @@
-﻿using EnterpriseApp.WebApp.MVC.Services.Interfaces;
+﻿using EnterpriseApp.Core.Services.Interfaces;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Threading;

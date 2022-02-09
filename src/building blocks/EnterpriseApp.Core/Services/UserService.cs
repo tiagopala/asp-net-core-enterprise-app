@@ -1,11 +1,11 @@
-﻿using EnterpriseApp.WebApp.MVC.Services.Interfaces;
+﻿using EnterpriseApp.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 
-namespace EnterpriseApp.WebApp.MVC.Services
+namespace EnterpriseApp.Core.Services
 {
     public class UserService : IUserService
     {
@@ -30,10 +30,6 @@ namespace EnterpriseApp.WebApp.MVC.Services
         public bool IsAuthenticated()
             => _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
 
-        public string GetClaimValue(string claimType)
-            => _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Equals(claimType))?.Value;
-        //  => _httpContextAccessor.HttpContext.User.FindFirst(claimType)?.Value; // Avaliar qual dos dois métodos é mais performático
-
         public IEnumerable<Claim> GetClaims()
             => _httpContextAccessor.HttpContext.User.Claims;
 
@@ -42,5 +38,21 @@ namespace EnterpriseApp.WebApp.MVC.Services
 
         public HttpContext GetHttpContext()
             => _httpContextAccessor.HttpContext;
+
+        public string GetClaimValue(string claimType)
+        {
+            var claimValue = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type == claimType)?.Value;
+
+            if (claimValue is not null)
+                return claimValue;
+
+            if (claimType == "sub")
+                return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Contains("nameidentifier"))?.Value;
+
+            if (claimType == "email")
+                return _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(x => x.Type.Contains("email"))?.Value;
+
+            return claimValue;
+        }
     }
 }
