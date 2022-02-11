@@ -1,4 +1,5 @@
-﻿using EnterpriseApp.Core.Services;
+﻿using EnterpriseApp.BFF.Compras.DelegatingHandlers;
+using EnterpriseApp.Core.Services;
 using EnterpriseApp.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
@@ -9,6 +10,8 @@ namespace EnterpriseApp.BFF.Compras.Configurations
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         {
+            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IUserService, UserService>();
