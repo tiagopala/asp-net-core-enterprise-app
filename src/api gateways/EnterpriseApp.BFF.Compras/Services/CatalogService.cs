@@ -1,4 +1,6 @@
-﻿using EnterpriseApp.BFF.Compras.Services.Interfaces;
+﻿using EnterpriseApp.BFF.Compras.AppSettings;
+using EnterpriseApp.BFF.Compras.Services.Interfaces;
+using Microsoft.Extensions.Options;
 using System.Net.Http;
 
 namespace EnterpriseApp.BFF.Compras.Services

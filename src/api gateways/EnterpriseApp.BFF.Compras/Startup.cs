@@ -33,7 +33,9 @@ namespace EnterpriseApp.BFF.Compras
         {
             services.AddControllers();
 
-            services.Configure<AppServicesSettings>(Configuration);
+            services.Configure<ExternalServicesAppSettings>(Configuration.GetSection("ExternalServicesConfiguration"));
+
+            services.Configure<MessageBusAppSettings>(Configuration.GetSection("MessageBusConfiguration"));
 
             services.AddCors(options =>
             {

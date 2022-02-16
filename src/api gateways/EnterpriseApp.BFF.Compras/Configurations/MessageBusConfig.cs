@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using EnterpriseApp.BFF.Compras.AppSettings;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EnterpriseApp.BFF.Compras.Configurations
@@ -7,6 +8,8 @@ namespace EnterpriseApp.BFF.Compras.Configurations
     {
         public static IServiceCollection AddMessageBusConfiguration(this IServiceCollection services, IConfiguration configuration)
         {
+            var messageBusConfig = configuration.GetSection("MessageBusConfiguration").Get<MessageBusAppSettings>();
+
             return services;
         }
     }

@@ -21,6 +21,8 @@ namespace EnterpriseApp.BFF.Compras.Configurations
 
             services.AddScoped<IUserService, UserService>();
 
+            services.AddScoped<ICatalogService, CatalogService>();
+
             services.AddHttpClientServices(configuration);
 
             return services;
@@ -28,7 +30,7 @@ namespace EnterpriseApp.BFF.Compras.Configurations
 
         public static IServiceCollection AddHttpClientServices(this IServiceCollection services, IConfiguration configuration)
         {
-            var appServicesSettings = configuration.Get<AppServicesSettings>();
+            var appServicesSettings = configuration.GetSection("ExternalServicesConfiguration").Get<ExternalServicesAppSettings>();
 
             services.AddHttpClient<ICatalogService, CatalogService>(x =>
             {

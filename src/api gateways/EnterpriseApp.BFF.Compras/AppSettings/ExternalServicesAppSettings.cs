@@ -1,6 +1,6 @@
 ﻿namespace EnterpriseApp.BFF.Compras.AppSettings
 {
-    public class AppServicesSettings
+    public class ExternalServicesAppSettings
     {
         public string CatalogUri { get; set; }
         public string ShoppingCartUri { get; set; }
