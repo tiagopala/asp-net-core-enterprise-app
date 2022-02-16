@@ -1,4 +1,4 @@
-﻿namespace EnterpriseApp.BFF.Compras.Extensions
+﻿namespace EnterpriseApp.BFF.Compras.AppSettings
 {
     public class AppServicesSettings
     {

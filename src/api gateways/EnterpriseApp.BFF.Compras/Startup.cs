@@ -1,7 +1,7 @@
 using EnterpriseApp.API.Core.Authentication;
 using EnterpriseApp.API.Core.Documentation;
+using EnterpriseApp.BFF.Compras.AppSettings;
 using EnterpriseApp.BFF.Compras.Configurations;
-using EnterpriseApp.BFF.Compras.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -49,7 +49,7 @@ namespace EnterpriseApp.BFF.Compras
                 .AddJwtConfiguration(Configuration)
                 .AddSwaggerConfig("EnterpriseApp BFF PURCHASE API", "This API is responsible for manage user's purchase.")
                 .AddMessageBusConfiguration(Configuration)
-                .AddApplicationServices();
+                .AddApplicationServices(Configuration);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

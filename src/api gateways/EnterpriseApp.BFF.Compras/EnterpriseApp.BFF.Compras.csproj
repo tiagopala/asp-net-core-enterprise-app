@@ -2,19 +2,17 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
+    <UserSecretsId>98b810b4-b51a-4522-9404-ffd41884f4a8</UserSecretsId>
   </PropertyGroup>
-
-  <ItemGroup>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\building blocks\EnterpriseApp.API.Core\EnterpriseApp.API.Core.csproj" />
     <ProjectReference Include="..\..\building blocks\EnterpriseApp.Core\EnterpriseApp.Core.csproj" />
     <ProjectReference Include="..\..\building blocks\EnterpriseApp.MessageBus\EnterpriseApp.MessageBus.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Extensions\" />
   </ItemGroup>
 
 </Project>
