@@ -38,7 +38,7 @@ namespace EnterpriseApp.BFF.Compras.Services
             return ReturnOk();
         }
 
-        public async Task<ResponseResult> UdateShoppingCartItem(ItemCartDTO cartDTO)
+        public async Task<ResponseResult> UpdateShoppingCartItem(ItemCartDTO cartDTO)
         {
             var itemContent = GetContent(cartDTO);
 

@@ -1,4 +1,5 @@
-﻿using EnterpriseApp.BFF.Compras.AppSettings;
+﻿using EnterpriseApp.API.Core.Extensions;
+using EnterpriseApp.BFF.Compras.AppSettings;
 using EnterpriseApp.BFF.Compras.DelegatingHandlers;
 using EnterpriseApp.BFF.Compras.Services;
 using EnterpriseApp.BFF.Compras.Services.Interfaces;
@@ -7,6 +8,7 @@ using EnterpriseApp.Core.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Polly;
 using System;
 
 namespace EnterpriseApp.BFF.Compras.Configurations
@@ -21,8 +23,6 @@ namespace EnterpriseApp.BFF.Compras.Configurations
 
             services.AddScoped<IUserService, UserService>();
 
-            services.AddScoped<ICatalogService, CatalogService>();
-
             services.AddHttpClientServices(configuration);
 
             return services;
@@ -35,7 +35,16 @@ namespace EnterpriseApp.BFF.Compras.Configurations
             services.AddHttpClient<ICatalogService, CatalogService>(x =>
             {
                 x.BaseAddress = new Uri($"{appServicesSettings.CatalogUri}/api/catalog");
-            });
+            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+              .AddPolicyHandler(PollyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
+              .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+
+            services.AddHttpClient<IShoppingCartService, ShoppingCartService>(configuration =>
+            {
+                configuration.BaseAddress = new Uri($"{appServicesSettings.ShoppingCartUri}/api");
+            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+              .AddPolicyHandler(PollyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
+              .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
             services.AddHttpClient<IOrderService, OrderService>(configuration =>
             {
@@ -45,11 +54,6 @@ namespace EnterpriseApp.BFF.Compras.Configurations
             services.AddHttpClient<IPaymentService, PaymentService>(configuration =>
             {
                 configuration.BaseAddress = new Uri(appServicesSettings.PaymentUri);
-            });
-
-            services.AddHttpClient<IShoppingCartService, ShoppingCartService>(configuration =>
-            {
-                configuration.BaseAddress = new Uri($"{appServicesSettings.ShoppingCartUri}/api");
             });
 
             return services;

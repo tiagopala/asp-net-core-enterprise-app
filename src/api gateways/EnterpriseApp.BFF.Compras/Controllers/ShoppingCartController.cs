@@ -3,6 +3,7 @@ using EnterpriseApp.BFF.Compras.Models;
 using EnterpriseApp.BFF.Compras.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -59,16 +60,35 @@ namespace EnterpriseApp.BFF.Compras.Controllers
 
         [HttpPut]
         [Route("items/{produtoId}")]
-        public async Task<IActionResult> UpdateShoppingCartItem()
+        public async Task<IActionResult> UpdateShoppingCartItem(Guid productId, ItemCartDTO item)
         {
-            return CustomResponse();
+            var product = await _catalogService.GetById(productId);
+
+            await ValidateCartItem(product, item.Quantity);
+
+            if (!IsValidOperation()) 
+                return CustomResponse();
+
+            var resposta = await _cartService.UpdateShoppingCartItem(item);
+
+            return CustomResponse(resposta);
         }
 
         [HttpDelete]
         [Route("items/{produtoId}")]
-        public async Task<IActionResult> RemoveItemFromShoppingCart()
+        public async Task<IActionResult> RemoveItemFromShoppingCart(Guid productId)
         {
-            return CustomResponse();
+            var product = await _catalogService.GetById(productId);
+
+            if (product is null)
+            {
+                AddError("Produto inexistente!");
+                return CustomResponse();
+            }
+
+            var resposta = await _cartService.RemoveShoppingCartItem(productId);
+
+            return CustomResponse(resposta);
         }
 
         private async Task ValidateCartItem(ItemProductDTO product, int quantity, bool addProduct = false)
