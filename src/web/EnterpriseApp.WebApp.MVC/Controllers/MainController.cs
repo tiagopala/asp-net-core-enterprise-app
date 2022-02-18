@@ -1,4 +1,4 @@
-﻿using EnterpriseApp.WebApp.MVC.Models;
+﻿using EnterpriseApp.Core.Communication;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 

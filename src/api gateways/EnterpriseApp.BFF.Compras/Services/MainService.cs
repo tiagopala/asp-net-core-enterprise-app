@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using EnterpriseApp.Core.Communication;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
@@ -29,5 +30,8 @@ namespace EnterpriseApp.BFF.Compras.Services
             responseMessage.EnsureSuccessStatusCode();
             return true;
         }
+
+        protected ResponseResult ReturnOk()
+            => new();
     }
 }

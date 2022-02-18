@@ -1,4 +1,5 @@
-﻿using EnterpriseApp.WebApp.MVC.Models;
+﻿using EnterpriseApp.Core.Communication;
+using EnterpriseApp.WebApp.MVC.Models;
 using EnterpriseApp.WebApp.MVC.Services.Interfaces;
 using System;
 using System.Net.Http;

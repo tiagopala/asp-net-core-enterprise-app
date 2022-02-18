@@ -1,4 +1,5 @@
 ﻿using EnterpriseApp.API.Core.Controllers;
+using EnterpriseApp.BFF.Compras.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -9,8 +10,15 @@ namespace EnterpriseApp.BFF.Compras.Controllers
     [Route("purchase/shoppingcart")]
     public class ShoppingCartController : MainController
     {
-        public ShoppingCartController()
+        private readonly ICatalogService _catalogService;
+        private readonly IShoppingCartService _cartService;
+
+        public ShoppingCartController(
+            ICatalogService catalogService,
+            IShoppingCartService cartService)
         {
+            _catalogService = catalogService;
+            _cartService = cartService;
         }
 
         [HttpGet]

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace EnterpriseApp.WebApp.MVC.Models
+namespace EnterpriseApp.Core.Communication
 {
     public class ResponseResult
     {

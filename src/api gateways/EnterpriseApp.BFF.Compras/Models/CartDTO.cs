@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace EnterpriseApp.BFF.Compras.Models
 {
@@ -11,6 +8,6 @@ namespace EnterpriseApp.BFF.Compras.Models
         public VoucherDTO Voucher { get; set; }
         public bool IsVoucherUsed { get; set; }
         public decimal Discount { get; set; }
-        public List<ItemCarrinhoDTO> Itens { get; set; } = new List<ItemCarrinhoDTO>();
+        public List<ItemCartDTO> Itens { get; set; } = new List<ItemCartDTO>();
     }
 }

@@ -49,7 +49,7 @@ namespace EnterpriseApp.BFF.Compras.Configurations
 
             services.AddHttpClient<IShoppingCartService, ShoppingCartService>(configuration =>
             {
-                configuration.BaseAddress = new Uri(appServicesSettings.ShoppingCartUri);
+                configuration.BaseAddress = new Uri($"{appServicesSettings.ShoppingCartUri}/api");
             });
 
             return services;

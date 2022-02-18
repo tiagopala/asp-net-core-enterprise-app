@@ -1,6 +1,6 @@
-﻿using EnterpriseApp.Core.Responses;
+﻿using EnterpriseApp.Core.Communication;
+using EnterpriseApp.Core.Responses;
 using EnterpriseApp.WebApp.MVC.Exceptions;
-using EnterpriseApp.WebApp.MVC.Models;
 using System.Net;
 using System.Net.Http;
 using System.Text;

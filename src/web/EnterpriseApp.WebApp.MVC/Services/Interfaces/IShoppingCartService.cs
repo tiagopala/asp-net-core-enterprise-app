@@ -1,4 +1,5 @@
-﻿using EnterpriseApp.WebApp.MVC.Models;
+﻿using EnterpriseApp.Core.Communication;
+using EnterpriseApp.WebApp.MVC.Models;
 using System;
 using System.Threading.Tasks;
 
