@@ -1,5 +1,4 @@
 ﻿using EnterpriseApp.API.Core.Controllers;
-using EnterpriseApp.BFF.Compras.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
