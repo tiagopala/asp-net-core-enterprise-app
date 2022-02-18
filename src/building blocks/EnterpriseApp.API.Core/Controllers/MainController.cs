@@ -1,4 +1,5 @@
-﻿using EnterpriseApp.Identidade.API.Extensions;
+﻿using EnterpriseApp.Core.Communication;
+using EnterpriseApp.Identidade.API.Extensions;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -15,7 +16,7 @@ namespace EnterpriseApp.API.Core.Controllers
 
         protected ActionResult CustomResponse(object result = null)
         {
-            if (!CheckOperation())
+            if (!IsValidOperation())
                 return BadRequest(new ValidationProblemDetails(new Dictionary<string, string[]>
                 {
                     { "messages", Errors.ToArray() }
@@ -45,7 +46,24 @@ namespace EnterpriseApp.API.Core.Controllers
             return CustomResponse();
         }
 
-        protected bool CheckOperation()
+        protected ActionResult CustomResponse(ResponseResult resposta)
+        {
+            HasErrorsAtResponseResult(resposta);
+
+            return CustomResponse();
+        }
+
+        protected bool HasErrorsAtResponseResult(ResponseResult response)
+        {
+            if (response is null || !response.Errors.Messages.Any())
+                return false;
+
+            response.Errors.Messages.ForEach(message => AddError(message));
+
+            return true;
+        }
+
+        protected bool IsValidOperation()
             => !Errors.Any();
 
         protected void AddError(string error)

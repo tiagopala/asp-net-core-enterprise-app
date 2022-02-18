@@ -8,6 +8,6 @@ namespace EnterpriseApp.BFF.Compras.Models
         public VoucherDTO Voucher { get; set; }
         public bool IsVoucherUsed { get; set; }
         public decimal Discount { get; set; }
-        public List<ItemCartDTO> Itens { get; set; } = new List<ItemCartDTO>();
+        public List<ItemCartDTO> Items { get; set; } = new List<ItemCartDTO>();
     }
 }

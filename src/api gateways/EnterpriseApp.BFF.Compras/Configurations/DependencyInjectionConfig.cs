@@ -34,7 +34,7 @@ namespace EnterpriseApp.BFF.Compras.Configurations
 
             services.AddHttpClient<ICatalogService, CatalogService>(x =>
             {
-                x.BaseAddress = new Uri(appServicesSettings.CatalogUri);
+                x.BaseAddress = new Uri($"{appServicesSettings.CatalogUri}/api/catalog");
             });
 
             services.AddHttpClient<IOrderService, OrderService>(configuration =>
