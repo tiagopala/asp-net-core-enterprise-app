@@ -19,7 +19,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
         #region Domínio do Carrinho de Compras
         public async Task<ShoppingCartViewModel> GetShoppingCart()
         {
-            var response = await _httpClient.GetAsync("api/purchase/shoppingcart");
+            var response = await _httpClient.GetAsync("shoppingcart");
 
             if (!response.IsSuccessStatusCode)
                 await HandleErrorsResponse(response);
@@ -29,7 +29,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
 
         public async Task<int> GetQuantityFromCart()
         {
-            var response = await _httpClient.GetAsync("api/purchase/shoppingcart/items/quantity");
+            var response = await _httpClient.GetAsync("shoppingcart/items/quantity");
 
             if (!response.IsSuccessStatusCode)
                 await HandleErrorsResponse(response);
@@ -41,7 +41,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
         {
             var itemContent = GetContent(cartDTO);
 
-            var response = await _httpClient.PostAsync("api/purchase/shoppingcart/items/", itemContent);
+            var response = await _httpClient.PostAsync("shoppingcart/items/", itemContent);
 
             if (!response.IsSuccessStatusCode)
                 return await DeserializeResponseMessage<ResponseResult>(response);
@@ -53,7 +53,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
         {
             var itemContent = GetContent(cartDTO);
 
-            var response = await _httpClient.PutAsync($"api/purchase/shoppingcart/items/{productId}", itemContent);
+            var response = await _httpClient.PutAsync($"shoppingcart/items/{productId}", itemContent);
 
             if (!response.IsSuccessStatusCode)
                 return await DeserializeResponseMessage<ResponseResult>(response);
@@ -63,7 +63,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
 
         public async Task<ResponseResult> RemoveShoppingCartItem(Guid productId)
         {
-            var response = await _httpClient.DeleteAsync($"api/purchase/shoppingcart/items/{productId}");
+            var response = await _httpClient.DeleteAsync($"shoppingcart/items/{productId}");
 
             if (!response.IsSuccessStatusCode)
                 return await DeserializeResponseMessage<ResponseResult>(response);

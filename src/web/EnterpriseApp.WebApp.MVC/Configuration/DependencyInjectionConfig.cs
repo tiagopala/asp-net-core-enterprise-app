@@ -38,7 +38,7 @@ namespace EnterpriseApp.WebApp.MVC.Configuration
 
             services.AddHttpClient<IPurchaseBffService, PurchaseBffService>(configure =>
             {
-                configure.BaseAddress = new Uri(configuration["PurchaseBffServiceAPI:Uri"]);
+                configure.BaseAddress = new Uri($"{configuration["PurchaseBffServiceAPI:Uri"]}/api/purchase/");
             }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
               .AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
               .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
