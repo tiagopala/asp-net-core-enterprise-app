@@ -36,9 +36,9 @@ namespace EnterpriseApp.WebApp.MVC.Configuration
               .AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
               .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
-            services.AddHttpClient<IShoppingCartService, ShoppingCartService>(configure =>
+            services.AddHttpClient<IPurchaseBffService, PurchaseBffService>(configure =>
             {
-                configure.BaseAddress = new Uri(configuration["ShoppingCartAPI:Uri"]);
+                configure.BaseAddress = new Uri(configuration["PurchaseBffServiceAPI:Uri"]);
             }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
               .AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
               .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));

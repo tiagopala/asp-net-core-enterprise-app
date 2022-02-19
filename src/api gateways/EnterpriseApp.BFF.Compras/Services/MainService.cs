@@ -1,19 +1,17 @@
 ﻿using EnterpriseApp.Core.Communication;
-using EnterpriseApp.Core.Responses;
-using EnterpriseApp.WebApp.MVC.Exceptions;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace EnterpriseApp.WebApp.MVC.Services
+namespace EnterpriseApp.BFF.Compras.Services
 {
     public abstract class MainService
     {
         private readonly JsonSerializerOptions _jsonSerializerOptions;
 
-        public MainService() 
+        public MainService()
         {
             _jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
         }
@@ -24,20 +22,16 @@ namespace EnterpriseApp.WebApp.MVC.Services
         protected async Task<T> DeserializeResponseMessage<T>(HttpResponseMessage responseMessage)
             => JsonSerializer.Deserialize<T>(await responseMessage.Content.ReadAsStringAsync(), _jsonSerializerOptions);
 
-        protected async Task HandleErrorsResponse(HttpResponseMessage httpResponseMessage)
+        protected bool HandleResponseErrors(HttpResponseMessage responseMessage)
         {
-            if (!httpResponseMessage.StatusCode.Equals(HttpStatusCode.BadRequest))
-                throw new CustomHttpRequestException(httpResponseMessage.StatusCode);
+            if (responseMessage.StatusCode == HttpStatusCode.BadRequest)
+                return false;
 
-            var content = await httpResponseMessage.Content.ReadAsStringAsync();
-            var payload = JsonSerializer.Deserialize<ErrorApiResponse>(content, _jsonSerializerOptions);
-            var messages = payload.Errors.Messages;
-            throw new AuthException(messages);
+            responseMessage.EnsureSuccessStatusCode();
+            return true;
         }
 
         protected ResponseResult ReturnOk()
-        {
-            return new ResponseResult();
-        }
+            => new();
     }
 }

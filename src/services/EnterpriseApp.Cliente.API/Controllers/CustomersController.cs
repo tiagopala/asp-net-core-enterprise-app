@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace EnterpriseApp.Cliente.API.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CustomersController : MainController
     {
         private readonly IMediatorHandler _mediator;

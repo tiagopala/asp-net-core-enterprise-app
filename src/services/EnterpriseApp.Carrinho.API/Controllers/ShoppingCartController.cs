@@ -47,7 +47,7 @@ namespace EnterpriseApp.Carrinho.API.Controllers
             else
                 UpdateShoppingCartWithExistentItem(shoppingCart, shoppingCartItem);
 
-            if (!CheckOperation()) 
+            if (!IsValidOperation()) 
                 return CustomResponse();
 
             await PersistData();
@@ -69,7 +69,7 @@ namespace EnterpriseApp.Carrinho.API.Controllers
 
             ValidateShoppingCart(shoppingCart);
 
-            if (!CheckOperation())
+            if (!IsValidOperation())
                 return CustomResponse();
 
             shoppingCart.Items.ToList().ForEach(x => x.ShoppingCartCustomer = null);
@@ -94,7 +94,7 @@ namespace EnterpriseApp.Carrinho.API.Controllers
 
             ValidateShoppingCart(cart);
 
-            if (!CheckOperation())
+            if (!IsValidOperation())
                 return CustomResponse();
 
             cart.RemoveShoppingCartItem(item);
