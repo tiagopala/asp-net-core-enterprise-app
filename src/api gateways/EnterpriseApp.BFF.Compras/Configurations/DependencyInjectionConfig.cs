@@ -34,14 +34,14 @@ namespace EnterpriseApp.BFF.Compras.Configurations
 
             services.AddHttpClient<ICatalogService, CatalogService>(x =>
             {
-                x.BaseAddress = new Uri($"{appServicesSettings.CatalogUri}/api/catalog");
+                x.BaseAddress = new Uri($"{appServicesSettings.CatalogUri}/api/catalog/");
             }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
               .AddPolicyHandler(PollyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
               .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
             services.AddHttpClient<IShoppingCartService, ShoppingCartService>(configuration =>
             {
-                configuration.BaseAddress = new Uri($"{appServicesSettings.ShoppingCartUri}/api");
+                configuration.BaseAddress = new Uri($"{appServicesSettings.ShoppingCartUri}/api/");
             }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
               .AddPolicyHandler(PollyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
               .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));

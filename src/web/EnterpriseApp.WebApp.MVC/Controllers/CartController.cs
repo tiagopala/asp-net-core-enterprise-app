@@ -11,74 +11,48 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
     [Route("shopping-cart")]
     public class CartController : MainController
     {
-        private readonly IShoppingCartService _shoppingCartService;
-        private readonly ICatalogServiceRefit _catalogService;
+        private readonly IPurchaseBffService _purchaseBffService;
 
-        public CartController(
-            IShoppingCartService carrinhoService,
-            ICatalogServiceRefit catalogoService)
+        public CartController(IPurchaseBffService purchaseBffService)
         {
-            _shoppingCartService = carrinhoService;
-            _catalogService = catalogoService;
+            _purchaseBffService = purchaseBffService;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _shoppingCartService.GetShoppingCart());
+            return View(await _purchaseBffService.GetShoppingCart());
         }
 
         [HttpPost]
         [Route("add-item")]
-        public async Task<IActionResult> AdicionarItemCarrinho(ItemProductViewModel itemProduto)
+        public async Task<IActionResult> AddItemAtCart(ItemProductViewModel itemProduct)
         {
-            var produto = await _catalogService.GetProduct(itemProduto.ProductId);
+            var resposta = await _purchaseBffService.AddShoppingCartItem(itemProduct);
 
-            ValidarItemCarrinho(produto, itemProduto.Quantity);
-            if (!OperacaoValida()) return View("Index", await _shoppingCartService.GetShoppingCart());
-
-            itemProduto.Name = produto.Name;
-            itemProduto.Price = produto.Price;
-            itemProduto.Image = produto.Image;
-
-            var resposta = await _shoppingCartService.AddShoppingCartItem(itemProduto);
-
-            if (ResponsePossuiErros(resposta)) return View("Index", await _shoppingCartService.GetShoppingCart());
+            if (ResponsePossuiErros(resposta)) return View("Index", await _purchaseBffService.GetShoppingCart());
 
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         [Route("update-item")]
-        public async Task<IActionResult> AtualizarItemCarrinho(Guid produtoId, int quantidade)
+        public async Task<IActionResult> UpdateCartItem(Guid produtoId, int quantidade)
         {
-            var produto = await _catalogService.GetProduct(produtoId);
+            var item = new ItemProductViewModel { ProductId = produtoId, Quantity = quantidade };
+            var resposta = await _purchaseBffService.UpdateShoppingCartItem(produtoId, item);
 
-            ValidarItemCarrinho(produto, quantidade);
-            if (!OperacaoValida()) return View("Index", await _shoppingCartService.GetShoppingCart());
-
-            var itemProduto = new ItemProductViewModel { ProductId = produtoId, Quantity = quantidade };
-            var resposta = await _shoppingCartService.UdateShoppingCartItem(produtoId, itemProduto);
-
-            if (ResponsePossuiErros(resposta)) return View("Index", await _shoppingCartService.GetShoppingCart());
+            if (ResponsePossuiErros(resposta)) return View("Index", await _purchaseBffService.GetShoppingCart());
 
             return RedirectToAction("Index");
         }
 
         [HttpPost]
         [Route("remove-item")]
-        public async Task<IActionResult> RemoverItemCarrinho(Guid produtoId)
+        public async Task<IActionResult> RemoveItemFromCart(Guid produtoId)
         {
-            var produto = await _catalogService.GetProduct(produtoId);
+            var resposta = await _purchaseBffService.RemoveShoppingCartItem(produtoId);
 
-            if (produto == null)
-            {
-                AdicionarErroValidacao("Produto inexistente!");
-                return View("Index", await _shoppingCartService.GetShoppingCart());
-            }
-
-            var resposta = await _shoppingCartService.RemoveShoppingCartItem(produtoId);
-
-            if (ResponsePossuiErros(resposta)) return View("Index", await _shoppingCartService.GetShoppingCart());
+            if (ResponsePossuiErros(resposta)) return View("Index", await _purchaseBffService.GetShoppingCart());
 
             return RedirectToAction("Index");
         }

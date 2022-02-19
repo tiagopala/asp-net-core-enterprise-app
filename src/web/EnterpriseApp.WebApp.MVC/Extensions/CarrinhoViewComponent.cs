@@ -7,16 +7,16 @@ namespace EnterpriseApp.WebApp.MVC.Extensions
 {
     public class CarrinhoViewComponent : ViewComponent
     {
-        private readonly IShoppingCartService _cartService;
+        private readonly IPurchaseBffService _purchaseBffService;
 
-        public CarrinhoViewComponent(IShoppingCartService cartService)
+        public CarrinhoViewComponent(IPurchaseBffService purchaseBffService)
         {
-            _cartService = cartService;
+            _purchaseBffService = purchaseBffService;
         }
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
-            return View(await _cartService.GetShoppingCart() ?? new ShoppingCartViewModel());
+            return View(await _purchaseBffService.GetShoppingCart() ?? new ShoppingCartViewModel());
         }
     }
 }

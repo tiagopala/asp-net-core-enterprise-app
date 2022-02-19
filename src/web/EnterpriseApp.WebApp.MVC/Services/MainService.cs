@@ -35,7 +35,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
             throw new AuthException(messages);
         }
 
-        protected ResponseResult RetornoOk()
+        protected ResponseResult ReturnOk()
         {
             return new ResponseResult();
         }

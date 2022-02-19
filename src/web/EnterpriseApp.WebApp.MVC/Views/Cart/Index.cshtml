@@ -50,7 +50,7 @@
                                                         <small class="text-muted"> @this.FormatCurrency(item.Price) each</small>
                                                     </div>
                                                 </td>
-                                                <form method="post" asp-controller="Cart" asp-action="AtualizarItemCarrinho">
+                                                <form method="post" asp-controller="Cart" asp-action="UpdateCartItem">
                                                 <td>
 
                                                     <input type="hidden" id="ProdutoId" name="ProdutoId" value="@item.ProductId" />
@@ -74,7 +74,7 @@
                                                 </td>
                                                 </form>
                                                 <td>
-                                                    <form method="post" asp-controller="Cart" asp-action="RemoverItemCarrinho">
+                                                    <form method="post" asp-controller="Cart" asp-action="RemoveItemFromCart">
                                                         <div>
 
                                                             <input type="hidden" id="ProdutoId" name="ProdutoId" value="@item.ProductId" />

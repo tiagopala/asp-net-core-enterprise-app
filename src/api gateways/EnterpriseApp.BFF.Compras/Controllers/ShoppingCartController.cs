@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace EnterpriseApp.BFF.Compras.Controllers
 {
     [Authorize]
-    [Route("purchase/shoppingcart")]
+    [Route("api/purchase/shoppingcart")]
     public class ShoppingCartController : MainController
     {
         private readonly ICatalogService _catalogService;
@@ -26,8 +26,14 @@ namespace EnterpriseApp.BFF.Compras.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Index()
+            => CustomResponse(await _cartService.GetShoppingCart());
+
+        [HttpGet]
+        [Route("items/quantity")]
+        public async Task<int> GetQuantityFromCart()
         {
-            return CustomResponse(await _cartService.GetShoppingCart());
+            var quantity = await _cartService.GetShoppingCart();
+            return quantity?.Items.Sum(i => i.Quantity) ?? 0;
         }
 
         [HttpPost]
@@ -50,16 +56,8 @@ namespace EnterpriseApp.BFF.Compras.Controllers
             return CustomResponse(resposta);
         }
 
-        [HttpGet]
-        [Route("items/quantity")]
-        public async Task<int> ObterQuantidadeCarrinho()
-        {
-            var quantity = await _cartService.GetShoppingCart();
-            return quantity?.Items.Sum(i => i.Quantity) ?? 0;
-        }
-
         [HttpPut]
-        [Route("items/{produtoId}")]
+        [Route("items/{productId}")]
         public async Task<IActionResult> UpdateShoppingCartItem(Guid productId, ItemCartDTO item)
         {
             var product = await _catalogService.GetById(productId);
@@ -75,7 +73,7 @@ namespace EnterpriseApp.BFF.Compras.Controllers
         }
 
         [HttpDelete]
-        [Route("items/{produtoId}")]
+        [Route("items/{productId}")]
         public async Task<IActionResult> RemoveItemFromShoppingCart(Guid productId)
         {
             var product = await _catalogService.GetById(productId);
