@@ -5,7 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\building blocks\EnterpriseApp.API.Core\EnterpriseApp.API.Core.csproj" />
+    <ProjectReference Include="..\..\building blocks\EnterpriseApp.Core\EnterpriseApp.Core.csproj" />
     <ProjectReference Include="..\EnterpriseApp.Pedido.Domain\EnterpriseApp.Pedido.Domain.csproj" />
+    <ProjectReference Include="..\EnterpriseApp.Pedido.Infrastructure\EnterpriseApp.Pedido.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>

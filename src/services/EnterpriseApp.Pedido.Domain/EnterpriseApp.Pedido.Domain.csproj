@@ -5,12 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EnterpriseApp.Pedido.Infrastructure\EnterpriseApp.Pedido.Infrastructure.csproj" />
+    <Folder Include="Pedidos\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Vouchers\" />
-    <Folder Include="Pedidos\" />
+    <ProjectReference Include="..\..\building blocks\EnterpriseApp.Core\EnterpriseApp.Core.csproj" />
   </ItemGroup>
 
 </Project>
