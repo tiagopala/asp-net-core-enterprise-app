@@ -1,6 +1,7 @@
 ﻿using EnterpriseApp.Core.Data;
 using EnterpriseApp.Core.Mediator;
 using EnterpriseApp.Core.Messages;
+using EnterpriseApp.Pedido.Domain.Vouchers;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -19,6 +20,8 @@ namespace EnterpriseApp.Pedido.Infrastructure.Data
         {
             _mediatorHandler = mediatorHandler;
         }
+
+        public DbSet<Voucher> Vouchers => Set<Voucher>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
