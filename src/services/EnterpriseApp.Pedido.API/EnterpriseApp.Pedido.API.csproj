@@ -8,21 +8,19 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.12">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.11.1" />
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\..\building blocks\EnterpriseApp.API.Core\EnterpriseApp.API.Core.csproj" />
 		<ProjectReference Include="..\..\building blocks\EnterpriseApp.Core\EnterpriseApp.Core.csproj" />
 		<ProjectReference Include="..\EnterpriseApp.Pedido.Application\EnterpriseApp.Pedido.Application.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="5.0.12">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
+		<ProjectReference Include="..\EnterpriseApp.Pedido.Domain\EnterpriseApp.Pedido.Domain.csproj" />
+		<ProjectReference Include="..\EnterpriseApp.Pedido.Infrastructure\EnterpriseApp.Pedido.Infrastructure.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

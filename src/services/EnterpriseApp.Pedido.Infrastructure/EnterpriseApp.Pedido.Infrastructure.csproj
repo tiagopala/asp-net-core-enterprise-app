@@ -5,10 +5,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Folder Include="Data\Mappings\" />
-	</ItemGroup>
-
-	<ItemGroup>
+		<ProjectReference Include="..\..\building blocks\EnterpriseApp.Core\EnterpriseApp.Core.csproj" />
 		<ProjectReference Include="..\EnterpriseApp.Pedido.Domain\EnterpriseApp.Pedido.Domain.csproj" />
 	</ItemGroup>
 
