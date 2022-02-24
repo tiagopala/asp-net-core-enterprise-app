@@ -2,7 +2,6 @@
 using EnterpriseApp.Pedido.Domain.Vouchers;
 using EnterpriseApp.Pedido.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EnterpriseApp.Pedido.Infrastructure.Repositories
