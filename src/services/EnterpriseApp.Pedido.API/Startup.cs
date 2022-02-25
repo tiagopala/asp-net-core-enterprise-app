@@ -49,7 +49,7 @@ namespace EnterpriseApp.Pedido.API
             services
                 .AddRouting(x => x.LowercaseUrls = true)
                 .AddJwtConfiguration(Configuration)
-                .AddSwaggerConfig("EnterpriseApp Shopping Order's API", "This API is responsible for manage user's orders.")
+                .AddSwaggerConfig("EnterpriseApp Shopping Order's API", "This API is responsible for manage user's orders and vouchers.")
                 .AddApplicationServices();
         }
 
