@@ -24,9 +24,27 @@ namespace EnterpriseApp.Carrinho.API.Data
                 .HasDatabaseName("IDX_Customer");
 
             modelBuilder.Entity<ShoppingCartCustomer>()
+                .Ignore(c => c.Voucher)
+                .OwnsOne(c => c.Voucher, v =>
+                {
+                    v.Property(vc => vc.Code)
+                   .HasColumnName("VoucherCode")
+                      .HasColumnType("varchar(50)");
+
+                    v.Property(vc => vc.DiscountType)
+                        .HasColumnName("DiscountType");
+
+                    v.Property(vc => vc.Percent)
+                        .HasColumnName("Percent");
+
+                    v.Property(vc => vc.DiscountValue)
+                        .HasColumnName("DiscountValue");
+                });
+
+            modelBuilder.Entity<ShoppingCartCustomer>()
                 .HasMany(c => c.Items)
                 .WithOne(i => i.ShoppingCartCustomer)
                 .HasForeignKey(i => i.ShoppingCartId);
-        }        
+        }
     }
 }
