@@ -70,6 +70,18 @@ namespace EnterpriseApp.WebApp.MVC.Services
 
             return ReturnOk();
         }
+
+        public async Task<ResponseResult> ApplyVoucherShoppingCart(string voucher)
+        {
+            var itemContent = GetContent(voucher);
+
+            var response = await _httpClient.PostAsync("shoppingcart/apply-voucher", itemContent);
+
+            if (!response.IsSuccessStatusCode)
+                return await DeserializeResponseMessage<ResponseResult>(response);
+
+            return ReturnOk();
+        }
         #endregion
     }
 }

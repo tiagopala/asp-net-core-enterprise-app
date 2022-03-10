@@ -103,11 +103,9 @@ namespace EnterpriseApp.BFF.Compras.Controllers
                 return CustomResponse();
             }
 
-            // TODO CRIAR SERVIÇO PARA APLICAR VOUCHER
-            //var resposta = await _cartService.AplicarVoucherCarrinho(voucher);
+            var response = await _cartService.ApplyVoucher(voucher);
 
-            //return CustomResponse(resposta);
-            return CustomResponse();
+            return CustomResponse(response);
         }
 
         private async Task ValidateCartItem(ItemProductDTO product, int quantity, bool addProduct = false)

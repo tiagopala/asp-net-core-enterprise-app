@@ -6,6 +6,9 @@ namespace EnterpriseApp.WebApp.MVC.Models
     public class ShoppingCartViewModel
     {
         public decimal TotalPrice { get; set; }
+        public bool HasUsedVoucher { get; set; }
+        public decimal Discount { get; set; }
+        public VoucherViewModel Voucher { get; set; }
         public List<ItemProductViewModel> Items { get; set; } = new List<ItemProductViewModel>();
     }
 

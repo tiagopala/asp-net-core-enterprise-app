@@ -57,11 +57,15 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
             return RedirectToAction("Index");
         }
 
-        private void ValidarItemCarrinho(ProductViewModel produto, int quantidade)
+        [HttpPost]
+        [Route("apply-voucher")]
+        public async Task<IActionResult> ApplyVoucher(string voucherCodigo)
         {
-            if (produto == null) AdicionarErroValidacao("Produto inexistente!");
-            if (quantidade < 1) AdicionarErroValidacao($"Escolha ao menos uma unidade do produto {produto.Name}");
-            if (quantidade > produto.StockQuantity) AdicionarErroValidacao($"O produto {produto.Name} possui {produto.StockQuantity} unidades em estoque, você selecionou {quantidade}");
+            var resposta = await _purchaseBffService.ApplyVoucherShoppingCart(voucherCodigo);
+
+            if (ResponsePossuiErros(resposta)) return View("Index", await _purchaseBffService.GetShoppingCart());
+
+            return RedirectToAction("Index");
         }
     }
 }

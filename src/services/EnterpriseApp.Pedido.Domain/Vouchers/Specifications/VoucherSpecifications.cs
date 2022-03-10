@@ -9,7 +9,7 @@ namespace EnterpriseApp.Pedido.Domain.Vouchers.Specifications
     public class VoucherDateTimeSpecification : Specification<Voucher>
     {
         public override Expression<Func<Voucher, bool>> ToExpression()
-            => voucher => voucher.MaximumValidDate >= DateTime.Now;
+            => voucher => voucher.MaximumValidationDate >= DateTime.Now;
     }
 
     public class VoucherQuantitySpecification : Specification<Voucher>

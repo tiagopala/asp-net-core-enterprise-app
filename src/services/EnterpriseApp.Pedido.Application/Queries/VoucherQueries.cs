@@ -1,6 +1,4 @@
-﻿using EnterpriseApp.Pedido.Application.DTO;
-using EnterpriseApp.Pedido.Application.Extensions;
-using EnterpriseApp.Pedido.Domain.Vouchers;
+﻿using EnterpriseApp.Pedido.Domain.Vouchers;
 using System.Threading.Tasks;
 
 namespace EnterpriseApp.Pedido.Application.Queries
@@ -14,7 +12,7 @@ namespace EnterpriseApp.Pedido.Application.Queries
             _voucherRepository = voucherRepository;
         }
 
-        public async Task<VoucherDTO> GetVoucherByCode(string code)
+        public async Task<Voucher> GetVoucherByCode(string code)
         {
             var voucher = await _voucherRepository.GetVoucherByCode(code);
 
@@ -24,12 +22,12 @@ namespace EnterpriseApp.Pedido.Application.Queries
             if (!voucher.IsValidForUse())
                 return null;
 
-            return voucher.ToVoucherDTO();
+            return voucher;
         }
     }
 
     public interface IVoucherQueries
     {
-        Task<VoucherDTO> GetVoucherByCode(string code);
+        Task<Voucher> GetVoucherByCode(string code);
     }
 }

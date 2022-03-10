@@ -12,5 +12,6 @@ namespace EnterpriseApp.WebApp.MVC.Services.Interfaces
         Task<ResponseResult> AddShoppingCartItem(ItemProductViewModel cartDTO);
         Task<ResponseResult> UpdateShoppingCartItem(Guid productId, ItemProductViewModel cartDTO);
         Task<ResponseResult> RemoveShoppingCartItem(Guid productId);
+        Task<ResponseResult> ApplyVoucherShoppingCart(string voucher);
     }
 }

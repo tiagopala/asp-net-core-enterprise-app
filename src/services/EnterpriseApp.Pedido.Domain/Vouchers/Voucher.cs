@@ -13,7 +13,7 @@ namespace EnterpriseApp.Pedido.Domain.Vouchers
         public VoucherDiscountType DiscountType { get; private set; }
         public DateTime CreationDate { get; private set; }
         public DateTime? UsedDate { get; private set; }
-        public DateTime MaximumValidDate { get; private set; }
+        public DateTime MaximumValidationDate { get; private set; }
         public bool Active { get; private set; }
         public bool Used { get; private set; }
 
