@@ -3,8 +3,6 @@ using EnterpriseApp.Pedido.Domain.Vouchers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace EnterpriseApp.Pedido.Domain.Pedidos
 {
@@ -43,7 +41,7 @@ namespace EnterpriseApp.Pedido.Domain.Pedidos
 
         public void AuthorizeOrder()
         {
-            OrderStatus = OrderStatus.Autorizado;
+            OrderStatus = OrderStatus.Authorized;
         }
 
         public void ApplyVoucher(Voucher voucher)
