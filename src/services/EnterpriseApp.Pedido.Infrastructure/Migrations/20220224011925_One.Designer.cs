@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EnterpriseApp.Pedido.Infrastructure.Migrations
 {
-    [DbContext(typeof(PedidosContext))]
+    [DbContext(typeof(OrderDbContext))]
     [Migration("20220224011925_One")]
     partial class One
     {

@@ -8,9 +8,9 @@ namespace EnterpriseApp.Pedido.Infrastructure.Repositories
 {
     public class VoucherRepository : IVoucherRepository
     {
-        private readonly PedidosContext _dbContext;
+        private readonly OrderDbContext _dbContext;
 
-        public VoucherRepository(PedidosContext dbContext)
+        public VoucherRepository(OrderDbContext dbContext)
         {
             _dbContext = dbContext;
         }

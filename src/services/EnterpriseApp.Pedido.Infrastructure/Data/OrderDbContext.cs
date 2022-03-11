@@ -1,4 +1,5 @@
 ﻿using EnterpriseApp.Core.Data;
+using EnterpriseApp.Pedido.Domain.Pedidos;
 using EnterpriseApp.Pedido.Domain.Vouchers;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -7,11 +8,15 @@ using System.Threading.Tasks;
 
 namespace EnterpriseApp.Pedido.Infrastructure.Data
 {
-    public class PedidosContext : DbContext, IUnitOfWork
+    public class OrderDbContext : DbContext, IUnitOfWork
     {
-        public PedidosContext(DbContextOptions<PedidosContext> options) : base(options) { }
+        public OrderDbContext(DbContextOptions<OrderDbContext> options) : base(options) { }
 
         public DbSet<Voucher> Vouchers => Set<Voucher>();
+
+        public DbSet<Order> Orders => Set<Order>();
+
+        public DbSet<OrderItem> OrderItems => Set<OrderItem>();
 
         public async Task<bool> Commit()
         {
