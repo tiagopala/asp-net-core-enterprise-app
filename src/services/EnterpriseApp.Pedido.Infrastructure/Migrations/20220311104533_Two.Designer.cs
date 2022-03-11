@@ -4,14 +4,16 @@ using EnterpriseApp.Pedido.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EnterpriseApp.Pedido.Infrastructure.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    partial class PedidosContextModelSnapshot : ModelSnapshot
+    [Migration("20220311104533_Two")]
+    partial class Two
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -58,7 +60,7 @@ namespace EnterpriseApp.Pedido.Infrastructure.Migrations
 
                     b.HasIndex("VoucherId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Pedidos");
                 });
 
             modelBuilder.Entity("EnterpriseApp.Pedido.Domain.Pedidos.OrderItem", b =>
@@ -90,7 +92,7 @@ namespace EnterpriseApp.Pedido.Infrastructure.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderItems");
+                    b.ToTable("PedidoItems");
                 });
 
             modelBuilder.Entity("EnterpriseApp.Pedido.Domain.Vouchers.Voucher", b =>
@@ -176,7 +178,7 @@ namespace EnterpriseApp.Pedido.Infrastructure.Migrations
 
                             b1.HasKey("OrderId");
 
-                            b1.ToTable("Orders");
+                            b1.ToTable("Pedidos");
 
                             b1.WithOwner()
                                 .HasForeignKey("OrderId");

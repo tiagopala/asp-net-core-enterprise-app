@@ -4,14 +4,16 @@ using EnterpriseApp.Pedido.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace EnterpriseApp.Pedido.Infrastructure.Migrations
 {
     [DbContext(typeof(OrderDbContext))]
-    partial class PedidosContextModelSnapshot : ModelSnapshot
+    [Migration("20220311104805_Three")]
+    partial class Three
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

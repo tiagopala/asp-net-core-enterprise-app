@@ -1,6 +1,8 @@
 ﻿using EnterpriseApp.Core.Data;
+using EnterpriseApp.Core.Messages;
 using EnterpriseApp.Pedido.Domain.Pedidos;
 using EnterpriseApp.Pedido.Domain.Vouchers;
+using FluentValidation.Results;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -17,6 +19,18 @@ namespace EnterpriseApp.Pedido.Infrastructure.Data
         public DbSet<Order> Orders => Set<Order>();
 
         public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Ignore<Event>();
+            modelBuilder.Ignore<ValidationResult>();
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(OrderDbContext).Assembly);
+
+            modelBuilder.HasSequence<int>("OrdersSequence").StartsAt(1000).IncrementsBy(1);
+
+            base.OnModelCreating(modelBuilder);
+        }
 
         public async Task<bool> Commit()
         {
