@@ -4,6 +4,7 @@ using EnterpriseApp.Cliente.API.Business.Interfaces;
 using EnterpriseApp.Cliente.API.Business.Models;
 using EnterpriseApp.Core.Extensions;
 using EnterpriseApp.Core.Mediator;
+using EnterpriseApp.Core.Messages;
 using FluentValidation.Results;
 using MediatR;
 using System.Threading;
