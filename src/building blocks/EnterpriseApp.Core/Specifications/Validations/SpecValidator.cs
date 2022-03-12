@@ -5,7 +5,7 @@ namespace EnterpriseApp.Core.Specifications.Validations
 {
     public class SpecValidator<T>
     {
-        private readonly Dictionary<string, Rule<T>> _validations = new Dictionary<string, Rule<T>>();
+        private readonly Dictionary<string, Rule<T>> _validations = new();
 
         public ValidationResult Validate(T obj)
         {

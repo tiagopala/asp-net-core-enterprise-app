@@ -20,6 +20,9 @@ namespace EnterpriseApp.Pedido.Infrastructure.Repositories
         public async Task<Voucher> GetVoucherByCode(string code)
             => await _dbContext.Vouchers.FirstOrDefaultAsync(v => v.Code == code);
 
+        public void Update(Voucher voucher)
+            => _dbContext.Vouchers.Update(voucher);
+
         public void Dispose()
         {
             _dbContext.Dispose();

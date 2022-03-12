@@ -6,9 +6,9 @@ using EnterpriseApp.Pedido.Application.Commands;
 using EnterpriseApp.Pedido.Application.DTO;
 using EnterpriseApp.Pedido.Domain.Pedidos;
 using EnterpriseApp.Pedido.Domain.Vouchers;
+using EnterpriseApp.Pedido.Domain.Vouchers.Specifications;
 using FluentValidation.Results;
 using MediatR;
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,11 +40,11 @@ namespace EnterpriseApp.Pedido.Application.Handlers
             var order = MapOrder(request);
 
             // Aplicar voucher se houver
-            if (!await AplicarVoucher(request, order)) 
+            if (!await ApplyVoucher(request, order)) 
                 return request.ValidationResult;
 
             // Validar pedido
-            if (!ValidarPedido(order))
+            if (!ValidateOrder(order, request.ValidationResult))
                 return request.ValidationResult;
 
             // Processar pagamento
@@ -55,7 +55,6 @@ namespace EnterpriseApp.Pedido.Application.Handlers
             order.AuthorizeOrder();
 
             // Adicionar Evento
-            //pedido.AddEvent(new PedidoRealizadoEvent(pedido.Id, pedido.CustomerId));
 
             // Adicionar Pedido Repositorio
             _orderRepository.Add(order);
@@ -92,7 +91,7 @@ namespace EnterpriseApp.Pedido.Application.Handlers
             return order;
         }
 
-        private async Task<bool> AplicarVoucher(AddOrderCommand request, Order order)
+        private async Task<bool> ApplyVoucher(AddOrderCommand request, Order order)
         {
             if (!request.HasUsedVoucher) 
                 return true;
@@ -109,41 +108,37 @@ namespace EnterpriseApp.Pedido.Application.Handlers
 
             if (!voucherValidation.IsValid)
             {
-                voucherValidation.Errors.ToList().ForEach(m => AdicionarErro(m.ErrorMessage));
+                voucherValidation.Errors.ToList().ForEach(x => request.ValidationResult.AddCustomError(x.ErrorMessage));
+                
                 return false;
             }
 
-            order.AtribuirVoucher(voucher);
-            voucher.DebitarQuantidade();
+            order.ApplyVoucher(voucher);
 
-            _voucherRepository.Atualizar(voucher);
+            voucher.DebitQuantity();
+
+            _voucherRepository.Update(voucher);
 
             return true;
         }
 
-        private bool ValidarPedido(Pedido pedido)
+        private static bool ValidateOrder(Order order, ValidationResult validationResult)
         {
-            var pedidoValorOriginal = pedido.ValorTotal;
-            var pedidoDesconto = pedido.Desconto;
+            var originalTotalPrice = order.TotalPrice;
+            var orderDiscount = order.Discount;
 
-            pedido.CalcularValorPedido();
+            order.CalculateOrderPrice();
 
-            if (pedido.ValorTotal != pedidoValorOriginal)
+            if (order.TotalPrice != originalTotalPrice || order.Discount != orderDiscount)
             {
-                AdicionarErro("O valor total do pedido não confere com o cálculo do pedido");
-                return false;
-            }
-
-            if (pedido.Desconto != pedidoDesconto)
-            {
-                AdicionarErro("O valor total não confere com o cálculo do pedido");
+                validationResult.AddCustomError("Total price order does not matches order calculated price.");
                 return false;
             }
 
             return true;
         }
 
-        public bool ProcessarPagamento(Pedido pedido)
+        public bool ProcessarPagamento(Order order)
         {
             return true;
         }

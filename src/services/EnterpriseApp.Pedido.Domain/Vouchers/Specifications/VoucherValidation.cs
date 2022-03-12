@@ -10,9 +10,9 @@ namespace EnterpriseApp.Pedido.Domain.Vouchers.Specifications
             var qtdeSpec = new VoucherQuantitySpecification();
             var ativoSpec = new VoucherActiveSpecification();
 
-            Add("dataSpec", new Rule<Voucher>(dataSpec, "Este voucher está expirado"));
-            Add("qtdeSpec", new Rule<Voucher>(qtdeSpec, "Este voucher já foi utilizado"));
-            Add("ativoSpec", new Rule<Voucher>(ativoSpec, "Este voucher não está mais ativo"));
+            Add("dataSpec", new Rule<Voucher>(dataSpec, "Voucher expired."));
+            Add("qtdeSpec", new Rule<Voucher>(qtdeSpec, "Voucher already used."));
+            Add("ativoSpec", new Rule<Voucher>(ativoSpec, "Voucher is not active."));
         }
     }
 }

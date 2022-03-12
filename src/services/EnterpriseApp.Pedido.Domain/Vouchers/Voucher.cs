@@ -29,5 +29,13 @@ namespace EnterpriseApp.Pedido.Domain.Vouchers
             Active = false;
             Quantity = 0;
         }
+
+        public void DebitQuantity()
+        {
+            Quantity -= 1;
+            if (Quantity >= 1) return;
+
+            SetAsUsed();
+        }
     }
 }
