@@ -6,13 +6,9 @@ namespace EnterpriseApp.Pedido.Domain.Vouchers.Specifications
     {
         public VoucherValidation()
         {
-            var dataSpec = new VoucherDateTimeSpecification();
-            var qtdeSpec = new VoucherQuantitySpecification();
-            var ativoSpec = new VoucherActiveSpecification();
-
-            Add("dataSpec", new Rule<Voucher>(dataSpec, "Voucher expired."));
-            Add("qtdeSpec", new Rule<Voucher>(qtdeSpec, "Voucher already used."));
-            Add("ativoSpec", new Rule<Voucher>(ativoSpec, "Voucher is not active."));
+            Add("dataSpec", new Rule<Voucher>(new VoucherDateTimeSpecification(), "Voucher expired."));
+            Add("qtdeSpec", new Rule<Voucher>(new VoucherQuantitySpecification(), "Voucher already used."));
+            Add("ativoSpec", new Rule<Voucher>(new VoucherActiveSpecification(), "Voucher is not active."));
         }
     }
 }

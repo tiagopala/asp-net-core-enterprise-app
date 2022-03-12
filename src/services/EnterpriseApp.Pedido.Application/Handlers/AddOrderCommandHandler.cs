@@ -4,6 +4,7 @@ using EnterpriseApp.Core.Mediator;
 using EnterpriseApp.Core.Messages;
 using EnterpriseApp.Pedido.Application.Commands;
 using EnterpriseApp.Pedido.Application.DTO;
+using EnterpriseApp.Pedido.Application.Events;
 using EnterpriseApp.Pedido.Domain.Pedidos;
 using EnterpriseApp.Pedido.Domain.Vouchers;
 using EnterpriseApp.Pedido.Domain.Vouchers.Specifications;
@@ -55,6 +56,7 @@ namespace EnterpriseApp.Pedido.Application.Handlers
             order.AuthorizeOrder();
 
             // Adicionar Evento
+            await MediatorHandler.PublishEvent(new OrderRealizedEvent(order.Id, order.CustomerId));
 
             // Adicionar Pedido Repositorio
             _orderRepository.Add(order);
