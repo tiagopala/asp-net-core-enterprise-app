@@ -31,7 +31,7 @@ namespace EnterpriseApp.Pedido.Infrastructure.Repositories
         public async Task<OrderItem> GetItemById(Guid id)
             => await _dbContext.OrderItems.FindAsync(id);
 
-        public async Task<IEnumerable<Order>> GetListByClientId(Guid customerId)
+        public async Task<IEnumerable<Order>> GetListByCustomerId(Guid customerId)
             => await _dbContext.Orders
                 .Include(p => p.OrderItems)
                 .AsNoTracking()
