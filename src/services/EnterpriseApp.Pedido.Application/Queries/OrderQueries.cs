@@ -4,7 +4,6 @@ using EnterpriseApp.Pedido.Domain.Pedidos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EnterpriseApp.Pedido.Application.Queries
@@ -51,9 +50,9 @@ namespace EnterpriseApp.Pedido.Application.Queries
 
             var connectionString = _orderRepository.GetConnection();
 
-            connectionString.Query<OrderDTO>(sql);
+            var ordersQueryResult = await connectionString.QueryAsync<dynamic>(sql, new { customerId });
 
-            return MapOrder();
+            return MapOrder(ordersQueryResult);
         }
 
         public async Task<IEnumerable<OrderDTO>> GetOrderListByCustomerId(Guid customerId)
@@ -63,9 +62,44 @@ namespace EnterpriseApp.Pedido.Application.Queries
             return orders.Select(x => x.ToOrderDTO());
         }
 
-        private static OrderDTO MapOrder()
+        private static OrderDTO MapOrder(dynamic result)
         {
-            return new OrderDTO();
+            var order = new OrderDTO
+            {
+                Code = result[0].CODE,
+                Status = result[0].ORDERSTATUS,
+                TotalPrice = result[0].TOTALPRICE,
+                Discount = result[0].DISCOUNT,
+                HasUsedVoucher = result[0].HASUSEDVOUCHER,
+
+                OrderItems = new List<OrderItemDTO>(),
+                
+                Address = new AddressDTO
+                {
+                    Street = result[0].STREET,
+                    Neighbourhood = result[0].NEIGHBOURHOOD,
+                    Cep = result[0].CEP,
+                    City = result[0].CITY,
+                    Complement = result[0].COMPLEMENT,
+                    State = result[0].STATE,
+                    Number = result[0].NUMBER
+                }
+            };
+
+            foreach (var item in result)
+            {
+                var orderItem = new OrderItemDTO
+                {
+                    Name = item.PRODUCTNAME,
+                    Price = item.UNITYPRICE,
+                    Quantity = item.QUANTITY,
+                    Image = item.PRODUCTIMAGE
+                };
+
+                order.OrderItems.Add(orderItem);
+            }
+
+            return order;
         }
     }
 
