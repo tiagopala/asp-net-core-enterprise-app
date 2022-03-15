@@ -2,6 +2,7 @@ using EnterpriseApp.API.Core.Authentication;
 using EnterpriseApp.API.Core.Documentation;
 using EnterpriseApp.Pedido.API.Configurations;
 using EnterpriseApp.Pedido.Infrastructure.Data;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +51,8 @@ namespace EnterpriseApp.Pedido.API
                 .AddRouting(x => x.LowercaseUrls = true)
                 .AddJwtConfiguration(Configuration)
                 .AddSwaggerConfig("EnterpriseApp Shopping Order's API", "This API is responsible for manage user's orders and vouchers.")
+                .AddMediatR(typeof(Startup))
+                .AddMessageBusConfig(Configuration)
                 .AddApplicationServices();
         }
 

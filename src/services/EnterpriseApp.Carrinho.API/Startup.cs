@@ -2,6 +2,7 @@ using EnterpriseApp.API.Core.Authentication;
 using EnterpriseApp.API.Core.Documentation;
 using EnterpriseApp.Carrinho.API.Configurations;
 using EnterpriseApp.Carrinho.API.Data;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +51,8 @@ namespace EnterpriseApp.Carrinho.API
                 .AddRouting(x => x.LowercaseUrls = true)
                 .AddJwtConfiguration(Configuration)
                 .AddSwaggerConfig("EnterpriseApp Shopping Cart API", "This API is responsible for manage user's shopping cart.")
+                .AddMediatR(typeof(Startup))
+                .AddMessageBusConfig(Configuration)
                 .AddApplicationServices();
         }
 
