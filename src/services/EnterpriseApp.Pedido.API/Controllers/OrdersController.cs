@@ -16,14 +16,14 @@ namespace EnterpriseApp.Pedido.API.Controllers
     {
         private readonly IMediatorHandler _mediatorHandler;
         private readonly IUserService _userService;
-        private readonly IOrderQueries _voucherQueries;
+        private readonly IOrderQueries _orderQueries;
 
         public OrdersController(
             IUserService userService,
             IMediatorHandler mediatorHandler,
             IOrderQueries orderQueries)
         {
-            _voucherQueries = orderQueries;
+            _orderQueries = orderQueries;
             _userService = userService;
             _mediatorHandler = mediatorHandler;
         }
@@ -35,6 +35,20 @@ namespace EnterpriseApp.Pedido.API.Controllers
             return CustomResponse(await _mediatorHandler.SendCommand(command));
         }
 
+        [HttpGet("last")]
+        public async Task<IActionResult> GetLastOrder()
+        {
+            var order = await _orderQueries.GetLastOrder(_userService.GetUserId());
 
+            return order is null ? NotFound() : CustomResponse(order);
+        }
+
+        [HttpGet("list")]
+        public async Task<IActionResult> GetOrderList()
+        {
+            var orders = await _orderQueries.GetOrderListByCustomerId(_userService.GetUserId());
+
+            return orders is null ? NotFound() : CustomResponse(orders);
+        }
     }
 }
