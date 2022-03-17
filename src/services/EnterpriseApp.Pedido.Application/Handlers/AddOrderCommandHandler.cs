@@ -21,11 +21,10 @@ namespace EnterpriseApp.Pedido.Application.Handlers
         private readonly IOrderRepository _orderRepository;
         private readonly IVoucherRepository _voucherRepository;
 
-        public AddOrderCommandHandler(
-            IRepository<Order> repository, 
+        public AddOrderCommandHandler( 
             IMediatorHandler mediatorHandler,
             IOrderRepository orderRepository,
-            IVoucherRepository voucherRepository) : base(repository, mediatorHandler)
+            IVoucherRepository voucherRepository) : base(orderRepository, mediatorHandler)
         {
             _orderRepository = orderRepository;
             _voucherRepository = voucherRepository;
