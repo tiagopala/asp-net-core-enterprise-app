@@ -18,7 +18,8 @@ namespace EnterpriseApp.Cliente.API.Configuration
             #region Commands
             services
                 .AddScoped<IMediatorHandler, MediatorHandler>()
-                .AddScoped<IRequestHandler<RegisterCustomerCommand, ValidationResult>, RegisterCustomerHandler>();
+                .AddScoped<IRequestHandler<RegisterCustomerCommand, ValidationResult>, CustomerHandler>()
+                .AddScoped<IRequestHandler<AddAddressCommand, ValidationResult>, CustomerHandler>();
             #endregion;
 
             #region Events
