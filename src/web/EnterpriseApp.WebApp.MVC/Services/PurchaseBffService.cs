@@ -2,6 +2,7 @@
 using EnterpriseApp.WebApp.MVC.Models;
 using EnterpriseApp.WebApp.MVC.Services.Interfaces;
 using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -37,7 +38,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
             return await DeserializeResponseMessage<int>(response);
         }
 
-        public async Task<ResponseResult> AddShoppingCartItem(ItemProductViewModel cartDTO)
+        public async Task<ResponseResult> AddShoppingCartItem(ItemShoppingCartViewModel cartDTO)
         {
             var itemContent = GetContent(cartDTO);
 
@@ -49,7 +50,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
             return ReturnOk();
         }
 
-        public async Task<ResponseResult> UpdateShoppingCartItem(Guid productId, ItemProductViewModel cartDTO)
+        public async Task<ResponseResult> UpdateShoppingCartItem(Guid productId, ItemShoppingCartViewModel cartDTO)
         {
             var itemContent = GetContent(cartDTO);
 
@@ -81,6 +82,29 @@ namespace EnterpriseApp.WebApp.MVC.Services
                 return await DeserializeResponseMessage<ResponseResult>(response);
 
             return ReturnOk();
+        }
+
+        #endregion
+
+        #region Domínio de Pedidos (Orders)
+        public Task<ResponseResult> FinishOrder(OrderTransactionViewModel transactionOrder)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<OrderViewModel> GetLastOrder()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IEnumerable<OrderViewModel>> GetOrderListByCustomerId()
+        {
+            throw new NotImplementedException();
+        }
+
+        public OrderTransactionViewModel MapToTransactionOrder(ShoppingCartViewModel cart, AddressViewModel address)
+        {
+            throw new NotImplementedException();
         }
         #endregion
     }

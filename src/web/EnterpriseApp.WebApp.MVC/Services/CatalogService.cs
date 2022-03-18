@@ -12,7 +12,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
     {
         private readonly HttpClient _httpClient;
 
-        public CatalogService(HttpClient httpClient, IHttpClientFactory clientFactory)
+        public CatalogService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }

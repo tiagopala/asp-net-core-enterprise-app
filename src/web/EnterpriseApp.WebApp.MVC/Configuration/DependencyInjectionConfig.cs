@@ -43,6 +43,13 @@ namespace EnterpriseApp.WebApp.MVC.Configuration
               .AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
               .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
+            services.AddHttpClient<ICustomersService, ICustomersService>(configure =>
+            {
+                configure.BaseAddress = new Uri($"{configuration["CustomerAPI:Uri"]}/api/customers/");
+            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+              .AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
+              .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IUserService, UserService>();
