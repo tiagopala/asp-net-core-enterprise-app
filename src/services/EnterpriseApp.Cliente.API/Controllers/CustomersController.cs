@@ -3,6 +3,7 @@ using EnterpriseApp.Cliente.API.Application.Commands;
 using EnterpriseApp.Cliente.API.Business.Interfaces;
 using EnterpriseApp.Core.Mediator;
 using EnterpriseApp.Core.Services.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ using System.Threading.Tasks;
 namespace EnterpriseApp.Cliente.API.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("api/[controller]")]
     public class CustomersController : MainController
     {

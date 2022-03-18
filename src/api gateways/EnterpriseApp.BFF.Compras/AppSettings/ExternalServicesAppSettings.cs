@@ -6,5 +6,6 @@
         public string ShoppingCartUri { get; set; }
         public string OrderUri { get; set; }
         public string PaymentUri { get; set; }
+        public string CustomerUri { get; set; }
     }
 }
