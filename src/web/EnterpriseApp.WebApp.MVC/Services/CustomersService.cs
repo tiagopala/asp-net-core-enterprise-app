@@ -1,6 +1,7 @@
 ﻿using EnterpriseApp.Core.Communication;
 using EnterpriseApp.WebApp.MVC.Models;
 using EnterpriseApp.WebApp.MVC.Services.Interfaces;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -30,6 +31,9 @@ namespace EnterpriseApp.WebApp.MVC.Services
         public async Task<AddressViewModel> GetAddress()
         {
             var response = await _httpClient.GetAsync("addresses");
+
+            if (response.StatusCode.Equals(HttpStatusCode.NotFound))
+                return null;
 
             if (!response.IsSuccessStatusCode)
                 await HandleErrorsResponse(response);

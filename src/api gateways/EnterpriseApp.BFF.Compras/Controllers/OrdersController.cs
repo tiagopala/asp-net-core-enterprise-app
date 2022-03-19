@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace EnterpriseApp.BFF.Compras.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/purchase/[controller]")]
     public class OrdersController : MainController
     {
         private readonly ICatalogService _catalogService;

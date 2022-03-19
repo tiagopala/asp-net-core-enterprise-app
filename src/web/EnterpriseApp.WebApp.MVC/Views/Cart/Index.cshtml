@@ -21,9 +21,9 @@
                             <table class="table table-borderless table-shopping-cart">
                                 <thead class="text-muted">
                                     <tr class="small text-uppercase">
-                                        <th scope="col">Produto</th>
-                                        <th scope="col">Valor</th>
-                                        <th scope="col">Quantidade</th>
+                                        <th scope="col">Product</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Quantity</th>
                                         <th scope="col"></th>
                                         <th scope="col"></th>
                                     </tr>
@@ -94,7 +94,7 @@
                             </table>
 
                             <div class="card-body border-top">
-                                <a href="#" class="btn btn-primary float-md-right"> Finalizar Compra <i class="fa fa-chevron-right"></i> </a>
+                                <a asp-controller="Orders" asp-action="DeliveryAddress" class="btn btn-primary float-md-right"> Payment <i class="fa fa-chevron-right"></i> </a>
                                 <a asp-controller="Catalog" asp-action="Index" class="btn btn-light"> <i class="fa fa-chevron-left"></i> Keep searching.</a>
                             </div>
                         </div>
@@ -104,7 +104,7 @@
                             <div class="card-body">
                                 <form asp-action="ApplyVoucher">
                                     <div class="form-group">
-                                        <label>Possui um Voucher?</label>
+                                        <label>Do you have a voucher?</label>
                                         <div class="input-group">
                                             <input type="text" class="form-control" name="VoucherCodigo" id="VoucherCodigo" value="@Model.Voucher?.Code" placeholder="Voucher">
                                             <span class="input-group-append">

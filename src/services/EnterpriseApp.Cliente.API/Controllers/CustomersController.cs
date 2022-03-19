@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace EnterpriseApp.Cliente.API.Controllers
 {
-    [ApiController]
     [Authorize]
+    [ApiController]
     [Route("api/[controller]")]
     public class CustomersController : MainController
     {
@@ -43,9 +43,9 @@ namespace EnterpriseApp.Cliente.API.Controllers
         [HttpGet("addresses")]
         public async Task<IActionResult> GetAddress()
         {
-            var endereco = await _customerRepository.GetAddressById(_userService.GetUserId());
+            var address = await _customerRepository.GetAddressById(_userService.GetUserId());
 
-            return endereco == null ? NotFound() : CustomResponse(endereco);
+            return address == null ? NotFound() : CustomResponse(address);
         }
     }
 }

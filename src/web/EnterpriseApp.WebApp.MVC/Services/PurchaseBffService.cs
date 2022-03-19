@@ -87,24 +87,64 @@ namespace EnterpriseApp.WebApp.MVC.Services
         #endregion
 
         #region Domínio de Pedidos (Orders)
-        public Task<ResponseResult> FinishOrder(OrderTransactionViewModel transactionOrder)
+        public async Task<ResponseResult> FinishOrder(OrderTransactionViewModel transactionOrder)
         {
-            throw new NotImplementedException();
+            var orderContent = GetContent(transactionOrder);
+
+            var response = await _httpClient.PostAsync("orders", orderContent);
+
+            if (!response.IsSuccessStatusCode)
+                return await DeserializeResponseMessage<ResponseResult>(response);
+
+            return ReturnOk();
         }
 
-        public Task<OrderViewModel> GetLastOrder()
+        public async Task<OrderViewModel> GetLastOrder()
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.GetAsync("orders/last");
+
+            if (!response.IsSuccessStatusCode)
+                await HandleErrorsResponse(response);
+
+            return await DeserializeResponseMessage<OrderViewModel>(response);
         }
 
-        public Task<IEnumerable<OrderViewModel>> GetOrderListByCustomerId()
+        public async Task<IEnumerable<OrderViewModel>> GetOrderListByCustomerId()
         {
-            throw new NotImplementedException();
+            var response = await _httpClient.GetAsync("orders/list");
+
+            if (!response.IsSuccessStatusCode)
+                await HandleErrorsResponse(response);
+
+            return await DeserializeResponseMessage<IEnumerable<OrderViewModel>>(response);
         }
 
         public OrderTransactionViewModel MapToTransactionOrder(ShoppingCartViewModel cart, AddressViewModel address)
         {
-            throw new NotImplementedException();
+            var order = new OrderTransactionViewModel
+            {
+                TotalPrice = cart.TotalPrice,
+                Items = cart.Items,
+                Discount = cart.Discount,
+                HasUsedVoucher = cart.HasUsedVoucher,
+                VoucherCode = cart.Voucher?.Code
+            };
+
+            if (address != null)
+            {
+                order.Address = new AddressViewModel
+                {
+                    Street = address.Street,
+                    Number = address.Number,
+                    Neighbourhood = address.Neighbourhood,
+                    Cep = address.Cep,
+                    Complement = address.Complement,
+                    City = address.City,
+                    State = address.State
+                };
+            }
+
+            return order;
         }
         #endregion
     }
