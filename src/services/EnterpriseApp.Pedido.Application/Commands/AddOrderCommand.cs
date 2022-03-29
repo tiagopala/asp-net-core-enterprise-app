@@ -14,7 +14,7 @@ namespace EnterpriseApp.Pedido.Application.Commands
         public List<OrderItemDTO> OrderItems { get; set; }
 
         // Voucher
-        public string VoucherCode { get; set; }
+        public string Code { get; set; }
         public bool HasUsedVoucher { get; set; }
         public decimal Discount { get; set; }
 

@@ -20,7 +20,7 @@ namespace EnterpriseApp.WebApp.MVC.Services
         {
             var addressContent = GetContent(address);
 
-            var response = await _httpClient.PostAsync("address", addressContent);
+            var response = await _httpClient.PostAsync("addresses", addressContent);
 
             if (!response.IsSuccessStatusCode)
                 return await DeserializeResponseMessage<ResponseResult>(response);

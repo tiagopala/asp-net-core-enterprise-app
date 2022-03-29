@@ -30,8 +30,10 @@ namespace EnterpriseApp.Cliente.API.Controllers
         }
 
         [HttpPost("addresses")]
-        public async Task<IActionResult> AddAddress(RegisterCustomerCommand command)
+        public async Task<IActionResult> AddAddress(AddAddressCommand command)
         {
+            command.CustomerId = _userService.GetUserId();
+
             var validationResult = await _mediator.SendCommand(command);
 
             if (validationResult.Errors.Any())

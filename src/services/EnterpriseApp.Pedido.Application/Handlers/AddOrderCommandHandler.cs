@@ -97,7 +97,7 @@ namespace EnterpriseApp.Pedido.Application.Handlers
             if (!request.HasUsedVoucher) 
                 return true;
 
-            var voucher = await _voucherRepository.GetVoucherByCode(request.VoucherCode);
+            var voucher = await _voucherRepository.GetVoucherByCode(request.Code);
 
             if (voucher == null)
             {

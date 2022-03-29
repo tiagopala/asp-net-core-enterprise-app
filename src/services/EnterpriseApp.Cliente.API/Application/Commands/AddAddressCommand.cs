@@ -15,8 +15,6 @@ namespace EnterpriseApp.Cliente.API.Application.Commands
         public string City { get; }
         public string State { get; }
 
-        public AddAddressCommand() {}
-
         public AddAddressCommand(Guid customerId, string street, string number, string complement, string neighbourhood, string cep, string city, string state)
         {
             CustomerId = customerId;
@@ -30,7 +28,11 @@ namespace EnterpriseApp.Cliente.API.Application.Commands
         }
 
         public override bool Validate()
-            => new AddressValidation().Validate(this).IsValid;
+        {
+            ValidationResult = new AddressValidation().Validate(this);
+
+            return ValidationResult.IsValid;
+        }
 
         public class AddressValidation : AbstractValidator<AddAddressCommand>
         {
