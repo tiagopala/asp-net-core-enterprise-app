@@ -1,7 +1,6 @@
 ﻿using EnterpriseApp.Core.Messages.Integration;
 using EnterpriseApp.MessageBus;
 using MediatR;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
