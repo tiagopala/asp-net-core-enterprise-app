@@ -28,6 +28,12 @@ namespace EnterpriseApp.Carrinho.API.Migrations
                     b.Property<Guid>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<decimal>("Discount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<bool>("HasUsedVoucher")
+                        .HasColumnType("bit");
+
                     b.Property<decimal>("TotalPrice")
                         .HasColumnType("decimal(18,2)");
 
@@ -68,6 +74,40 @@ namespace EnterpriseApp.Carrinho.API.Migrations
                     b.HasIndex("ShoppingCartId");
 
                     b.ToTable("CartItems");
+                });
+
+            modelBuilder.Entity("EnterpriseApp.Carrinho.API.Models.ShoppingCartCustomer", b =>
+                {
+                    b.OwnsOne("EnterpriseApp.Carrinho.API.Models.Voucher", "Voucher", b1 =>
+                        {
+                            b1.Property<Guid>("ShoppingCartCustomerId")
+                                .HasColumnType("uniqueidentifier");
+
+                            b1.Property<string>("Code")
+                                .HasColumnType("varchar(50)")
+                                .HasColumnName("VoucherCode");
+
+                            b1.Property<int>("DiscountType")
+                                .HasColumnType("int")
+                                .HasColumnName("DiscountType");
+
+                            b1.Property<decimal?>("DiscountValue")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("DiscountValue");
+
+                            b1.Property<decimal?>("Percent")
+                                .HasColumnType("decimal(18,2)")
+                                .HasColumnName("Percent");
+
+                            b1.HasKey("ShoppingCartCustomerId");
+
+                            b1.ToTable("CartCustomer");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ShoppingCartCustomerId");
+                        });
+
+                    b.Navigation("Voucher");
                 });
 
             modelBuilder.Entity("EnterpriseApp.Carrinho.API.Models.ShoppingCartItem", b =>

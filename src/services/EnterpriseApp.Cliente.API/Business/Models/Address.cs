@@ -17,7 +17,7 @@ namespace EnterpriseApp.Cliente.API.Business.Models
         // Entity Framework Constraint Relation to Customer
         public Customer Customer { get; protected set; }
 
-        public Address(string street, string number, string complement, string neighbourhood, string cep, string city, string state)
+        public Address(string street, string number, string complement, string neighbourhood, string cep, string city, string state, Guid customerId)
         {
             Street = street;
             Number = number;
@@ -26,6 +26,7 @@ namespace EnterpriseApp.Cliente.API.Business.Models
             Cep = cep;
             City = city;
             State = state;
+            CustomerId = customerId;
         }
     }
 }

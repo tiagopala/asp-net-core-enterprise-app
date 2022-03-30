@@ -30,9 +30,12 @@ namespace EnterpriseApp.WebApp.MVC
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.ResolveIdentity();
             services.AddControllersWithViews();
-            services.ResolveDependencyInjection(Configuration);
+
+            services
+                .ResolveIdentity()
+                .AddHttpClients(Configuration)
+                .ResolveDependencyInjection(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

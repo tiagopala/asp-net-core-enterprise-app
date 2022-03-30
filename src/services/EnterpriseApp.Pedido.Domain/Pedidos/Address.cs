@@ -1,6 +1,6 @@
-﻿namespace EnterpriseApp.BFF.Compras.Models
+﻿namespace EnterpriseApp.Pedido.Domain.Pedidos
 {
-    public class AdressDTO
+    public class Address
     {
         public string Street { get; set; }
         public string Number { get; set; }

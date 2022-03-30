@@ -2,7 +2,7 @@
 using EnterpriseApp.Core.Mediator;
 using System.Threading.Tasks;
 
-namespace EnterpriseApp.Cliente.API.Application.Handlers
+namespace EnterpriseApp.Core.Messages
 {
     public abstract class BaseHandler<T> where T : Entity, IAggregateRoot
     {

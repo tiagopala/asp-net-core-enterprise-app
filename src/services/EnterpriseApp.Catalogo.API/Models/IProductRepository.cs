@@ -9,6 +9,7 @@ namespace EnterpriseApp.Catalogo.API.Models
     {
         Task<IEnumerable<Product>> GetProducts();
         Task<Product> GetProduct(Guid id);
+        Task<IEnumerable<Product>> GetProductsById(string ids);
         void Add(Product product);
         void Update(Product product);
     }

@@ -11,5 +11,6 @@ namespace EnterpriseApp.BFF.Compras.Services.Interfaces
         Task<ResponseResult> AddShoppingCartItem(ItemCartDTO cartDTO);
         Task<ResponseResult> UpdateShoppingCartItem(ItemCartDTO cartDTO);
         Task<ResponseResult> RemoveShoppingCartItem(Guid productId);
+        Task<ResponseResult> ApplyVoucher(VoucherDTO voucher);
     }
 }

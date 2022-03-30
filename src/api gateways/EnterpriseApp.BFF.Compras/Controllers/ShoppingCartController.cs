@@ -15,13 +15,16 @@ namespace EnterpriseApp.BFF.Compras.Controllers
     {
         private readonly ICatalogService _catalogService;
         private readonly IShoppingCartService _cartService;
+        private readonly IOrderService _orderService;
 
         public ShoppingCartController(
             ICatalogService catalogService,
-            IShoppingCartService cartService)
+            IShoppingCartService cartService,
+            IOrderService orderService)
         {
             _catalogService = catalogService;
             _cartService = cartService;
+            _orderService = orderService;
         }
 
         [HttpGet]
@@ -87,6 +90,22 @@ namespace EnterpriseApp.BFF.Compras.Controllers
             var resposta = await _cartService.RemoveShoppingCartItem(productId);
 
             return CustomResponse(resposta);
+        }
+
+        [HttpPost]
+        [Route("apply-voucher")]
+        public async Task<IActionResult> AplicarVoucher([FromBody] string voucherCodigo)
+        {
+            var voucher = await _orderService.GetVoucherByCode(voucherCodigo);
+            if (voucher is null)
+            {
+                AddError("Voucher informed is either invalid or not found.");
+                return CustomResponse();
+            }
+
+            var response = await _cartService.ApplyVoucher(voucher);
+
+            return CustomResponse(response);
         }
 
         private async Task ValidateCartItem(ItemProductDTO product, int quantity, bool addProduct = false)

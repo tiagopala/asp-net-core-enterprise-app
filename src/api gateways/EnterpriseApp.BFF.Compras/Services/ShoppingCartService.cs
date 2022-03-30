@@ -59,5 +59,18 @@ namespace EnterpriseApp.BFF.Compras.Services
 
             return ReturnOk();
         }
+
+        public async Task<ResponseResult> ApplyVoucher(VoucherDTO voucher)
+        {
+            var itemContent = GetContent(voucher);
+
+            var response = await _httpClient.PostAsync("shoppingcart/apply-voucher", itemContent);
+
+
+            if (!response.IsSuccessStatusCode)
+                return await DeserializeResponseMessage<ResponseResult>(response);
+
+            return ReturnOk();
+        }
     }
 }

@@ -48,8 +48,17 @@ namespace EnterpriseApp.BFF.Compras.Configurations
 
             services.AddHttpClient<IOrderService, OrderService>(configuration =>
             {
-                configuration.BaseAddress = new Uri(appServicesSettings.OrderUri);
-            });
+                configuration.BaseAddress = new Uri($"{appServicesSettings.OrderUri}/api/");
+            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+              .AddPolicyHandler(PollyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
+              .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+
+            services.AddHttpClient<ICustomerService, CustomerService>(configuration =>
+            {
+                configuration.BaseAddress = new Uri($"{appServicesSettings.CustomerUri}/api/customers/");
+            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+              .AddPolicyHandler(PollyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
+              .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
             services.AddHttpClient<IPaymentService, PaymentService>(configuration =>
             {

@@ -3,6 +3,7 @@ using EnterpriseApp.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EnterpriseApp.Catalogo.API.Data.Repositories
@@ -21,6 +22,15 @@ namespace EnterpriseApp.Catalogo.API.Data.Repositories
 
         public async Task<Product> GetProduct(Guid id)
             => await _context.Products.FindAsync(id);
+
+        public async Task<IEnumerable<Product>> GetProductsById(string ids)
+        {
+            string[] idList = ids.Split(",");
+
+            IEnumerable<Guid> guidIds = idList.Select(x => Guid.Parse(x));
+
+            return await _context.Products.AsNoTracking().Where(x => guidIds.Contains(x.Id) && x.Active).ToListAsync();
+        }
 
         public void Add(Product product)
         {

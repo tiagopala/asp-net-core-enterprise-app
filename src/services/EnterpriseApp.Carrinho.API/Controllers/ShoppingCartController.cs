@@ -107,6 +107,21 @@ namespace EnterpriseApp.Carrinho.API.Controllers
             return CustomResponse();
         }
 
+        [HttpPost]
+        [Route("apply-voucher")]
+        public async Task<IActionResult> AplicarVoucher(Voucher voucher)
+        {
+            var cart = await GetShoppingCartFromDatabase();
+
+            cart.ApplyVoucher(voucher);
+
+            _context.CartCustomer.Update(cart);
+
+            await PersistData();
+
+            return CustomResponse();
+        }
+
         private async Task<ShoppingCartCustomer> GetShoppingCartFromDatabase()
             => await _context.CartCustomer
                 .Include(x => x.Items)

@@ -26,6 +26,12 @@ namespace EnterpriseApp.Cliente.API.Data.Repositories
         public async Task<Customer> GetByCpf(string cpf)
             => await _customerContext.Customers.FirstOrDefaultAsync(x => x.Cpf.Number == cpf);
 
+        public void AddAddress(Address address)
+            => _customerContext.Addresses.Add(address);
+
+        public async Task<Address> GetAddressById(Guid id)
+            => await _customerContext.Addresses.FirstOrDefaultAsync(e => e.CustomerId == id);
+
         public void Dispose() 
             => _customerContext?.DisposeAsync();
     }

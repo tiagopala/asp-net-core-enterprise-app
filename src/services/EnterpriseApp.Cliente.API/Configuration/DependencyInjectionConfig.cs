@@ -5,8 +5,11 @@ using EnterpriseApp.Cliente.API.Business.Interfaces;
 using EnterpriseApp.Cliente.API.Data.Repositories;
 using EnterpriseApp.Cliente.API.Services;
 using EnterpriseApp.Core.Mediator;
+using EnterpriseApp.Core.Services;
+using EnterpriseApp.Core.Services.Interfaces;
 using FluentValidation.Results;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EnterpriseApp.Cliente.API.Configuration
@@ -18,7 +21,8 @@ namespace EnterpriseApp.Cliente.API.Configuration
             #region Commands
             services
                 .AddScoped<IMediatorHandler, MediatorHandler>()
-                .AddScoped<IRequestHandler<RegisterCustomerCommand, ValidationResult>, RegisterCustomerHandler>();
+                .AddScoped<IRequestHandler<RegisterCustomerCommand, ValidationResult>, CustomerHandler>()
+                .AddScoped<IRequestHandler<AddAddressCommand, ValidationResult>, CustomerHandler>();
             #endregion;
 
             #region Events
@@ -32,6 +36,11 @@ namespace EnterpriseApp.Cliente.API.Configuration
 
             #region Hoasted Services
             services.AddHostedService<RegisteredCustomerIntegrationHandler>();
+            #endregion
+
+            #region Services
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped<IUserService, UserService>();
             #endregion
 
             return services;

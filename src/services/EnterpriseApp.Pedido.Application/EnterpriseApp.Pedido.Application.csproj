@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\building blocks\EnterpriseApp.API.Core\EnterpriseApp.API.Core.csproj" />
+		<ProjectReference Include="..\..\building blocks\EnterpriseApp.Core\EnterpriseApp.Core.csproj" />
+		<ProjectReference Include="..\..\building blocks\EnterpriseApp.MessageBus\EnterpriseApp.MessageBus.csproj" />
+		<ProjectReference Include="..\EnterpriseApp.Pedido.Domain\EnterpriseApp.Pedido.Domain.csproj" />
+		<ProjectReference Include="..\EnterpriseApp.Pedido.Infrastructure\EnterpriseApp.Pedido.Infrastructure.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!--<PackageReference Include="MediatR" Version="9.0.0" />-->
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Dapper" Version="2.0.123" />
+	</ItemGroup>
+
+</Project>

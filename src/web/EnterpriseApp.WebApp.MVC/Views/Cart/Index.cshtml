@@ -21,9 +21,9 @@
                             <table class="table table-borderless table-shopping-cart">
                                 <thead class="text-muted">
                                     <tr class="small text-uppercase">
-                                        <th scope="col">Produto</th>
-                                        <th scope="col">Valor</th>
-                                        <th scope="col">Quantidade</th>
+                                        <th scope="col">Product</th>
+                                        <th scope="col">Price</th>
+                                        <th scope="col">Quantity</th>
                                         <th scope="col"></th>
                                         <th scope="col"></th>
                                     </tr>
@@ -94,23 +94,21 @@
                             </table>
 
                             <div class="card-body border-top">
-                                <a href="#" class="btn btn-primary float-md-right"> Finalizar Compra <i class="fa fa-chevron-right"></i> </a>
+                                <a asp-controller="Orders" asp-action="DeliveryAddress" class="btn btn-primary float-md-right"> Payment <i class="fa fa-chevron-right"></i> </a>
                                 <a asp-controller="Catalog" asp-action="Index" class="btn btn-light"> <i class="fa fa-chevron-left"></i> Keep searching.</a>
                             </div>
                         </div>
-
-
                     </main>
                     <aside class="col-md-3">
                         <div class="card mb-3">
                             <div class="card-body">
-                                <form>
+                                <form asp-action="ApplyVoucher">
                                     <div class="form-group">
-                                        <label>Possui um Cupom?</label>
+                                        <label>Do you have a voucher?</label>
                                         <div class="input-group">
-                                            <input type="text" class="form-control" name="" placeholder="Descount Cupom">
+                                            <input type="text" class="form-control" name="VoucherCodigo" id="VoucherCodigo" value="@Model.Voucher?.Code" placeholder="Voucher">
                                             <span class="input-group-append">
-                                                <button class="btn btn-primary">Aplicar</button>
+                                                <button type="submit" class="btn btn-primary">Apply</button>
                                             </span>
                                         </div>
                                     </div>
@@ -119,25 +117,29 @@
                         </div>
                         <div class="card">
                             <div class="card-body">
+                                @{
+                                    if (Model.HasUsedVoucher)
+                                    {
+                                        <dl class="dlist-align">
+                                            <dt>Original Price:</dt>
+                                            <dd class="text-right">@this.FormatCurrency(Model.TotalPrice + Model.Discount)</dd>
+                                        </dl>
+                                        <dl class="dlist-align" style="color:green">
+                                            <dt>Discount:</dt>
+                                            <dd class="text-right">@this.FormatCurrency(Model.Discount)</dd>
+                                        </dl>
+                                    }
+                                }
                                 <dl class="dlist-align">
-                                    <dt>Total Price:</dt>
-                                    <dd class="text-right">@this.FormatCurrency(Model.TotalPrice)</dd>
-                                </dl>
-                                <dl class="dlist-align">
-                                    <dt>Descount:</dt>
-                                    <dd class="text-right">R$ 0,00</dd>
-                                </dl>
-                                <dl class="dlist-align">
-                                    <dt>Total Price:</dt>
+                                    <dt>Total:</dt>
                                     <dd class="text-right  h5">
                                         <strong>@this.FormatCurrency(Model.TotalPrice)</strong>
                                     </dd>
                                 </dl>
                                 <hr>
                                 <p class="text-center mb-3">
-                                    <img src="images/misc/payments.png" height="26">
+                                    <img src="~/images/misc/payments.png" height="26">
                                 </p>
-
                             </div>
                         </div>
 

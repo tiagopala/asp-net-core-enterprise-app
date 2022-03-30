@@ -6,10 +6,13 @@ namespace EnterpriseApp.WebApp.MVC.Models
     public class ShoppingCartViewModel
     {
         public decimal TotalPrice { get; set; }
-        public List<ItemProductViewModel> Items { get; set; } = new List<ItemProductViewModel>();
+        public bool HasUsedVoucher { get; set; }
+        public decimal Discount { get; set; }
+        public VoucherViewModel Voucher { get; set; }
+        public List<ItemShoppingCartViewModel> Items { get; set; } = new List<ItemShoppingCartViewModel>();
     }
 
-    public class ItemProductViewModel
+    public class ItemShoppingCartViewModel
     {
         public Guid ProductId { get; set; }
         public string Name { get; set; }

@@ -13,7 +13,13 @@ namespace EnterpriseApp.Carrinho.API.Migrations
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    CustomerId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    HasUsedVoucher = table.Column<bool>(type: "bit", nullable: false),
+                    Discount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    Percent = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    DiscountValue = table.Column<decimal>(type: "decimal(18,2)", nullable: true),
+                    VoucherCode = table.Column<string>(type: "varchar(50)", nullable: true),
+                    DiscountType = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {

@@ -1,0 +1,25 @@
+﻿@using EnterpriseApp.WebApp.MVC.Extensions
+@model EnterpriseApp.WebApp.MVC.Models.OrderTransactionViewModel
+
+<article class="card-body border-top">
+    <dl class="row">
+        @{
+            if (Model.HasUsedVoucher)
+            {
+                <dt class="col-sm-10">Subtotal: <span class="float-right text-muted">@Model.Items.Sum(i => i.Quantity) items</span></dt>
+                <dd class="col-sm-2 text-right">
+                    <strong>@this.FormatCurrency(Model.TotalPrice + Model.Discount)</strong>
+                </dd>
+
+                <dt class="col-sm-10">Discount: <span class="float-right text-muted">@Model.VoucherCode</span></dt>
+                <dd class="col-sm-2 text-danger text-right">
+                    <strong>@this.FormatCurrency(Model.Discount)</strong>
+                </dd>
+            }
+        }
+        <dt class="col-sm-10">Total:</dt>
+        <dd class="col-sm-2 text-right">
+            <strong class="h5 text-dark">@this.FormatCurrency(Model.TotalPrice)</strong>
+        </dd>
+    </dl>
+</article>

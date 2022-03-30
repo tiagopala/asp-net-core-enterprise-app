@@ -21,8 +21,51 @@ namespace EnterpriseApp.Carrinho.API.Models
         public IList<ShoppingCartItem> Items { get; set; } = new List<ShoppingCartItem>();
         public Guid CustomerId { get; set; }
 
+        public bool HasUsedVoucher { get; set; }
+        public decimal Discount { get; set; }
+        public Voucher Voucher { get; set; }
+
+        public void ApplyVoucher(Voucher voucher)
+        {
+            Voucher = voucher;
+            HasUsedVoucher = true;
+            CalculateTotalPrice();
+        }
+
+        private void CalculateTotalDiscount()
+        {
+            if (!HasUsedVoucher) 
+                return;
+
+            decimal discount = 0;
+            var value = TotalPrice;
+
+            if (Voucher.DiscountType == VoucherDiscountType.Percentage)
+            {
+                if (Voucher.Percent.HasValue)
+                {
+                    discount = (value * Voucher.Percent.Value) / 100;
+                    value -= discount;
+                }
+            }
+            else
+            {
+                if (Voucher.DiscountValue.HasValue)
+                {
+                    discount = Voucher.DiscountValue.Value;
+                    value -= discount;
+                }
+            }
+
+            TotalPrice = value < 0 ? 0 : value;
+            Discount = discount;
+        }
+
         public void CalculateTotalPrice()
-            => TotalPrice = Items.Sum(item => item.CalculatePrice());
+        {
+            TotalPrice = Items.Sum(item => item.CalculatePrice());
+            CalculateTotalDiscount();
+        }
 
         public bool HasItem(Guid productId)
             => Items.Any(p => p.ProductId == productId);
@@ -101,7 +144,7 @@ namespace EnterpriseApp.Carrinho.API.Models
 
                 RuleFor(cart => cart.Items.Count)
                     .GreaterThan(0)
-                    .WithMessage("Car does not have any item");
+                    .WithMessage("Cart does not have any item");
 
                 RuleFor(cart => cart.TotalPrice)
                     .GreaterThan(0)
