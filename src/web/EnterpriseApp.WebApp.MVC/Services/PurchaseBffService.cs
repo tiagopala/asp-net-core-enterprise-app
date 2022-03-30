@@ -116,7 +116,9 @@ namespace EnterpriseApp.WebApp.MVC.Services
             if (!response.IsSuccessStatusCode)
                 await HandleErrorsResponse(response);
 
-            return await DeserializeResponseMessage<IEnumerable<OrderViewModel>>(response);
+            var orders = await DeserializeResponseMessage<IEnumerable<OrderViewModel>>(response);
+
+            return orders;
         }
 
         public OrderTransactionViewModel MapToTransactionOrder(ShoppingCartViewModel cart, AddressViewModel address)

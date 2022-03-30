@@ -64,9 +64,11 @@ namespace EnterpriseApp.Pedido.Application.Queries
 
         private static OrderDTO MapOrder(dynamic result)
         {
+            int integerCode = result[0].CODE;
+
             var order = new OrderDTO
             {
-                Code = result[0].CODE,
+                Code = integerCode.ToString(),
                 Status = result[0].ORDERSTATUS,
                 TotalPrice = result[0].TOTALPRICE,
                 Discount = result[0].DISCOUNT,

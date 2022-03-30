@@ -33,5 +33,38 @@ namespace EnterpriseApp.WebApp.MVC.Extensions
 
             return sb.ToString();
         }
+
+        public static string ShowStatus(this RazorPage _, int status)
+        {
+            var statusMessage = "";
+            var statusClass = "";
+
+            switch (status)
+            {
+                case 1:
+                    statusClass = "info";
+                    statusMessage = "Pending";
+                    break;
+                case 2:
+                    statusClass = "primary";
+                    statusMessage = "Approved";
+                    break;
+                case 3:
+                    statusClass = "danger";
+                    statusMessage = "Refused";
+                    break;
+                case 4:
+                    statusClass = "success";
+                    statusMessage = "Delivered";
+                    break;
+                case 5:
+                    statusClass = "warning";
+                    statusMessage = "Cancelled";
+                    break;
+
+            }
+
+            return $"<span class='badge badge-{statusClass}'>{statusMessage}</span>";
+        }
     }
 }
