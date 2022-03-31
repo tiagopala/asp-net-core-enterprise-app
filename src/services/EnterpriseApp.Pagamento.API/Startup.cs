@@ -1,8 +1,10 @@
 using EnterpriseApp.API.Core.Authentication;
 using EnterpriseApp.API.Core.Documentation;
 using EnterpriseApp.Cliente.API.Configuration;
+using EnterpriseApp.Pagamento.API.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -31,8 +33,8 @@ namespace EnterpriseApp.Pagamento.API
         {
             services.AddControllers();
 
-            //services.AddDbContext<PaymentContext>(options =>
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<PaymentsContext>(options =>
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddCors(options =>
             {
