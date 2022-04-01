@@ -51,7 +51,7 @@ namespace EnterpriseApp.Pagamento.API
                 .AddSwaggerConfig("EnterpriseApp Payment API", "This API is responsible for manage EnterpriseApp's payments")
                 //.AddMediatR(typeof(Startup))
                 .AddMessageBusConfig(Configuration)
-                .AddAppServices();
+                .AddAppServices(Configuration);
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
