@@ -23,8 +23,6 @@ namespace EnterpriseApp.Pagamento.API.Repositories
         public void AddPayment(Payment payment)
             => _paymentsContext.Payments.Add(payment);
 
-
-
         public void Dispose()
         {
             throw new NotImplementedException();

@@ -3,10 +3,8 @@ using EnterpriseApp.Pagamento.API.Enums;
 using EnterpriseApp.Pagamento.API.Models;
 using Microsoft.Extensions.Options;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using ExternalGateway = External.Payments.Gateway.Payme;
+using PaymentGateway = External.Payments.Gateway.Payme;
 
 namespace EnterpriseApp.Pagamento.API.Facade
 {
@@ -21,9 +19,9 @@ namespace EnterpriseApp.Pagamento.API.Facade
 
         public async Task<Transaction> AuthorizePayment(Payment payment)
         {
-            var paymeService = new ExternalGateway.PaymeService(_paymentConfig.DefaultApiKey, _paymentConfig.DefaultEncryptionKey);
+            var paymeService = new PaymentGateway.PaymeService(_paymentConfig.DefaultApiKey, _paymentConfig.DefaultEncryptionKey);
 
-            var cardHashGen = new ExternalGateway.CardHash(paymeService)
+            var cardHashGen = new PaymentGateway.CardHash(paymeService)
             {
                 CardNumber = payment.CreditCard.CardNumber,
                 CardHolderName = payment.CreditCard.CardName,
@@ -33,21 +31,21 @@ namespace EnterpriseApp.Pagamento.API.Facade
 
             string cardHash = cardHashGen.Generate();
 
-            var transaction = new ExternalGateway.Transaction(paymeService)
+            var transaction = new PaymentGateway.Transaction(paymeService)
             {
                 CardHash = cardHash,
                 CardNumber = payment.CreditCard.CardNumber,
                 CardHolderName = payment.CreditCard.CardName,
                 CardExpirationDate = payment.CreditCard.MonthYearDueDate,
                 CardCvv = payment.CreditCard.Cvv,
-                PaymentMethod = ExternalGateway.PaymentMethod.CreditCard,
+                PaymentMethod = PaymentGateway.PaymentMethod.CreditCard,
                 Amount = payment.Price
             };
 
             return ToTransaction(await transaction.AuthorizeCardTransaction());
         }
 
-        public static Transaction ToTransaction(ExternalGateway.Transaction transaction)
+        private static Transaction ToTransaction(PaymentGateway.Transaction transaction)
         {
             return new Transaction
             {

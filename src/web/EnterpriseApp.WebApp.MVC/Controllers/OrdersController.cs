@@ -62,7 +62,7 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
                 var cart = await _purchaseBffService.GetShoppingCart();
 
                 if (cart.Items.Count == 0) 
-                    return RedirectToAction("Index", "Carrinho");
+                    return RedirectToAction("Index", "Cart");
 
                 var orderMap = _purchaseBffService.MapToTransactionOrder(cart, null);
 
