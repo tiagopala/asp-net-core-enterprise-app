@@ -103,11 +103,41 @@ namespace EnterpriseApp.Pedido.Application.Queries
 
             return order;
         }
+
+        public async Task<OrderDTO> GetAuthorizedOrders()
+        {
+            const string sql = @"
+                SELECT TOP 1
+                O.ID as 'OrderId',
+                O.ID,
+                O.CUSTOMERID,
+                OI.ID as 'OrderItemId',
+                OI.ID,
+                OI.PRODUCTID,
+                OI.QUANTITY
+                FROM ORDER O
+                INNER JOIN ORDERITEMS OI
+                ON OI.ORDERID = O.ID
+                WHERE O.ORDERSTATUS = 1
+                ORDER BY O.CREATIONDATE";
+
+            var connectionString = _orderRepository.GetConnection();
+
+            var orders = await connectionString.QueryAsync<OrderDTO, OrderItemDTO, OrderDTO>(sql, (o, oi) =>
+            {
+                o.OrderItems = new();
+                o.OrderItems.Add(oi);
+                return o;
+            }, splitOn: "OrderId, OrderItemId");
+
+            return orders.FirstOrDefault();
+        }
     }
 
     public interface IOrderQueries
     {
         Task<OrderDTO> GetLastOrder(Guid customerId);
         Task<IEnumerable<OrderDTO>> GetOrderListByCustomerId(Guid customerId);
+        Task<OrderDTO> GetAuthorizedOrders();
     }
 }
