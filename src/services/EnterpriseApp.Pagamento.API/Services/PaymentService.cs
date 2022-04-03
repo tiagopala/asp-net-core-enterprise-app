@@ -5,9 +5,6 @@ using EnterpriseApp.Pagamento.API.Models;
 using EnterpriseApp.Pagamento.API.Repositories.Interfaces;
 using EnterpriseApp.Pagamento.API.Services.Interfaces;
 using FluentValidation.Results;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace EnterpriseApp.Pagamento.API.Services
@@ -37,8 +34,9 @@ namespace EnterpriseApp.Pagamento.API.Services
             }
 
             _paymentRepository.AddPayment(payment);
+            var saveOperation = await _paymentRepository.UnitOfWork.Commit();
 
-            if (!await _paymentRepository.UnitOfWork.Commit())
+            if (saveOperation is false)
             {
                 validationResults.Errors.Add(new ValidationFailure("Payment", "Operation could not be completed. Try again later."));
 

@@ -1,14 +1,10 @@
 ﻿using EnterpriseApp.Core.Messages.Integration;
 using EnterpriseApp.MessageBus;
 using EnterpriseApp.Pagamento.API.Enums;
-using EnterpriseApp.Pagamento.API.Models;
 using EnterpriseApp.Pagamento.API.Services.Interfaces;
-using FluentValidation.Results;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,11 +27,9 @@ namespace EnterpriseApp.Pagamento.API.Services
             return Task.CompletedTask;
         }
 
-        private void SetResponder()
-            => _messageBus.RespondAsync<OrderInitializedIntegrationEvent, ResponseMessage>((x) => AuthorizePayment(x));
-
         private async Task<ResponseMessage> AuthorizePayment(OrderInitializedIntegrationEvent @event)
         {
+
             ResponseMessage responseMessage;
 
             var paymentRequest = new Models.Payment
@@ -46,10 +40,23 @@ namespace EnterpriseApp.Pagamento.API.Services
                 Price = @event.Price
             };
 
-            using var scope = _serviceProvider.CreateScope();
-            var paymentService = scope.ServiceProvider.GetRequiredService<IPaymentService>();
-            responseMessage = await paymentService.AuthorizePayment(paymentRequest);
+            using (var scope = _serviceProvider.CreateScope())
+            {
+                var paymentService = scope.ServiceProvider.GetRequiredService<IPaymentService>();
+                responseMessage = await paymentService.AuthorizePayment(paymentRequest);
+            }
+
             return responseMessage;
         }
+
+        private void SetResponder()
+        {
+            _messageBus.RespondAsync<OrderInitializedIntegrationEvent, ResponseMessage>(async request => await AuthorizePayment(request));
+
+            _messageBus.AdvancedBus.Connected += OnConnect;
+        }
+
+        private void OnConnect(object sender, EventArgs args)
+            => SetResponder();
     }
 }

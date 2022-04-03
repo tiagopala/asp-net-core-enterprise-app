@@ -2,10 +2,6 @@
 using EnterpriseApp.Pagamento.API.Data;
 using EnterpriseApp.Pagamento.API.Models;
 using EnterpriseApp.Pagamento.API.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace EnterpriseApp.Pagamento.API.Repositories
 {
@@ -24,8 +20,6 @@ namespace EnterpriseApp.Pagamento.API.Repositories
             => _paymentsContext.Payments.Add(payment);
 
         public void Dispose()
-        {
-            throw new NotImplementedException();
-        }
+            => _paymentsContext.Dispose();
     }
 }

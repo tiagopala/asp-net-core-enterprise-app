@@ -17,7 +17,7 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": "true",
-      "applicationUrl": "https://localhost:7006;http://localhost:5006"
+      "applicationUrl": "https://localhost:7007;http://localhost:5007"
     },
     "SelfHosting - hml": {
       "commandName": "Project",
@@ -27,7 +27,7 @@
         "ASPNETCORE_ENVIRONMENT": "Staging"
       },
       "dotnetRunMessages": "true",
-      "applicationUrl": "https://localhost:7006;http://localhost:5006"
+      "applicationUrl": "https://localhost:7007;http://localhost:5007"
     },
     "SelfHosting - prd": {
       "commandName": "Project",
@@ -37,7 +37,7 @@
         "ASPNETCORE_ENVIRONMENT": "Production"
       },
       "dotnetRunMessages": "true",
-      "applicationUrl": "https://localhost:7006;http://localhost:5006"
+      "applicationUrl": "https://localhost:7007;http://localhost:5007"
     },
     "IIS Express": {
       "commandName": "IISExpress",

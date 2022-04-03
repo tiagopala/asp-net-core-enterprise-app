@@ -30,6 +30,10 @@ namespace EnterpriseApp.Cliente.API.Configuration
             services.AddScoped<IPaymentRepository, PaymentRepository>();
             #endregion
 
+            #region Background Services
+            services.AddHostedService<PaymentIntegrationHandler>();
+            #endregion
+
             return services;
         }
     }

@@ -82,6 +82,5 @@ namespace EnterpriseApp.BFF.Compras.Controllers
             order.OrderItems = cart.Items;
             order.Address = address;
         }
-
     }
 }

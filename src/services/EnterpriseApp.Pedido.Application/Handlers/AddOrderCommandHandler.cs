@@ -12,6 +12,7 @@ using EnterpriseApp.Pedido.Domain.Vouchers;
 using EnterpriseApp.Pedido.Domain.Vouchers.Specifications;
 using FluentValidation.Results;
 using MediatR;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
