@@ -1,6 +1,7 @@
 ﻿using EnterpriseApp.Core.Mediator;
 using EnterpriseApp.Core.Services;
 using EnterpriseApp.Core.Services.Interfaces;
+using EnterpriseApp.Pedido.Application.BackgroundServices;
 using EnterpriseApp.Pedido.Application.Commands;
 using EnterpriseApp.Pedido.Application.Events;
 using EnterpriseApp.Pedido.Application.Handlers;
@@ -40,6 +41,9 @@ namespace EnterpriseApp.Pedido.API.Configurations
             // Repositories
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IVoucherRepository, VoucherRepository>();
+
+            // Hosted Services
+            services.AddHostedService<OrderOrchestratorIntegrationHandler>();
 
             return services;
         }
