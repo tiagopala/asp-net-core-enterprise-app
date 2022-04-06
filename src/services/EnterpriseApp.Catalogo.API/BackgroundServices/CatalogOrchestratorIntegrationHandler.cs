@@ -67,6 +67,7 @@ namespace EnterpriseApp.Catalogo.API.BackgroundServices
 
             if (!await productRepository.UnitOfWork.Commit())
             {
+                // Disclaire: Caso a exceção seja lançada, a mensagem será enviada para uma fila de erros a qual tentará ser reprocessada até ser processada com sucesso.
                 throw new DomainException($"Problems happned whilte updating database for OrderId:{@event.OrderId}.");
             }
 
