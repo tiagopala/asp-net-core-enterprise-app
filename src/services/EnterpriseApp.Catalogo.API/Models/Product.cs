@@ -12,5 +12,16 @@ namespace EnterpriseApp.Catalogo.API.Models
         public DateTime InsertDate { get; set; }
         public string Image { get; set; }
         public int StockQuantity { get; set; }
+
+        public void WithdrawFromStock(int quantidade)
+        {
+            if (StockQuantity >= quantidade)
+            {
+                StockQuantity -= quantidade;
+            }
+        }
+
+        public bool IsAvailable(int quantidade)
+            => (Active && StockQuantity >= quantidade);
     }
 }

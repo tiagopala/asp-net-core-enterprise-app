@@ -1,4 +1,5 @@
 ﻿using EnterpriseApp.Catalogo.API.Models;
+using EnterpriseApp.Core.DomainObjects;
 using EnterpriseApp.Core.Messages.Integration;
 using EnterpriseApp.MessageBus;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,33 +41,42 @@ namespace EnterpriseApp.Catalogo.API.BackgroundServices
 
             if (products.Count() != @event.Items.Count)
             {
-
+                CancelOrder(@event);
+                return;
             }
 
             foreach (var product in products)
             {
+                var quantidadeProduto = @event.Items.FirstOrDefault(p => p.Key == product.Id).Value;
 
+                if (product.IsAvailable(quantidadeProduto))
+                {
+                    product.WithdrawFromStock(quantidadeProduto);
+                    productAtStock.Add(product);
+                }
             }
 
             if(productAtStock.Count != @event.Items.Count)
             {
-
+                CancelOrder(@event);
+                return;
             }
 
             foreach (var product in productAtStock)
-            {
-
-            }
+                productRepository.Update(product);
 
             if (!await productRepository.UnitOfWork.Commit())
             {
-
+                throw new DomainException($"Problems happned whilte updating database for OrderId:{@event.OrderId}.");
             }
 
             var withdrawnOrder = new WithdrawnOrderIntegrationEvent(@event.CustomerId, @event.OrderId);
 
             await _messageBus.PublishAsync(withdrawnOrder);
         }
+
+        private async void CancelOrder(OrderAuthorizedIntegrationEvent @event)
+            => await _messageBus.PublishAsync(new CancelOrderIntegrationEvent(@event.CustomerId, @event.OrderId));
 
         private void SetResponder()
         {
