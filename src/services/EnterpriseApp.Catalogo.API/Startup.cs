@@ -46,6 +46,7 @@ namespace EnterpriseApp.Catalogo.API
             });
 
             services
+                .AddMessageBusConfig(Configuration)
                 .AddRouting(x => x.LowercaseUrls = true)
                 .AddJwtConfiguration(Configuration)
                 .AddSwaggerConfig("EnterpriseApp Catalog API", "This API is responsible for manage EnterpriseApp's products")
