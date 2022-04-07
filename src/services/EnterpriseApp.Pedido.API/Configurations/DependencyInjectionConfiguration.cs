@@ -44,6 +44,7 @@ namespace EnterpriseApp.Pedido.API.Configurations
 
             // Hosted Services
             services.AddHostedService<OrderOrchestratorIntegrationHandler>();
+            services.AddHostedService<OrderIntegrationHandler>();
 
             return services;
         }

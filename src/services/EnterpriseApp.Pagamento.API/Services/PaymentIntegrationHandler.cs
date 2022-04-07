@@ -1,4 +1,5 @@
-﻿using EnterpriseApp.Core.Messages.Integration;
+﻿using EnterpriseApp.Core.DomainObjects;
+using EnterpriseApp.Core.Messages.Integration;
 using EnterpriseApp.MessageBus;
 using EnterpriseApp.Pagamento.API.Enums;
 using EnterpriseApp.Pagamento.API.Services.Interfaces;
@@ -24,12 +25,12 @@ namespace EnterpriseApp.Pagamento.API.Services
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
             SetResponder();
+            SetSubscribers();
             return Task.CompletedTask;
         }
 
         private async Task<ResponseMessage> AuthorizePayment(OrderInitializedIntegrationEvent @event)
         {
-
             ResponseMessage responseMessage;
 
             var paymentRequest = new Models.Payment
@@ -49,11 +50,40 @@ namespace EnterpriseApp.Pagamento.API.Services
             return responseMessage;
         }
 
+        private async Task CancelPayment(CancelOrderIntegrationEvent request)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var paymentService = scope.ServiceProvider.GetRequiredService<IPaymentService>();
+            var response = await paymentService.CancelPayment(request.OrderId);
+
+            if(!response.ValidationResult.IsValid)
+                throw new DomainException($"Error while trying to cancel payment for this OrderId:{request.OrderId}");
+        }
+
+        private async Task CapturePayment(WithdrawnOrderIntegrationEvent request)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var paymentService = scope.ServiceProvider.GetRequiredService<IPaymentService>();
+            var response = await paymentService.CapturePayment(request.OrderId);
+
+            if (!response.ValidationResult.IsValid)
+                throw new DomainException($"Error while trying to capture payment for this OrderId:{request.OrderId}");
+
+            await _messageBus.PublishAsync<OrderPaidIntegrationEvent>(new OrderPaidIntegrationEvent(request.CustomerId, request.OrderId));
+        }
+
         private void SetResponder()
         {
             _messageBus.RespondAsync<OrderInitializedIntegrationEvent, ResponseMessage>(async request => await AuthorizePayment(request));
 
             _messageBus.AdvancedBus.Connected += OnConnect;
+        }
+
+        private void SetSubscribers()
+        {
+            _messageBus.SubscribeAsync<CancelOrderIntegrationEvent>("WidthdrawnOrder", async request => await CancelPayment(request));
+
+            _messageBus.SubscribeAsync<WithdrawnOrderIntegrationEvent>("WidthdrawnOrder", async request => await CapturePayment(request));
         }
 
         private void OnConnect(object sender, EventArgs args)

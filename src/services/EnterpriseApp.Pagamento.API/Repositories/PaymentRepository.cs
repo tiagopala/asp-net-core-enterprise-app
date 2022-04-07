@@ -21,6 +21,9 @@ namespace EnterpriseApp.Pagamento.API.Repositories
 
         public IUnitOfWork UnitOfWork => _paymentsContext;
 
+        public void AddTransaction(Transaction transaction)
+            => _paymentsContext.Transactions.Add(transaction);
+
         public void AddPayment(Payment payment)
             => _paymentsContext.Payments.Add(payment);
 

@@ -54,6 +54,15 @@ namespace EnterpriseApp.Pagamento.API.Facade
             return ToTransaction(await gatewayTransaction.CaptureCardTransaction());
         }
 
+        public async Task<Transaction> CancelAuthorization(Transaction transaction)
+        {
+            var paymeService = new PaymentGateway.PaymeService(_paymentConfig.DefaultApiKey, _paymentConfig.DefaultEncryptionKey);
+
+            var gatewayTransaction = ToPaymentGatewayTransaction(transaction, paymeService);
+
+            return ToTransaction(await gatewayTransaction.CancelAuthorization());
+        }
+
         private static Transaction ToTransaction(PaymentGateway.Transaction transaction)
         {
             return new Transaction

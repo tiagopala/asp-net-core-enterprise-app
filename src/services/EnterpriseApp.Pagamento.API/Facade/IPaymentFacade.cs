@@ -7,5 +7,6 @@ namespace EnterpriseApp.Pagamento.API.Facade
     {
         Task<Transaction> AuthorizePayment(Payment payment);
         Task<Transaction> CapturePayment(Transaction transaction);
+        Task<Transaction> CancelAuthorization(Transaction transaction);
     }
 }

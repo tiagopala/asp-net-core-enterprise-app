@@ -1,10 +1,13 @@
-﻿using EnterpriseApp.Core.Messages.Integration;
+﻿using EnterpriseApp.Core.DomainObjects;
+using EnterpriseApp.Core.Messages.Integration;
 using EnterpriseApp.Pagamento.API.Enums;
 using EnterpriseApp.Pagamento.API.Facade;
 using EnterpriseApp.Pagamento.API.Models;
 using EnterpriseApp.Pagamento.API.Repositories.Interfaces;
 using EnterpriseApp.Pagamento.API.Services.Interfaces;
 using FluentValidation.Results;
+using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace EnterpriseApp.Pagamento.API.Services
@@ -50,16 +53,64 @@ namespace EnterpriseApp.Pagamento.API.Services
             return new ResponseMessage(validationResults);
         }
 
-        public Task<ResponseMessage> CapturePayment(System.Guid orderId)
+        public async Task<ResponseMessage> CapturePayment(Guid orderId)
         {
-            // Implementar captura do pagamento
-            throw new System.NotImplementedException();
+            var transactions = await _paymentRepository.GetTransactionsByOrderId(orderId);
+            var authorizedTransaction = transactions?.FirstOrDefault(t => t.Status == TransactionStatusEnum.Authorized);
+            var validationResult = new ValidationResult();
+
+            if (authorizedTransaction is null) throw new DomainException($"Transaction not found for this OrderId:{orderId}.");
+
+            var paymenTransaction = await _paymentFacade.CapturePayment(authorizedTransaction);
+
+            if (paymenTransaction.Status != TransactionStatusEnum.Paid)
+            {
+                validationResult.Errors.Add(new ValidationFailure("Payment",$"Error while trying to capture payment for this OrderId:{orderId}"));
+
+                return new ResponseMessage(validationResult);
+            }
+
+            paymenTransaction.PaymentId = authorizedTransaction.PaymentId;
+            _paymentRepository.AddTransaction(paymenTransaction);
+
+            if (!await _paymentRepository.UnitOfWork.Commit())
+            {
+                validationResult.Errors.Add(new ValidationFailure("Payment", "Operation could not be completed. Try again later."));
+
+                return new ResponseMessage(validationResult);
+            }
+
+            return new ResponseMessage(validationResult);
         }
 
-        public Task<ResponseMessage> CancelPayment(System.Guid orderId)
+        public async Task<ResponseMessage> CancelPayment(Guid orderId)
         {
-            // Implementar cancelamento do pagamento
-            throw new System.NotImplementedException();
+            var transactions = await _paymentRepository.GetTransactionsByOrderId(orderId);
+            var authorizedTransaction = transactions?.FirstOrDefault(t => t.Status == TransactionStatusEnum.Authorized);
+            var validationResult = new ValidationResult();
+
+            if (authorizedTransaction is null) throw new DomainException($"Transaction not found for this OrderId:{orderId}.");
+
+            var transaction = await _paymentFacade.CancelAuthorization(authorizedTransaction);
+
+            if (transaction.Status != TransactionStatusEnum.Cancelled)
+            {
+                validationResult.Errors.Add(new ValidationFailure("Payment", $"Error while trying to cancel payment for this OrderId:{orderId}"));
+
+                return new ResponseMessage(validationResult);
+            }
+
+            transaction.PaymentId = authorizedTransaction.PaymentId;
+            _paymentRepository.AddTransaction(transaction);
+
+            if (!await _paymentRepository.UnitOfWork.Commit())
+            {
+                validationResult.Errors.Add(new ValidationFailure("Payment", "Operation could not be completed. Try again later."));
+
+                return new ResponseMessage(validationResult);
+            }
+
+            return new ResponseMessage(validationResult);
         }
     }
 }

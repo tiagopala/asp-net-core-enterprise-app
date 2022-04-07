@@ -8,6 +8,7 @@ namespace EnterpriseApp.Pagamento.API.Repositories.Interfaces
 {
     public interface IPaymentRepository : IRepository<Payment>
     {
+        void AddTransaction(Transaction transaction);
         void AddPayment(Payment payment);
         Task<Payment> GetPaymentByOrderId(Guid orderId);
         Task<IEnumerable<Transaction>> GetTransactionsByOrderId(Guid orderId);
