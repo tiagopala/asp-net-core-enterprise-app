@@ -49,5 +49,17 @@ namespace EnterpriseApp.Pagamento.API.Services
 
             return new ResponseMessage(validationResults);
         }
+
+        public Task<ResponseMessage> CapturePayment(System.Guid orderId)
+        {
+            // Implementar captura do pagamento
+            throw new System.NotImplementedException();
+        }
+
+        public Task<ResponseMessage> CancelPayment(System.Guid orderId)
+        {
+            // Implementar cancelamento do pagamento
+            throw new System.NotImplementedException();
+        }
     }
 }

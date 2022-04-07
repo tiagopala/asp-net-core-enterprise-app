@@ -45,6 +45,15 @@ namespace EnterpriseApp.Pagamento.API.Facade
             return ToTransaction(await transaction.AuthorizeCardTransaction());
         }
 
+        public async Task<Transaction> CapturePayment(Transaction transaction)
+        {
+            var paymeService = new PaymentGateway.PaymeService(_paymentConfig.DefaultApiKey, _paymentConfig.DefaultEncryptionKey);
+
+            var gatewayTransaction = ToPaymentGatewayTransaction(transaction, paymeService);
+
+            return ToTransaction(await gatewayTransaction.CaptureCardTransaction());
+        }
+
         private static Transaction ToTransaction(PaymentGateway.Transaction transaction)
         {
             return new Transaction
@@ -58,6 +67,20 @@ namespace EnterpriseApp.Pagamento.API.Facade
                 Date = transaction.TransactionDate,
                 NSU = transaction.Nsu,
                 TID = transaction.Tid
+            };
+        }
+
+        public static PaymentGateway.Transaction ToPaymentGatewayTransaction(Transaction transaction, PaymentGateway.PaymeService paymeService)
+        {
+            return new PaymentGateway.Transaction(paymeService)
+            {
+                Status = (PaymentGateway.TransactionStatus)transaction.Status,
+                Amount = transaction.TotalPrice,
+                CardBrand = transaction.CreditCardBrand,
+                AuthorizationCode = transaction.AuthorizationCode,
+                Cost = transaction.Tax,
+                Nsu = transaction.NSU,
+                Tid = transaction.TID
             };
         }
     }
