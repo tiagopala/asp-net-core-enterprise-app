@@ -61,7 +61,7 @@ namespace EnterpriseApp.Pedido.Application.Handlers
             order.AuthorizeOrder();
 
             // Adicionar Evento
-            //await MediatorHandler.PublishEvent(new OrderRealizedEvent(order.Id, order.CustomerId));
+            await MediatorHandler.PublishEvent(new OrderRealizedEvent(order.Id, order.CustomerId));
 
             // Adicionar Pedido Repositorio
             _orderRepository.Add(order);
