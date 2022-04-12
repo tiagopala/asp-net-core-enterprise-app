@@ -29,6 +29,13 @@ namespace EnterpriseApp.Pagamento.API.Services
             return Task.CompletedTask;
         }
 
+        private void SetResponder()
+        {
+            _messageBus.RespondAsync<OrderInitializedIntegrationEvent, ResponseMessage>(async request => await AuthorizePayment(request));
+
+            _messageBus.AdvancedBus.Connected += OnConnect;
+        }
+
         private async Task<ResponseMessage> AuthorizePayment(OrderInitializedIntegrationEvent @event)
         {
             ResponseMessage responseMessage;
@@ -48,6 +55,13 @@ namespace EnterpriseApp.Pagamento.API.Services
             }
 
             return responseMessage;
+        }
+
+        private void SetSubscribers()
+        {
+            _messageBus.SubscribeAsync<CancelOrderIntegrationEvent>("CancelledOrder", async request => await CancelPayment(request));
+
+            _messageBus.SubscribeAsync<WithdrawnOrderIntegrationEvent>("WidthdrawnOrder", async request => await CapturePayment(request));
         }
 
         private async Task CancelPayment(CancelOrderIntegrationEvent request)
@@ -70,20 +84,6 @@ namespace EnterpriseApp.Pagamento.API.Services
                 throw new DomainException($"Error while trying to capture payment for this OrderId:{request.OrderId}");
 
             await _messageBus.PublishAsync<OrderPaidIntegrationEvent>(new OrderPaidIntegrationEvent(request.CustomerId, request.OrderId));
-        }
-
-        private void SetResponder()
-        {
-            _messageBus.RespondAsync<OrderInitializedIntegrationEvent, ResponseMessage>(async request => await AuthorizePayment(request));
-
-            _messageBus.AdvancedBus.Connected += OnConnect;
-        }
-
-        private void SetSubscribers()
-        {
-            _messageBus.SubscribeAsync<CancelOrderIntegrationEvent>("WidthdrawnOrder", async request => await CancelPayment(request));
-
-            _messageBus.SubscribeAsync<WithdrawnOrderIntegrationEvent>("WidthdrawnOrder", async request => await CapturePayment(request));
         }
 
         private void OnConnect(object sender, EventArgs args)
