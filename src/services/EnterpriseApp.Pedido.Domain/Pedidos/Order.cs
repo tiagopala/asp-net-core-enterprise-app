@@ -40,9 +40,13 @@ namespace EnterpriseApp.Pedido.Domain.Pedidos
         }
 
         public void AuthorizeOrder()
-        {
-            OrderStatus = OrderStatus.Authorized;
-        }
+            => OrderStatus = OrderStatus.Authorized;
+
+        public void CancelOrder()
+            => OrderStatus = OrderStatus.Cancelled;
+
+        public void FinishOrder()
+            => OrderStatus = OrderStatus.Paid;
 
         public void ApplyVoucher(Voucher voucher)
         {

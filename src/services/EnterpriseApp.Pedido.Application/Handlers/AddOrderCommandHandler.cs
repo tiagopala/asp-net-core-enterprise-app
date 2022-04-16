@@ -2,6 +2,8 @@
 using EnterpriseApp.Core.Extensions;
 using EnterpriseApp.Core.Mediator;
 using EnterpriseApp.Core.Messages;
+using EnterpriseApp.Core.Messages.Integration;
+using EnterpriseApp.MessageBus;
 using EnterpriseApp.Pedido.Application.Commands;
 using EnterpriseApp.Pedido.Application.DTO;
 using EnterpriseApp.Pedido.Application.Events;
@@ -10,6 +12,7 @@ using EnterpriseApp.Pedido.Domain.Vouchers;
 using EnterpriseApp.Pedido.Domain.Vouchers.Specifications;
 using FluentValidation.Results;
 using MediatR;
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,14 +23,17 @@ namespace EnterpriseApp.Pedido.Application.Handlers
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IVoucherRepository _voucherRepository;
+        private readonly IMessageBus _messageBus;
 
         public AddOrderCommandHandler( 
             IMediatorHandler mediatorHandler,
             IOrderRepository orderRepository,
-            IVoucherRepository voucherRepository) : base(orderRepository, mediatorHandler)
+            IVoucherRepository voucherRepository,
+            IMessageBus messageBus) : base(orderRepository, mediatorHandler)
         {
             _orderRepository = orderRepository;
             _voucherRepository = voucherRepository;
+            _messageBus = messageBus;
         }
 
         public async Task<ValidationResult> Handle(AddOrderCommand request, CancellationToken cancellationToken)
@@ -48,14 +54,14 @@ namespace EnterpriseApp.Pedido.Application.Handlers
                 return request.ValidationResult;
 
             // Processar pagamento
-            if (!ProcessarPagamento(order))
+            if ((await ProcessPayment(order, request)) is false)
                 return request.ValidationResult;
 
             // Se pagamento tudo ok!
             order.AuthorizeOrder();
 
             // Adicionar Evento
-            //await MediatorHandler.PublishEvent(new OrderRealizedEvent(order.Id, order.CustomerId));
+            await MediatorHandler.PublishEvent(new OrderRealizedEvent(order.Id, order.CustomerId));
 
             // Adicionar Pedido Repositorio
             _orderRepository.Add(order);
@@ -139,9 +145,28 @@ namespace EnterpriseApp.Pedido.Application.Handlers
             return true;
         }
 
-        public bool ProcessarPagamento(Order order)
+        public async Task<bool> ProcessPayment(Order order, AddOrderCommand request)
         {
-            return true;
+            var orderInitializedEvent = new OrderInitializedIntegrationEvent
+            {
+                CustomerId = order.CustomerId,
+                OrderID = order.Id,
+                PaymentType = 0, // Fixed, only credit card
+                Price = order.TotalPrice,
+                CardName = request.CardName,
+                CardNumber = request.CardNumber,
+                CVV = request.CardCvv,
+                MonthYearDueDate = request.CardExpirationDate
+            };
+
+            var response = await _messageBus.RequestAsync<OrderInitializedIntegrationEvent, ResponseMessage>(orderInitializedEvent);
+
+            if (response.ValidationResult.IsValid)
+                return true;
+
+            response.ValidationResult.Errors.ForEach(x => request.ValidationResult.AddCustomError(x.ErrorMessage));
+
+            return false;
         }
     }
 }
