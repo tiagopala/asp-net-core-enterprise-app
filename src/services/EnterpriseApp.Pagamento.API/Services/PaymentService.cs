@@ -36,7 +36,10 @@ namespace EnterpriseApp.Pagamento.API.Services
                 return new ResponseMessage(validationResults);
             }
 
+            transaction.PaymentId = payment.Id;
+
             _paymentRepository.AddPayment(payment);
+            _paymentRepository.AddTransaction(transaction);
             var saveOperation = await _paymentRepository.UnitOfWork.Commit();
 
             if (saveOperation is false)
@@ -55,7 +58,8 @@ namespace EnterpriseApp.Pagamento.API.Services
 
         public async Task<ResponseMessage> CapturePayment(Guid orderId)
         {
-            var transactions = await _paymentRepository.GetTransactionsByOrderId(orderId);
+            var payment = await _paymentRepository.GetPaymentByOrderId(orderId);
+            var transactions = await _paymentRepository.GetTransactionsByPaymentId(payment.Id);
             var authorizedTransaction = transactions?.FirstOrDefault(t => t.Status == TransactionStatusEnum.Authorized);
             var validationResult = new ValidationResult();
 
@@ -85,7 +89,8 @@ namespace EnterpriseApp.Pagamento.API.Services
 
         public async Task<ResponseMessage> CancelPayment(Guid orderId)
         {
-            var transactions = await _paymentRepository.GetTransactionsByOrderId(orderId);
+            var payment = await _paymentRepository.GetPaymentByOrderId(orderId);
+            var transactions = await _paymentRepository.GetTransactionsByPaymentId(payment.Id);
             var authorizedTransaction = transactions?.FirstOrDefault(t => t.Status == TransactionStatusEnum.Authorized);
             var validationResult = new ValidationResult();
 

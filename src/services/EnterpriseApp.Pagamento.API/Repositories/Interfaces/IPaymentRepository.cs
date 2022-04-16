@@ -11,6 +11,6 @@ namespace EnterpriseApp.Pagamento.API.Repositories.Interfaces
         void AddTransaction(Transaction transaction);
         void AddPayment(Payment payment);
         Task<Payment> GetPaymentByOrderId(Guid orderId);
-        Task<IEnumerable<Transaction>> GetTransactionsByOrderId(Guid orderId);
+        Task<IEnumerable<Transaction>> GetTransactionsByPaymentId(Guid paymentId);
     }
 }

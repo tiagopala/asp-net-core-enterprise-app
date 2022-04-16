@@ -30,8 +30,8 @@ namespace EnterpriseApp.Pagamento.API.Repositories
         public async Task<Payment> GetPaymentByOrderId(Guid orderId)
             => await _paymentsContext.Payments.AsNoTracking().FirstOrDefaultAsync(p => p.OrderId == orderId);
 
-        public async Task<IEnumerable<Transaction>> GetTransactionsByOrderId(Guid orderId)
-            => await _paymentsContext.Transactions.AsNoTracking().Where(t => t.PaymentId == orderId).ToListAsync();
+        public async Task<IEnumerable<Transaction>> GetTransactionsByPaymentId(Guid paymentId)
+            => await _paymentsContext.Transactions.AsNoTracking().Where(t => t.PaymentId == paymentId).ToListAsync();
 
         public void Dispose()
             => _paymentsContext.Dispose();

@@ -61,7 +61,7 @@ namespace EnterpriseApp.Pagamento.API.Services
         {
             _messageBus.SubscribeAsync<CancelOrderIntegrationEvent>("CancelledOrder", async request => await CancelPayment(request));
 
-            _messageBus.SubscribeAsync<WithdrawnOrderIntegrationEvent>("WidthdrawnOrder", async request => await CapturePayment(request));
+            _messageBus.SubscribeAsync<WithdrawnOrderIntegrationEvent>("WithdrawnOrder", async request => await CapturePayment(request));
         }
 
         private async Task CancelPayment(CancelOrderIntegrationEvent request)
