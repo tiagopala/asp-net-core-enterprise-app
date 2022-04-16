@@ -7,7 +7,7 @@ namespace EnterpriseApp.Catalogo.API.Models
 {
     public interface IProductRepository : IRepository<Product>
     {
-        Task<IEnumerable<Product>> GetProducts();
+        Task<PagedResult<Product>> GetProducts(int pageSize, int pageIndex, string query = null);
         Task<Product> GetProduct(Guid id);
         Task<IEnumerable<Product>> GetProductsById(string ids);
         void Add(Product product);

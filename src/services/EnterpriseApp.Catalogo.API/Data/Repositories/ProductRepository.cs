@@ -1,4 +1,5 @@
-﻿using EnterpriseApp.Catalogo.API.Models;
+﻿using Dapper;
+using EnterpriseApp.Catalogo.API.Models;
 using EnterpriseApp.Core.Data;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -17,8 +18,33 @@ namespace EnterpriseApp.Catalogo.API.Data.Repositories
 
         public IUnitOfWork UnitOfWork => _context;
 
-        public async Task<IEnumerable<Product>> GetProducts()
-            => await _context.Products.AsNoTracking().ToListAsync();
+        public async Task<PagedResult<Product>> GetProducts(int pageSize, int pageIndex, string query = null)
+        {
+            var sql = $@" 
+                SELECT * 
+                FROM Products
+                WHERE (@Name is NULL OR Name LIKE '%' + @Name + '%')
+                ORDER BY [Name]
+                OFFSET {pageSize * (pageIndex - 1)} ROWS
+                FETCH NEXT {pageSize} ROWS ONLY
+                SELECT COUNT(Id) 
+                FROM Products
+                WHERE (@Name is NULL OR Name LIKE '%' + @Name + '%')";
+
+            var gridResult = await _context.Database.GetDbConnection().QueryMultipleAsync(sql, new { Name = query });
+
+            var products = gridResult.Read<Product>();
+            var count = gridResult.Read<int>().FirstOrDefault();
+
+            return new PagedResult<Product>
+            {
+                List = products,
+                TotalResults = count,
+                PageIndex = pageIndex,
+                PageSize = pageSize,
+                Query = query
+            };
+        }
 
         public async Task<Product> GetProduct(Guid id)
             => await _context.Products.FindAsync(id);
