@@ -19,10 +19,16 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
         [Route("")]
         [Route("catalog")]
         public async Task<IActionResult> Index(
-            [FromQuery] int pageSize = 8,
+            [FromQuery] int pageSize = 2,
             [FromQuery] int pageIndex = 1,
             [FromQuery] string query = null)
-            => View(await _catalogService.GetAllProducts(pageSize, pageIndex, query));
+        {
+            var products = await _catalogService.GetAllProducts(pageSize, pageIndex, query);
+
+            ViewBag.Pesquisa = query;
+
+            return View(products);
+        }
 
         [HttpGet]
         [Route("product-details/{id}")]
