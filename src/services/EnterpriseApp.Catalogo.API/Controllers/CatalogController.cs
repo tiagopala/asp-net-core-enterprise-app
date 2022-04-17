@@ -26,9 +26,7 @@ namespace EnterpriseApp.Catalogo.API.Controllers
             [FromQuery] int pageSize = 8, 
             [FromQuery] int pageIndex = 1, 
             [FromQuery] string query = null)
-        {
-            return await _productRepository.GetProducts(pageSize, pageIndex, query);
-        }
+            => await _productRepository.GetProducts(pageSize, pageIndex, query);
 
         [HttpGet("products/{id}")]
         [ClaimsAuthorize("Catalog", "View")]

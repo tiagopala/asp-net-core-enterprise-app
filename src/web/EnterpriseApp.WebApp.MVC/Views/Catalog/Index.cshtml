@@ -1,5 +1,5 @@
 ﻿@using EnterpriseApp.WebApp.MVC.Extensions
-@model IEnumerable<EnterpriseApp.WebApp.MVC.Models.ProductViewModel>
+@model PagedViewModel<EnterpriseApp.WebApp.MVC.Models.ProductViewModel>
 
 @{
     ViewData["Title"] = "All the products";
@@ -15,7 +15,7 @@
         <div class="container" style=" padding-top: 20px">
             <div class="row">
                 @{
-                    foreach (var product in Model.OrderBy(p => p.Name))
+                    foreach (var product in Model.List.OrderBy(p => p.Name))
                     {
                         <div class="col-md-3">
                             <div href="#" class="card card-product-grid">
@@ -40,6 +40,25 @@
                     }
                 }
             </div>
+            <nav>
+                <ul class="pagination justify-content-center">
+                    @{
+                        for (var i = 1; i < Model.TotalPages + 1; i++)
+                        {
+                            if (i == Model.PageIndex)
+                            {
+                                <li class="page-item active">
+                                    <a class="page-link" asp-action="@Model.ReferenceAction" asp-route-pageIndex="@i" asp-route-pageSize="@Model.PageSize" asp-route-query="@Model.Query">@i <span class="sr-only">(current)</span></a>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="page-item"><a class="page-link" asp-action="@Model.ReferenceAction" asp-route-pageSize="@Model.PageSize" asp-route-pageIndex="@i" asp-route-query="@Model.Query">@i</a></li>
+                            }
+                        }
+                    }
+                </ul>
+            </nav>
         </div>
     </div>
 </section>
