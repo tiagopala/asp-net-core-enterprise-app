@@ -1,6 +1,7 @@
 ﻿using EnterpriseApp.API.Core.Authentication;
 using EnterpriseApp.API.Core.Controllers;
 using EnterpriseApp.Core.Messages.Integration;
+using EnterpriseApp.Core.Services.Interfaces;
 using EnterpriseApp.Identidade.API.Extensions;
 using EnterpriseApp.Identidade.API.Models;
 using EnterpriseApp.MessageBus;
@@ -9,12 +10,12 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using NetDevPack.Security.Jwt.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace EnterpriseApp.Identidade.API.Controllers
@@ -24,17 +25,23 @@ namespace EnterpriseApp.Identidade.API.Controllers
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
+        private readonly IJsonWebKeySetService _jsonKeyService;
+        private readonly IUserService _userService;
         private readonly AuthConfig _jwtConfig;
         private readonly IMessageBus _bus;
 
         public AuthController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
+            IJsonWebKeySetService jsonKeyService,
+            IUserService userService,
             IOptions<AuthConfig> jwtConfig,
             IMessageBus bus)
         {
+            _jsonKeyService = jsonKeyService;
             _signInManager = signInManager;
             _userManager = userManager;
+            _userService = userService;
             _jwtConfig = jwtConfig.Value;
             _bus = bus;
 
@@ -140,14 +147,14 @@ namespace EnterpriseApp.Identidade.API.Controllers
         private string GetToken(ClaimsIdentity identityClaims)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_jwtConfig.Secret);
+            var key = _jsonKeyService.GetCurrentSigningCredentials();
+            var issuer = $"{_userService.GetHttpContext().Request.Scheme}://{_userService.GetHttpContext().Request.Host}";
             var token = tokenHandler.CreateToken(new SecurityTokenDescriptor
             {
-                Issuer = _jwtConfig.Issuer,
-                Audience = _jwtConfig.Audience,
+                Issuer = issuer,
                 Subject = identityClaims,
-                Expires = DateTime.UtcNow.AddHours(_jwtConfig.ExpirationHours),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                Expires = DateTime.UtcNow.AddHours(1),
+                SigningCredentials = key
             });
 
             return tokenHandler.WriteToken(token);

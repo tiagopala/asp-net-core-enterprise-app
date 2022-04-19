@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NetDevPack.Security.Jwt.AspNetCore;
 
 namespace EnterpriseApp.Identidade.API
 {
@@ -41,6 +42,7 @@ namespace EnterpriseApp.Identidade.API
                 .AddIdentityConfig(Configuration)
                 .AddJwtConfiguration(Configuration)
                 .AddMessageBusConfig(Configuration)
+                .AddServices()
                 .AddSwaggerConfig("EnterpriseApp Identity API", "This API is responsible for taking care of user authentication e authorization services");
         }
 
@@ -58,6 +60,8 @@ namespace EnterpriseApp.Identidade.API
             {
                 endpoints.MapControllers();
             });
+
+            app.UseJwksDiscovery();
         }
     }
 }
