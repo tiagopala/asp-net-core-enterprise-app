@@ -8,9 +8,9 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
     [ApiController]
     public class CatalogController : Controller
     {
-        private readonly ICatalogServiceRefit _catalogService;
+        private readonly ICatalogService _catalogService;
 
-        public CatalogController(ICatalogServiceRefit catalogService)
+        public CatalogController(ICatalogService catalogService)
         {
             _catalogService = catalogService;
         }
@@ -18,8 +18,18 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
         [HttpGet]
         [Route("")]
         [Route("catalog")]
-        public async Task<IActionResult> Index()
-            => View(await _catalogService.GetAllProducts());
+        public async Task<IActionResult> Index(
+            [FromQuery] int pageSize = 8,
+            [FromQuery] int pageIndex = 1,
+            [FromQuery] string query = null)
+        {
+            var products = await _catalogService.GetAllProducts(pageSize, pageIndex, query);
+
+            ViewBag.Pesquisa = query;
+            products.ReferenceAction = "Index";
+
+            return View(products);
+        }
 
         [HttpGet]
         [Route("product-details/{id}")]

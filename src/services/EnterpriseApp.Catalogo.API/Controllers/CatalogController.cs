@@ -11,7 +11,7 @@ namespace EnterpriseApp.Catalogo.API.Controllers
     [Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class CatalogController : ControllerBase
+    public class CatalogController : Controller
     {
         private readonly IProductRepository _productRepository;
 
@@ -22,8 +22,11 @@ namespace EnterpriseApp.Catalogo.API.Controllers
 
         [AllowAnonymous]
         [HttpGet("products")]
-        public async Task<IEnumerable<Product>> GetProducts()
-            => await _productRepository.GetProducts();
+        public async Task<PagedResult<Product>> GetProducts(
+            [FromQuery] int pageSize = 8, 
+            [FromQuery] int pageIndex = 1, 
+            [FromQuery] string query = null)
+            => await _productRepository.GetProducts(pageSize, pageIndex, query);
 
         [HttpGet("products/{id}")]
         [ClaimsAuthorize("Catalog", "View")]

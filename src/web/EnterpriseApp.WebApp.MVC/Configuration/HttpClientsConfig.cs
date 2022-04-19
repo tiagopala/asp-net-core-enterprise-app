@@ -22,11 +22,18 @@ namespace EnterpriseApp.WebApp.MVC.Configuration
             }).AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
               .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
-            services.AddHttpClient("CatalogRefit", configure =>
+            //services.AddHttpClient("CatalogRefit", configure =>
+            //{
+            //    configure.BaseAddress = new Uri(configuration["CatalogAPI:Uri"]);
+            //}).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+            //  .AddTypedClient(RestService.For<ICatalogServiceRefit>)
+            //  .AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
+            //  .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
+
+            services.AddHttpClient<ICatalogService, CatalogService>(configure =>
             {
                 configure.BaseAddress = new Uri(configuration["CatalogAPI:Uri"]);
             }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
-              .AddTypedClient(RestService.For<ICatalogServiceRefit>)
               .AddPolicyHandler(HttpCustomPolicyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
               .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
