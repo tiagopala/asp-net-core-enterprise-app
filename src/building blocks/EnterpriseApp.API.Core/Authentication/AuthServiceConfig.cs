@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using NetDevPack.Security.JwtExtensions;
 using System.Text;
 
 namespace EnterpriseApp.API.Core.Authentication
@@ -16,8 +17,6 @@ namespace EnterpriseApp.API.Core.Authentication
 
             var jwtConfig = jwtConfigSection.Get<AuthConfig>();
 
-            var key = Encoding.ASCII.GetBytes(jwtConfig.Secret);
-
             // Configuração do JWT
             services.AddAuthentication(options =>
             {
@@ -27,15 +26,7 @@ namespace EnterpriseApp.API.Core.Authentication
             {
                 bearerOptions.RequireHttpsMetadata = true;
                 bearerOptions.SaveToken = true;
-                bearerOptions.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = true,
-                    ValidateAudience = true,
-                    ValidAudience = jwtConfig.Audience,
-                    ValidIssuer = jwtConfig.Issuer
-                };
+                bearerOptions.SetJwksOptions(new JwkOptions(jwtConfig.AuthenticationURL));
             });
 
             return services;

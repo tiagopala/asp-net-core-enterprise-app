@@ -165,7 +165,7 @@ namespace EnterpriseApp.Identidade.API.Controllers
             return new UserLoginResponseDTO
             {
                 AccessToken = encodedToken,
-                ExpiresIn = TimeSpan.FromHours(_jwtConfig.ExpirationHours).TotalSeconds,
+                ExpiresIn = TimeSpan.FromHours(1).TotalSeconds,
                 UserToken = new UserTokenDTO
                 {
                     Id = user.Id,

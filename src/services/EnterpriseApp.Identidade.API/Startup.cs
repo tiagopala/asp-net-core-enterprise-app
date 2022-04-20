@@ -40,7 +40,6 @@ namespace EnterpriseApp.Identidade.API
             services
                 .AddRouting(options => options.LowercaseUrls = true)
                 .AddIdentityConfig(Configuration)
-                .AddJwtConfiguration(Configuration)
                 .AddMessageBusConfig(Configuration)
                 .AddServices()
                 .AddSwaggerConfig("EnterpriseApp Identity API", "This API is responsible for taking care of user authentication e authorization services");
