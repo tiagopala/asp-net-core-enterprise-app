@@ -36,7 +36,7 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
             try
             {
                 var response = await _authenticationService.Register(user);
-                await Login(response);
+                await _authenticationService.Login(response);
             }
             catch (AuthException e)
             {
@@ -67,7 +67,7 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
             try
             {
                 var response = await _authenticationService.Login(user);
-                await Login(response);
+                await _authenticationService.Login(response);
             }
             catch (AuthException e)
             {
@@ -85,35 +85,8 @@ namespace EnterpriseApp.WebApp.MVC.Controllers
         [Route("logout")]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            await _authenticationService.Logout();
             return RedirectToAction("Index", "Catalog");
-        }
-
-        private async Task Login(UserLoginResponse user)
-        {
-            var token = GetToken(user.AccessToken);
-
-            var claims = new List<Claim>
-            {
-                new Claim("jwt", user.AccessToken)
-            };
-
-            claims.AddRange(token.Claims);
-
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            var authProperties = new AuthenticationProperties
-            {
-                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(60),
-                IsPersistent = true
-            };
-
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity),authProperties);
-        }
-
-        private static JwtSecurityToken GetToken(string jwt)
-        {
-            return new JwtSecurityTokenHandler().ReadToken(jwt) as JwtSecurityToken;
         }
 
         private void AddErrorsToModelState(string errors)

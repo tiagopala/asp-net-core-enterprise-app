@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EnterpriseApp.Core.Communication;
+using System;
 using System.Collections.Generic;
 
 namespace EnterpriseApp.WebApp.MVC.Models
@@ -6,8 +7,10 @@ namespace EnterpriseApp.WebApp.MVC.Models
     public class UserLoginResponse
     {
         public string AccessToken { get; set; }
+        public string RefreshToken { get; set; }
         public long ExpiresIn { get; set; }
         public UserTokenDTO UserToken { get; set; }
+        public ResponseResult ResponseResult { get; set; }
     }
 
     public class UserTokenDTO

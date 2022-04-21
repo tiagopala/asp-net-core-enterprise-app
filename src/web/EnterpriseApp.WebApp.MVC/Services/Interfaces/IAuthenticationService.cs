@@ -7,5 +7,9 @@ namespace EnterpriseApp.WebApp.MVC.Services.Interfaces
     {
         Task<UserLoginResponse> Login(UserLoginDTO user);
         Task<UserLoginResponse> Register(UserRegisterDTO user);
+        Task Login(UserLoginResponse user);
+        Task Logout();
+        bool IsExpiredToken();
+        Task<bool> IsValidRefreshToken();
     }
 }

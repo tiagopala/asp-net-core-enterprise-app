@@ -27,6 +27,9 @@ namespace EnterpriseApp.Core.Services
         public string GetUserToken()
             => IsAuthenticated() ? GetClaimValue("jwt") : string.Empty;
 
+        public string GetRefreshToken()
+            => IsAuthenticated() ? GetClaimValue("refreshToken") : string.Empty;
+
         public bool IsAuthenticated()
             => _httpContextAccessor.HttpContext.User.Identity.IsAuthenticated;
 

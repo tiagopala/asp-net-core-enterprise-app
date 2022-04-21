@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using NetDevPack.Security.Jwt;
+using NetDevPack.Security.Jwt.Store.EntityFrameworkCore;
 
 namespace EnterpriseApp.Identidade.API.Configurations
 {
@@ -12,6 +14,8 @@ namespace EnterpriseApp.Identidade.API.Configurations
     {
         public static IServiceCollection AddIdentityConfig(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddJwksManager().PersistKeysToDatabaseStore<ApplicationDbContext>();
+
             // Configuração do ApplicationDbContext
             services.AddDbContext<ApplicationDbContext>(options =>
             {
@@ -19,7 +23,8 @@ namespace EnterpriseApp.Identidade.API.Configurations
             });
 
             // Configuração do Identity
-            services.AddDefaultIdentity<IdentityUser>()
+            services
+                .AddDefaultIdentity<IdentityUser>()
                 .AddRoles<IdentityRole>()
                 .AddErrorDescriber<IdentityPortugueseMessagesExtension>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
