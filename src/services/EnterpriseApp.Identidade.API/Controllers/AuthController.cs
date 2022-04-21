@@ -2,12 +2,14 @@
 using EnterpriseApp.API.Core.Controllers;
 using EnterpriseApp.Core.Messages.Integration;
 using EnterpriseApp.Core.Services.Interfaces;
+using EnterpriseApp.Identidade.API.Data;
 using EnterpriseApp.Identidade.API.Extensions;
 using EnterpriseApp.Identidade.API.Models;
 using EnterpriseApp.MessageBus;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using NetDevPack.Security.Jwt.Interfaces;
@@ -26,13 +28,14 @@ namespace EnterpriseApp.Identidade.API.Controllers
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IJsonWebKeySetService _jsonKeyService;
+        private readonly ApplicationDbContext _context;
         private readonly IUserService _userService;
-        private readonly AuthConfig _jwtConfig;
         private readonly IMessageBus _bus;
 
         public AuthController(
             SignInManager<IdentityUser> signInManager,
             UserManager<IdentityUser> userManager,
+            ApplicationDbContext context,
             IJsonWebKeySetService jsonKeyService,
             IUserService userService,
             IOptions<AuthConfig> jwtConfig,
@@ -42,7 +45,7 @@ namespace EnterpriseApp.Identidade.API.Controllers
             _signInManager = signInManager;
             _userManager = userManager;
             _userService = userService;
-            _jwtConfig = jwtConfig.Value;
+            _context = context;
             _bus = bus;
 
         }
@@ -119,8 +122,29 @@ namespace EnterpriseApp.Identidade.API.Controllers
 
             var identityClaims = await GetUserClaims(claims, user);
             var encodedToken = GetToken(identityClaims);
+            var refreshToken = await CreateRefreshToken(email);
 
-            return GetUserLoginResponse(encodedToken, user, claims);
+            return GetUserLoginResponse(encodedToken, user, claims, refreshToken.Token);
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken([FromBody] string refreshToken)
+        {
+            if (string.IsNullOrEmpty(refreshToken))
+            {
+                AddError("Refresh Token inválido");
+                return CustomResponse();
+            }
+
+            var token = await GetRefreshToken(Guid.Parse(refreshToken));
+
+            if (token is null)
+            {
+                AddError("Refresh Token expirado");
+                return CustomResponse();
+            }
+
+            return CustomResponse(await GenerateToken(token.Username));
         }
 
         private async Task<ClaimsIdentity> GetUserClaims(ICollection<Claim> claims, IdentityUser user)
@@ -153,18 +177,19 @@ namespace EnterpriseApp.Identidade.API.Controllers
             {
                 Issuer = issuer,
                 Subject = identityClaims,
-                Expires = DateTime.UtcNow.AddHours(1),
+                Expires = DateTime.UtcNow.AddHours(8),
                 SigningCredentials = key
             });
 
             return tokenHandler.WriteToken(token);
         }
 
-        private UserLoginResponseDTO GetUserLoginResponse(string encodedToken, IdentityUser user, IList<Claim> claims)
+        private static UserLoginResponseDTO GetUserLoginResponse(string encodedToken, IdentityUser user, IList<Claim> claims, Guid refreshToken)
         {
             return new UserLoginResponseDTO
             {
                 AccessToken = encodedToken,
+                RefreshToken = refreshToken,
                 ExpiresIn = TimeSpan.FromHours(1).TotalSeconds,
                 UserToken = new UserTokenDTO
                 {
@@ -182,5 +207,27 @@ namespace EnterpriseApp.Identidade.API.Controllers
 
         private static long ToUnixEpochDate(DateTime date)
             => (long)Math.Round((date.ToUniversalTime() - new DateTimeOffset(1970, 1, 1, 0, 0, 0, TimeSpan.Zero)).TotalSeconds);
+
+        private async Task<RefreshToken> GetRefreshToken(Guid refreshToken)
+        {
+            var token = await _context.RefreshTokens.AsNoTracking().FirstOrDefaultAsync(u => u.Token == refreshToken);
+
+            return token != null && token.ExpirationDate.ToLocalTime() > DateTime.Now ? token : null;
+        }
+
+        private async Task<RefreshToken> CreateRefreshToken(string email)
+        {
+            var refreshToken = new RefreshToken
+            {
+                Username = email,
+                ExpirationDate = DateTime.UtcNow.AddHours(8)
+            };
+
+            _context.RefreshTokens.RemoveRange(_context.RefreshTokens.Where(u => u.Username == email));
+            await _context.RefreshTokens.AddAsync(refreshToken);
+            await _context.SaveChangesAsync();
+
+            return refreshToken;
+        }
     }
 }

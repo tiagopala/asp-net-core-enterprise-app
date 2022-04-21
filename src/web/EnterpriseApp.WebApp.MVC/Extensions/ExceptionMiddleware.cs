@@ -1,4 +1,5 @@
 ﻿using EnterpriseApp.WebApp.MVC.Exceptions;
+using EnterpriseApp.WebApp.MVC.Services.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Polly.CircuitBreaker;
 using Refit;
@@ -11,14 +12,17 @@ namespace EnterpriseApp.WebApp.MVC.Extensions
     public class ExceptionMiddleware
     {
         private readonly RequestDelegate _next;
+        private static IAuthenticationService _authenticationService;
 
         public ExceptionMiddleware(RequestDelegate next)
         {
             _next = next;
         }
 
-        public async Task InvokeAsync(HttpContext httpContext)
+        public async Task InvokeAsync(HttpContext httpContext, IAuthenticationService authenticationService)
         {
+            _authenticationService = authenticationService;
+
             try
             {
                 await _next(httpContext);
@@ -46,6 +50,14 @@ namespace EnterpriseApp.WebApp.MVC.Extensions
         {
             if (statusCode.Equals(HttpStatusCode.Unauthorized))
             {
+                if (_authenticationService.IsExpiredToken() && _authenticationService.IsValidRefreshToken().Result)
+                {
+                    context.Response.Redirect(context.Request.Path);
+                    return;
+                }
+
+                _authenticationService.Logout();
+
                 context.Response.Redirect($"/login?ReturnUrl={context.Request.Path}");
                 return;
             }

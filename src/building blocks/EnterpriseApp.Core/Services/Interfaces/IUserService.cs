@@ -11,6 +11,7 @@ namespace EnterpriseApp.Core.Services.Interfaces
         Guid GetUserId();
         string GetUserEmail();
         string GetUserToken();
+        string GetRefreshToken();
         bool IsAuthenticated();
         bool HasRole(string role);
         IEnumerable<Claim> GetClaims();
