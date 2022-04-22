@@ -6,12 +6,12 @@ package ShoppingCartServices;
 
 service ShoppingCartServices 
 {
-	rpc GetShoppingCart(GetShoppingCartRequest) returns (ShoppingCartCustomer) { }
+	rpc GetShoppingCart(GetShoppingCartRequest) returns (ShoppingCartCustomerResponse) { }
 }
 
 message GetShoppingCartRequest { }
 
-message ShoppingCartCustomer
+message ShoppingCartCustomerResponse
 {
 	string id								= 1;
 	string customerid						= 2;
