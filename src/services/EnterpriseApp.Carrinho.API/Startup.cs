@@ -2,6 +2,7 @@ using EnterpriseApp.API.Core.Authentication;
 using EnterpriseApp.API.Core.Documentation;
 using EnterpriseApp.Carrinho.API.Configurations;
 using EnterpriseApp.Carrinho.API.Data;
+using EnterpriseApp.Carrinho.API.Services.gRPC;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -37,6 +38,8 @@ namespace EnterpriseApp.Carrinho.API
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
             services.AddControllers();
+
+            services.AddGrpc();
 
             services.AddCors(options =>
             {
@@ -74,6 +77,7 @@ namespace EnterpriseApp.Carrinho.API
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapGrpcService<ShoppingCartGRpcService>().RequireCors("Total");
             });
         }
     }
