@@ -1,5 +1,6 @@
 ﻿using EnterpriseApp.API.Core.Controllers;
 using EnterpriseApp.BFF.Compras.Models;
+using EnterpriseApp.BFF.Compras.Services.gRPC;
 using EnterpriseApp.BFF.Compras.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,27 +16,30 @@ namespace EnterpriseApp.BFF.Compras.Controllers
     {
         private readonly ICatalogService _catalogService;
         private readonly IShoppingCartService _cartService;
+        private readonly IShoppingCartGRpcService _gRpcCartService;
         private readonly IOrderService _orderService;
 
         public ShoppingCartController(
             ICatalogService catalogService,
             IShoppingCartService cartService,
+            IShoppingCartGRpcService gRpcCartService,
             IOrderService orderService)
         {
             _catalogService = catalogService;
             _cartService = cartService;
+            _gRpcCartService = gRpcCartService;
             _orderService = orderService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Index()
-            => CustomResponse(await _cartService.GetShoppingCart());
+            => CustomResponse(await _gRpcCartService.GetShoppingCart());
 
         [HttpGet]
         [Route("items/quantity")]
         public async Task<int> GetQuantityFromCart()
         {
-            var quantity = await _cartService.GetShoppingCart();
+            var quantity = await _gRpcCartService.GetShoppingCart();
             return quantity?.Items.Sum(i => i.Quantity) ?? 0;
         }
 
