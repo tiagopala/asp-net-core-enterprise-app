@@ -32,7 +32,7 @@ namespace EnterpriseApp.Carrinho.API.Services.gRPC
 
             var shoppingCart = await GetShoppingCartFromDatabase();
 
-            return ToShoppingCartCustomerResponse(shoppingCart);
+            return (shoppingCart is null) ? new ShoppingCartCustomerResponse() : ToShoppingCartCustomerResponse(shoppingCart);
         }
 
         private async Task<ShoppingCartCustomer> GetShoppingCartFromDatabase()
