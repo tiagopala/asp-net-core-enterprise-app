@@ -69,7 +69,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseApp.Pedido.Domain
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EnterpriseApp.Pedido.Infrastructure", "src\services\EnterpriseApp.Pedido.Infrastructure\EnterpriseApp.Pedido.Infrastructure.csproj", "{8674F5BC-F49A-4C78-AFDB-EA849917EF2E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "External.Payments.Gateway.Payme", "src\services\External.Payments.Gateway.Payme\External.Payments.Gateway.Payme.csproj", "{092DEF00-B4E7-42B1-824E-E9E87835CD83}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "External.Payments.Gateway.Payme", "src\services\External.Payments.Gateway.Payme\External.Payments.Gateway.Payme.csproj", "{092DEF00-B4E7-42B1-824E-E9E87835CD83}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

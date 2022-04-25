@@ -1,5 +1,6 @@
 ﻿using EnterpriseApp.WebApp.MVC.Exceptions;
 using EnterpriseApp.WebApp.MVC.Services.Interfaces;
+using Grpc.Core;
 using Microsoft.AspNetCore.Http;
 using Polly.CircuitBreaker;
 using Refit;
@@ -38,6 +39,18 @@ namespace EnterpriseApp.WebApp.MVC.Extensions
             catch (BrokenCircuitException)
             {
                 HandleBrokenCircuitException(httpContext);
+            }
+            catch (RpcException e)
+            {
+                var httpStatusCode = e.StatusCode switch
+                {
+                    StatusCode.Internal => HttpStatusCode.BadRequest,
+                    StatusCode.Unauthenticated => HttpStatusCode.Unauthorized,
+                    StatusCode.PermissionDenied => HttpStatusCode.Forbidden,
+                    StatusCode.Unimplemented => HttpStatusCode.NotFound,
+                    _ => HttpStatusCode.InternalServerError,
+                };
+                HandleRequestExceptionAsync(httpContext, httpStatusCode);
             }
         }
 
