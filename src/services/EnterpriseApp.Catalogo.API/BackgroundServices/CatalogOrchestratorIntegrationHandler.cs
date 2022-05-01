@@ -4,6 +4,7 @@ using EnterpriseApp.Core.Messages.Integration;
 using EnterpriseApp.MessageBus;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,14 @@ namespace EnterpriseApp.Catalogo.API.BackgroundServices
     {
         private readonly IMessageBus _messageBus;
         private readonly IServiceProvider _serviceProvider;
+        private readonly ILogger<CatalogOrchestratorIntegrationHandler> _logger;
 
         public CatalogOrchestratorIntegrationHandler(
+            ILogger<CatalogOrchestratorIntegrationHandler> logger,
             IMessageBus messageBus, 
             IServiceProvider serviceProvider)
         {
+            _logger = logger;
             _messageBus = messageBus;
             _serviceProvider = serviceProvider;
         }
