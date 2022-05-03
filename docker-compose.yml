@@ -12,6 +12,20 @@ services:
       RABBITMQ_DEFAULT_PASS: "enterpriseapp"
     networks:
       - enterpriseapp-network
+  
+  sql-server:
+    image: tiagopala/enterpriseapp-sqlserverdb:latest
+    container_name: enterpriseapp-sqlserverdb
+    build:
+      context: ./sql
+      dockerfile: ./Dockerfile
+    ports:
+      - "1433:1433"
+    environment:
+      - SA_PASSWORD=MeuDB@123
+      - ACCEPT_EULA=Y
+    networks:
+      - enterpriseapp-network
 
   catalog-api:
     image: tiagopala/enterpriseapp-catalogapi:latest
