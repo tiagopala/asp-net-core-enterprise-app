@@ -24,7 +24,7 @@ namespace EnterpriseApp.API.Core.Authentication
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
             }).AddJwtBearer(bearerOptions =>
             {
-                bearerOptions.RequireHttpsMetadata = true;
+                bearerOptions.RequireHttpsMetadata = false; // Alterando para false, para executarmos via container em http
                 bearerOptions.SaveToken = true;
                 bearerOptions.SetJwksOptions(new JwkOptions(jwtConfig.AuthenticationURL));
             });

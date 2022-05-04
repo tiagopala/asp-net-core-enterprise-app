@@ -5,19 +5,19 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["./services/EnterpriseApp.Carrinho.API/EnterpriseApp.Carrinho.API.csproj", "services/EnterpriseApp.Carrinho.API/"]
+COPY ["./api gateways/EnterpriseApp.BFF.Compras/EnterpriseApp.BFF.Compras.csproj", "api gateways/EnterpriseApp.BFF.Compras/"]
 COPY ["./building blocks/EnterpriseApp.Core/EnterpriseApp.Core.csproj", "building blocks/EnterpriseApp.Core/"]
 COPY ["./building blocks/EnterpriseApp.API.Core/EnterpriseApp.API.Core.csproj", "building blocks/EnterpriseApp.API.Core/"]
 COPY ["./building blocks/EnterpriseApp.MessageBus/EnterpriseApp.MessageBus.csproj", "building blocks/EnterpriseApp.MessageBus/"]
-RUN dotnet restore "services/EnterpriseApp.Carrinho.API/EnterpriseApp.Carrinho.API.csproj"
+RUN dotnet restore "api gateways/EnterpriseApp.BFF.Compras/EnterpriseApp.BFF.Compras.csproj"
 COPY . .
-WORKDIR "services/EnterpriseApp.Carrinho.API"
-RUN dotnet build "EnterpriseApp.Carrinho.API.csproj" -c Release -o /app/build
+WORKDIR "api gateways/EnterpriseApp.BFF.Compras"
+RUN dotnet build "EnterpriseApp.BFF.Compras.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "EnterpriseApp.Carrinho.API.csproj" -c Release -o /app/publish
+RUN dotnet publish "EnterpriseApp.BFF.Compras.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "EnterpriseApp.Carrinho.API.dll"]
+ENTRYPOINT ["dotnet", "EnterpriseApp.BFF.Compras.dll"]

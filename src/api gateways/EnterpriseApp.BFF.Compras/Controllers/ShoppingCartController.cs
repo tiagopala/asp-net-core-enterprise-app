@@ -33,13 +33,13 @@ namespace EnterpriseApp.BFF.Compras.Controllers
 
         [HttpGet]
         public async Task<IActionResult> Index()
-            => CustomResponse(await _gRpcCartService.GetShoppingCart());
+            => CustomResponse(await _cartService.GetShoppingCart());
 
         [HttpGet]
         [Route("items/quantity")]
         public async Task<int> GetQuantityFromCart()
         {
-            var quantity = await _gRpcCartService.GetShoppingCart();
+            var quantity = await _cartService.GetShoppingCart();
             return quantity?.Items.Sum(i => i.Quantity) ?? 0;
         }
 

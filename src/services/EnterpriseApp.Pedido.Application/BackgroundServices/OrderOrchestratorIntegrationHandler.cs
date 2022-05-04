@@ -27,7 +27,7 @@ namespace EnterpriseApp.Pedido.Application.BackgroundServices
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            //_timer = new Timer(ProccessOrder, null, TimeSpan.Zero, TimeSpan.FromSeconds(60));
+            _timer = new Timer(ProccessOrder, null, TimeSpan.Zero, TimeSpan.FromSeconds(20));
             return Task.CompletedTask;
         }
 
