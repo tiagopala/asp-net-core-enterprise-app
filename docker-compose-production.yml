@@ -2,7 +2,7 @@ version: "3.9"
 
 services:
   rabbitmq-enterpriseapp:
-    image: rabbitmq:management
+    image: rabbitmq:3-management
     container_name: enterpriseapp-rabbitmq
     ports:
       - "15672:15672"
@@ -24,6 +24,27 @@ services:
     environment:
       - SA_PASSWORD=MeuDB@123
       - ACCEPT_EULA=Y
+    networks:
+      - enterpriseapp-network
+
+  web-mvc:
+    image: tiagopala/enterpriseapp-webappmvc:latest
+    container_name: enterpriseapp-webappmvc
+    build:
+      context: ./src
+      dockerfile: ./web/EnterpriseApp.WebApp.MVC/Dockerfile
+    ports:
+      - "5000:5000"
+      - "7000:7000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://*:5000
+    depends_on:
+      - sql-server
+      - auth-api
+      - catalog-api
+      - customer-api
+      - purchasebff-api
     networks:
       - enterpriseapp-network
 
@@ -60,6 +81,7 @@ services:
     depends_on:
       - rabbitmq-enterpriseapp
       - sql-server
+      - auth-api
     networks:
       - enterpriseapp-network
 
@@ -76,8 +98,9 @@ services:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://*:5003
     depends_on:
-      - enterpriseapp-rabbitmq
-      - enterpriseapp-sqlserverdb
+      - rabbitmq-enterpriseapp
+      - sql-server
+      - auth-api
     networks:
       - enterpriseapp-network
 
@@ -96,6 +119,7 @@ services:
     depends_on:
       - rabbitmq-enterpriseapp
       - sql-server
+      - auth-api
     networks:
       - enterpriseapp-network
 
@@ -113,9 +137,8 @@ services:
       - ASPNETCORE_URLS=http://*:5005
     depends_on:
       - rabbitmq-enterpriseapp
-      - sql-server
+      - auth-api
       - catalog-api
-      - customer-api
       - shoppingcart-api
       - order-api
       - payment-api
@@ -137,8 +160,10 @@ services:
     depends_on:
       - rabbitmq-enterpriseapp
       - sql-server
+      - auth-api
     networks:
       - enterpriseapp-network
+    command: ["/bin/bash", "/wait.sh"]
 
   payment-api:
     image: tiagopala/enterpriseapp-paymentapi:latest
@@ -155,28 +180,7 @@ services:
     depends_on:
       - rabbitmq-enterpriseapp
       - sql-server
-    networks:
-      - enterpriseapp-network
-
-  web-mvc:
-    image: tiagopala/enterpriseapp-webappmvc:latest
-    container_name: enterpriseapp-webappmvc
-    build:
-      context: ./src
-      dockerfile: ./web/EnterpriseApp.WebApp.MVC/Dockerfile
-    ports:
-      - "5000:5000"
-      - "7000:7000"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://*:5000
-    depends_on:
-      - sql-server
       - auth-api
-      - catalog-api
-      - customer-api
-      - shoppingcart-api
-      - purchasebff-api
     networks:
       - enterpriseapp-network
 

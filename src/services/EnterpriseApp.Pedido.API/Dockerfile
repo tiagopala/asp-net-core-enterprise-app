@@ -6,6 +6,9 @@ EXPOSE 443
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
 COPY ["./services/EnterpriseApp.Pedido.API/EnterpriseApp.Pedido.API.csproj", "services/EnterpriseApp.Pedido.API/"]
+COPY ["./services/EnterpriseApp.Pedido.Application/EnterpriseApp.Pedido.Application.csproj", "services/EnterpriseApp.Pedido.Application/"]
+COPY ["./services/EnterpriseApp.Pedido.Domain/EnterpriseApp.Pedido.Domain.csproj", "services/EnterpriseApp.Pedido.Domain/"]
+COPY ["./services/EnterpriseApp.Pedido.Infrastructure/EnterpriseApp.Pedido.Infrastructure.csproj", "services/EnterpriseApp.Pedido.Infrastructure/"]
 COPY ["./building blocks/EnterpriseApp.Core/EnterpriseApp.Core.csproj", "building blocks/EnterpriseApp.Core/"]
 COPY ["./building blocks/EnterpriseApp.API.Core/EnterpriseApp.API.Core.csproj", "building blocks/EnterpriseApp.API.Core/"]
 COPY ["./building blocks/EnterpriseApp.MessageBus/EnterpriseApp.MessageBus.csproj", "building blocks/EnterpriseApp.MessageBus/"]
