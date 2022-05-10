@@ -2,6 +2,7 @@ using EnterpriseApp.WebApp.MVC.Configuration;
 using EnterpriseApp.WebApp.MVC.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -32,6 +33,11 @@ namespace EnterpriseApp.WebApp.MVC
         {
             services.AddControllersWithViews();
 
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+            });
+
             services
                 .ResolveIdentity()
                 .AddHttpClients(Configuration)
@@ -40,6 +46,8 @@ namespace EnterpriseApp.WebApp.MVC
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseForwardedHeaders();
+
             if (env.IsDevelopment())
                 app.UseDeveloperExceptionPage();
 

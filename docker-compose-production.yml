@@ -184,6 +184,18 @@ services:
     networks:
       - enterpriseapp-network
 
+  nginx-server:
+    image: tiagopala/enterpriseapp-nginxserver:latest
+    container_name: enterpriseapp-server
+    build:
+      context: ./nginx
+      dockerfile: ./Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web-mvc
+
 networks:
   enterpriseapp-network:
     name: enterpriseapp-network
