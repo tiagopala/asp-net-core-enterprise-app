@@ -12,6 +12,7 @@ namespace EnterpriseApp.Carrinho.API.BackgroundServices
 {
     public class CartIntegrationEventHandler : BackgroundService
     {
+        private Timer _timer;
         private readonly IMessageBus _messageBus;
         private readonly IServiceProvider _serviceProvider;
 
@@ -25,25 +26,34 @@ namespace EnterpriseApp.Carrinho.API.BackgroundServices
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            SetSubscriber();
+            _timer = new Timer(SetSubscriber, null, TimeSpan.Zero, TimeSpan.FromSeconds(15));
             return Task.CompletedTask;
         }
 
-        private void SetSubscriber()
-            => _messageBus.SubscribeAsync<OrderRealizedIntegrationEvent>("OrderRealized", async request => await DeleteCart(request));
+        private void SetSubscriber(object obj)
+        {
+            if (!_messageBus.AdvancedBus.IsConnected)
+            {
+                _messageBus.SubscribeAsync<OrderRealizedIntegrationEvent>("OrderRealized", async request => await DeleteCart(request));
+                _messageBus.AdvancedBus.Connected += OnConnect;
+            }
+        }
 
         private async Task DeleteCart(OrderRealizedIntegrationEvent @event)
         {
             using var scope = _serviceProvider.CreateScope();
             var context = scope.ServiceProvider.GetRequiredService<ShoppingCartContext>();
-            
+
             var cart = await context.CartCustomer.FirstOrDefaultAsync(x => x.CustomerId == @event.CustomerId);
-            
+
             if (cart is not null)
             {
                 context.CartCustomer.Remove(cart);
                 await context.SaveChangesAsync();
             }
         }
+
+        private void OnConnect(object sender, EventArgs args)
+            => SetSubscriber(null);
     }
 }

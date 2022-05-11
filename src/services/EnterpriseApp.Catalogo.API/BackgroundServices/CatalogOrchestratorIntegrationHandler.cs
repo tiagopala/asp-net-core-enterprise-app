@@ -15,6 +15,7 @@ namespace EnterpriseApp.Catalogo.API.BackgroundServices
 {
     public class CatalogOrchestratorIntegrationHandler : BackgroundService
     {
+        private Timer _timer;
         private readonly IMessageBus _messageBus;
         private readonly IServiceProvider _serviceProvider;
         private readonly ILogger<CatalogOrchestratorIntegrationHandler> _logger;
@@ -31,7 +32,7 @@ namespace EnterpriseApp.Catalogo.API.BackgroundServices
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            SetResponder();
+            _timer = new Timer(SetResponder, null, TimeSpan.Zero, TimeSpan.FromSeconds(15));
             return Task.CompletedTask;
         }
 
@@ -83,14 +84,16 @@ namespace EnterpriseApp.Catalogo.API.BackgroundServices
         private async void CancelOrder(OrderAuthorizedIntegrationEvent @event)
             => await _messageBus.PublishAsync(new CancelOrderIntegrationEvent(@event.CustomerId, @event.OrderId));
 
-        private void SetResponder()
+        private void SetResponder(object obj)
         {
-            _messageBus.SubscribeAsync<OrderAuthorizedIntegrationEvent>("AuthorizedOrder", async request => await WithdrawFromStock(request));
-
-            _messageBus.AdvancedBus.Connected += OnConnect;
+            if (!_messageBus.AdvancedBus.IsConnected)
+            {
+                _messageBus.SubscribeAsync<OrderAuthorizedIntegrationEvent>("AuthorizedOrder", async request => await WithdrawFromStock(request));
+                _messageBus.AdvancedBus.Connected += OnConnect;
+            }
         }
 
         private void OnConnect(object sender, EventArgs args)
-            => SetResponder();
+            => SetResponder(null);
     }
 }

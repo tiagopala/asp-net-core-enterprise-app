@@ -13,6 +13,7 @@ namespace EnterpriseApp.Pagamento.API.Services
 {
     public class PaymentIntegrationHandler : BackgroundService
     {
+        private Timer _timer;
         private readonly IMessageBus _messageBus;
         private readonly IServiceProvider _serviceProvider;
 
@@ -24,16 +25,20 @@ namespace EnterpriseApp.Pagamento.API.Services
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            SetResponder();
-            SetSubscribers();
+            _timer = new Timer(SetIntegrations, null, TimeSpan.Zero, TimeSpan.FromSeconds(15));
+
             return Task.CompletedTask;
         }
 
-        private void SetResponder()
+        private void SetIntegrations(object obj)
         {
-            _messageBus.RespondAsync<OrderInitializedIntegrationEvent, ResponseMessage>(async request => await AuthorizePayment(request));
-
-            _messageBus.AdvancedBus.Connected += OnConnect;
+            if (!_messageBus.AdvancedBus.IsConnected)
+            {
+                _messageBus.RespondAsync<OrderInitializedIntegrationEvent, ResponseMessage>(async request => await AuthorizePayment(request));
+                _messageBus.SubscribeAsync<CancelOrderIntegrationEvent>("CancelledOrder", async request => await CancelPayment(request));
+                _messageBus.SubscribeAsync<WithdrawnOrderIntegrationEvent>("WithdrawnOrder", async request => await CapturePayment(request));
+                _messageBus.AdvancedBus.Connected += OnConnect;
+            }
         }
 
         private async Task<ResponseMessage> AuthorizePayment(OrderInitializedIntegrationEvent @event)
@@ -55,13 +60,6 @@ namespace EnterpriseApp.Pagamento.API.Services
             }
 
             return responseMessage;
-        }
-
-        private void SetSubscribers()
-        {
-            _messageBus.SubscribeAsync<CancelOrderIntegrationEvent>("CancelledOrder", async request => await CancelPayment(request));
-
-            _messageBus.SubscribeAsync<WithdrawnOrderIntegrationEvent>("WithdrawnOrder", async request => await CapturePayment(request));
         }
 
         private async Task CancelPayment(CancelOrderIntegrationEvent request)
@@ -87,6 +85,6 @@ namespace EnterpriseApp.Pagamento.API.Services
         }
 
         private void OnConnect(object sender, EventArgs args)
-            => SetResponder();
+            => SetIntegrations(null);
     }
 }
