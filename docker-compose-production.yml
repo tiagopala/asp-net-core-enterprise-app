@@ -6,7 +6,6 @@ services:
     container_name: enterpriseapp-rabbitmq
     ports:
       - "15672:15672"
-      - "5672:5672"
     environment:
       RABBITMQ_DEFAULT_USER: "enterpriseapp"
       RABBITMQ_DEFAULT_PASS: "enterpriseapp"
@@ -19,8 +18,6 @@ services:
     build:
       context: ./sql
       dockerfile: ./Dockerfile
-    ports:
-      - "1433:1433"
     environment:
       - SA_PASSWORD=MeuDB@123
       - ACCEPT_EULA=Y
@@ -33,9 +30,6 @@ services:
     build:
       context: ./src
       dockerfile: ./web/EnterpriseApp.WebApp.MVC/Dockerfile
-    ports:
-      - "5000:5000"
-      - "7000:7000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://*:5000
@@ -55,9 +49,6 @@ services:
     build:
       context: ./src
       dockerfile: ./services/EnterpriseApp.Identidade.API/Dockerfile
-    ports:
-      - "5001:5001"
-      - "7001:7001"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://*:5001
@@ -73,9 +64,6 @@ services:
     build:
       context: ./src
       dockerfile: ./services/EnterpriseApp.Catalogo.API/Dockerfile
-    ports:
-      - "5002:5002"
-      - "7002:7002"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://*:5002
@@ -92,9 +80,6 @@ services:
     build:
       context: ./src
       dockerfile: ./services/EnterpriseApp.Cliente.API/Dockerfile
-    ports:
-      - "5003:5003"
-      - "7003:7003"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://*:5003
@@ -111,9 +96,6 @@ services:
     build:
       context: ./src
       dockerfile: ./services/EnterpriseApp.Carrinho.API/Dockerfile
-    ports:
-      - "5004:5004"
-      - "7004:7004"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://*:5004
@@ -130,9 +112,6 @@ services:
     build:
       context: ./src
       dockerfile: ./api gateways/EnterpriseApp.BFF.Compras/Dockerfile
-    ports:
-      - "5005:5005"
-      - "7005:7005"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://*:5005
@@ -152,9 +131,6 @@ services:
     build:
       context: ./src
       dockerfile: ./services/EnterpriseApp.Pedido.API/Dockerfile
-    ports:
-      - "5006:5006"
-      - "7006:7006"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://*:5006
@@ -171,9 +147,6 @@ services:
     build:
       context: ./src
       dockerfile: ./services/EnterpriseApp.Pagamento.API/Dockerfile
-    ports:
-      - "5007:5007"
-      - "7007:7007"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://*:5007
