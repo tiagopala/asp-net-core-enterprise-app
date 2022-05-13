@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NetDevPack.Security.JwtExtensions;
+using System.Net.Http;
 using System.Text;
 
 namespace EnterpriseApp.API.Core.Authentication
@@ -25,6 +26,10 @@ namespace EnterpriseApp.API.Core.Authentication
             }).AddJwtBearer(bearerOptions =>
             {
                 bearerOptions.RequireHttpsMetadata = false; // Alterando para false, para executarmos via container em http
+                bearerOptions.BackchannelHttpHandler = new HttpClientHandler
+                {
+                    ServerCertificateCustomValidationCallback = delegate { return true; }
+                };
                 bearerOptions.SaveToken = true;
                 bearerOptions.SetJwksOptions(new JwkOptions(jwtConfig.AuthenticationURL));
             });

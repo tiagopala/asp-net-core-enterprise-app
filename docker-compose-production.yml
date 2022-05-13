@@ -51,7 +51,11 @@ services:
       dockerfile: ./services/EnterpriseApp.Identidade.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://*:5001
+      - ASPNETCORE_URLS=https://+:5001;http://+5011
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=enterpriseapp
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/enterpriseapp-certificate.pfx
+    volumes:
+      - ./certs:/https:ro
     depends_on:
       - rabbitmq-enterpriseapp
       - sql-server
@@ -66,7 +70,11 @@ services:
       dockerfile: ./services/EnterpriseApp.Catalogo.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://*:5002
+      - ASPNETCORE_URLS=https://+:5002;http://+5021
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=enterpriseapp
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/enterpriseapp-certificate.pfx
+    volumes:
+      - ./certs:/https:ro
     depends_on:
       - rabbitmq-enterpriseapp
       - sql-server
@@ -82,7 +90,11 @@ services:
       dockerfile: ./services/EnterpriseApp.Cliente.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://*:5003
+      - ASPNETCORE_URLS=https://+:5003;http://+5031
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=enterpriseapp
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/enterpriseapp-certificate.pfx
+    volumes:
+      - ./certs:/https:ro
     depends_on:
       - rabbitmq-enterpriseapp
       - sql-server
@@ -98,7 +110,11 @@ services:
       dockerfile: ./services/EnterpriseApp.Carrinho.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://*:5004
+      - ASPNETCORE_URLS=https://+:5004;http://+5041
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=enterpriseapp
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/enterpriseapp-certificate.pfx
+    volumes:
+      - ./certs:/https:ro
     depends_on:
       - rabbitmq-enterpriseapp
       - sql-server
@@ -114,7 +130,11 @@ services:
       dockerfile: ./api gateways/EnterpriseApp.BFF.Compras/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://*:5005
+      - ASPNETCORE_URLS=https://+:5005;http://+5051
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=enterpriseapp
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/enterpriseapp-certificate.pfx
+    volumes:
+      - ./certs:/https:ro
     depends_on:
       - rabbitmq-enterpriseapp
       - auth-api
@@ -133,7 +153,11 @@ services:
       dockerfile: ./services/EnterpriseApp.Pedido.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://*:5006
+      - ASPNETCORE_URLS=https://+:5006;http://+5061
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=enterpriseapp
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/enterpriseapp-certificate.pfx
+    volumes:
+      - ./certs:/https:ro
     depends_on:
       - rabbitmq-enterpriseapp
       - sql-server
@@ -149,7 +173,11 @@ services:
       dockerfile: ./services/EnterpriseApp.Pagamento.API/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - ASPNETCORE_URLS=http://*:5007
+      - ASPNETCORE_URLS=https://+:5007;http://+5071
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=enterpriseapp
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/enterpriseapp-certificate.pfx
+    volumes:
+      - ./certs:/https:ro
     depends_on:
       - rabbitmq-enterpriseapp
       - sql-server
