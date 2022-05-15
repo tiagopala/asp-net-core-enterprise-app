@@ -12,6 +12,7 @@ namespace EnterpriseApp.Pedido.Application.BackgroundServices
 {
     public class OrderIntegrationHandler : BackgroundService
     {
+        private Timer _timer;
         private readonly IMessageBus _messageBus;
         private readonly IServiceProvider _serviceProvider;
 
@@ -23,15 +24,19 @@ namespace EnterpriseApp.Pedido.Application.BackgroundServices
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            SetSubscribers();
+            _timer = new Timer(SetSubscribers, null, TimeSpan.Zero, TimeSpan.FromSeconds(15));
+
             return Task.CompletedTask;
         }
 
-        private void SetSubscribers()
+        private void SetSubscribers(object obj)
         {
-            _messageBus.SubscribeAsync<CancelOrderIntegrationEvent>("CancelOrder", async request => await CancelOrder(request));
+            if (!_messageBus.AdvancedBus.IsConnected)
+            {
+                _messageBus.SubscribeAsync<CancelOrderIntegrationEvent>("CancelOrder", async request => await CancelOrder(request));
 
-            _messageBus.SubscribeAsync<OrderPaidIntegrationEvent>("OrderPaid", async request => await FinishOrder(request));
+                _messageBus.SubscribeAsync<OrderPaidIntegrationEvent>("OrderPaid", async request => await FinishOrder(request));
+            }
         }
 
         private async Task CancelOrder(CancelOrderIntegrationEvent request)

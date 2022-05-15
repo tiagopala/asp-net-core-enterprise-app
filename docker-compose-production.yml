@@ -1,0 +1,218 @@
+version: "3.9"
+
+services:
+  rabbitmq-enterpriseapp:
+    image: rabbitmq:3-management
+    container_name: enterpriseapp-rabbitmq
+    ports:
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: "enterpriseapp"
+      RABBITMQ_DEFAULT_PASS: "enterpriseapp"
+    networks:
+      - enterpriseapp-network
+  
+  sql-server:
+    image: tiagopala/enterpriseapp-sqlserverdb:latest
+    container_name: enterpriseapp-sqlserverdb
+    build:
+      context: ./sql
+      dockerfile: ./Dockerfile
+    environment:
+      - SA_PASSWORD=MeuDB@123
+      - ACCEPT_EULA=Y
+    networks:
+      - enterpriseapp-network
+
+  web-mvc:
+    image: tiagopala/enterpriseapp-webappmvc:latest
+    #container_name: enterpriseapp-webappmvc
+    build:
+      context: ./src
+      dockerfile: ./web/EnterpriseApp.WebApp.MVC/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://*:5000
+    volumes:
+      - dpkeys:/var/data_protection_keys/
+    depends_on:
+      - sql-server
+      - rabbitmq-enterpriseapp
+      - auth-api
+      - catalog-api
+      - customer-api
+      - purchasebff-api
+    networks:
+      - enterpriseapp-network
+
+  auth-api:
+    image: tiagopala/enterpriseapp-authapi:latest
+    container_name: enterpriseapp-authapi
+    build:
+      context: ./src
+      dockerfile: ./services/EnterpriseApp.Identidade.API/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:5001;http://+5011
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=enterpriseapp
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/enterpriseapp-certificate.pfx
+    volumes:
+      - ./certs:/https:ro
+    depends_on:
+      - rabbitmq-enterpriseapp
+      - sql-server
+    networks:
+      - enterpriseapp-network
+
+  catalog-api:
+    image: tiagopala/enterpriseapp-catalogapi:latest
+    container_name: enterpriseapp-catalogapi
+    build:
+      context: ./src
+      dockerfile: ./services/EnterpriseApp.Catalogo.API/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:5002;http://+5021
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=enterpriseapp
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/enterpriseapp-certificate.pfx
+    volumes:
+      - ./certs:/https:ro
+    depends_on:
+      - rabbitmq-enterpriseapp
+      - sql-server
+      - auth-api
+    networks:
+      - enterpriseapp-network
+
+  customer-api:
+    image: tiagopala/enterpriseapp-customerapi:latest
+    container_name: enterpriseapp-customerapi
+    build:
+      context: ./src
+      dockerfile: ./services/EnterpriseApp.Cliente.API/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:5003;http://+5031
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=enterpriseapp
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/enterpriseapp-certificate.pfx
+    volumes:
+      - ./certs:/https:ro
+    depends_on:
+      - rabbitmq-enterpriseapp
+      - sql-server
+      - auth-api
+    networks:
+      - enterpriseapp-network
+
+  shoppingcart-api:
+    image: tiagopala/enterpriseapp-shoppingcartapi:latest
+    container_name: enterpriseapp-shoppingcartapi
+    build:
+      context: ./src
+      dockerfile: ./services/EnterpriseApp.Carrinho.API/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:5004;http://+5041
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=enterpriseapp
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/enterpriseapp-certificate.pfx
+    volumes:
+      - ./certs:/https:ro
+    depends_on:
+      - rabbitmq-enterpriseapp
+      - sql-server
+      - auth-api
+    networks:
+      - enterpriseapp-network
+
+  purchasebff-api:
+    image: tiagopala/enterpriseapp-purchasebffapi:latest
+    container_name: enterpriseapp-purchasebffapi
+    build:
+      context: ./src
+      dockerfile: ./api gateways/EnterpriseApp.BFF.Compras/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:5005;http://+5051
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=enterpriseapp
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/enterpriseapp-certificate.pfx
+    volumes:
+      - ./certs:/https:ro
+    depends_on:
+      - rabbitmq-enterpriseapp
+      - auth-api
+      - catalog-api
+      - shoppingcart-api
+      - order-api
+      - payment-api
+    networks:
+      - enterpriseapp-network
+
+  order-api:
+    image: tiagopala/enterpriseapp-orderapi:latest
+    container_name: enterpriseapp-orderapi
+    build:
+      context: ./src
+      dockerfile: ./services/EnterpriseApp.Pedido.API/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:5006;http://+5061
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=enterpriseapp
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/enterpriseapp-certificate.pfx
+    volumes:
+      - ./certs:/https:ro
+    depends_on:
+      - rabbitmq-enterpriseapp
+      - sql-server
+      - auth-api
+    networks:
+      - enterpriseapp-network
+
+  payment-api:
+    image: tiagopala/enterpriseapp-paymentapi:latest
+    container_name: enterpriseapp-paymentapi
+    build:
+      context: ./src
+      dockerfile: ./services/EnterpriseApp.Pagamento.API/Dockerfile
+    restart: always
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=https://+:5007;http://+5071
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=enterpriseapp
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/enterpriseapp-certificate.pfx
+    volumes:
+      - ./certs:/https:ro
+    depends_on:
+      - rabbitmq-enterpriseapp
+      - sql-server
+      - auth-api
+    networks:
+      - enterpriseapp-network
+
+  nginx-server:
+    image: tiagopala/enterpriseapp-nginxserver:latest
+    container_name: enterpriseapp-server
+    build:
+      context: ./nginx
+      dockerfile: ./Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - web-mvc
+    networks:
+      - enterpriseapp-network
+
+volumes:
+  dpkeys:
+
+networks:
+  enterpriseapp-network:
+    name: enterpriseapp-network
+    driver: bridge

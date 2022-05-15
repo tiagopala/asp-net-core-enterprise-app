@@ -13,6 +13,7 @@ namespace EnterpriseApp.Cliente.API.Services
 {
     public class RegisteredCustomerIntegrationHandler : BackgroundService
     {
+        private Timer _timer;
         private readonly IServiceProvider _serviceProvider;
         private readonly IMessageBus _bus;
 
@@ -26,7 +27,8 @@ namespace EnterpriseApp.Cliente.API.Services
 
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            SetResponder();
+            _timer = new Timer(SetResponder, null, TimeSpan.Zero, TimeSpan.FromSeconds(15));
+
             return Task.CompletedTask;
         }
 
@@ -44,14 +46,17 @@ namespace EnterpriseApp.Cliente.API.Services
             return new ResponseMessage(result);
         }
 
-        private void SetResponder()
+        private void SetResponder(object state)
         {
-            _bus.RespondAsync<UserRegisteredIntegrationEvent, ResponseMessage>(async request => await RegisterCustomer(request));
+            if (!_bus.AdvancedBus.IsConnected)
+            {
+                _bus.RespondAsync<UserRegisteredIntegrationEvent, ResponseMessage>(async request => await RegisterCustomer(request));
 
-            _bus.AdvancedBus.Connected += OnConnect;
+                _bus.AdvancedBus.Connected += OnConnect;
+            }
         }
 
         private void OnConnect(object sender, EventArgs args)
-            => SetResponder();
+            => SetResponder(null);
     }
 }

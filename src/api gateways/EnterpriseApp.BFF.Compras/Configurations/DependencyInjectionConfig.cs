@@ -43,7 +43,8 @@ namespace EnterpriseApp.BFF.Compras.Configurations
             services.AddGrpcClient<ShoppingCartServices.ShoppingCartServicesClient>(options =>
             {
                 options.Address = new Uri(appSettings.ShoppingCartUri);
-            }).AddInterceptor<GrpcServiceInterceptor>();
+            }).AddCustomCertificate()
+              .AddInterceptor<GrpcServiceInterceptor>();
 
             return services;
         }
@@ -53,34 +54,43 @@ namespace EnterpriseApp.BFF.Compras.Configurations
             services.AddHttpClient<ICatalogService, CatalogService>(x =>
             {
                 x.BaseAddress = new Uri($"{appSettings.CatalogUri}/api/catalog/");
-            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                x.Timeout = TimeSpan.FromSeconds(60);
+            }).AddCustomCertificate()
+              .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
               .AddPolicyHandler(PollyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
               .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
             services.AddHttpClient<IShoppingCartService, ShoppingCartService>(configuration =>
             {
                 configuration.BaseAddress = new Uri($"{appSettings.ShoppingCartUri}/api/");
-            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                configuration.Timeout = TimeSpan.FromSeconds(60);
+            }).AddCustomCertificate()
+              .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
               .AddPolicyHandler(PollyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
               .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
             services.AddHttpClient<IOrderService, OrderService>(configuration =>
             {
                 configuration.BaseAddress = new Uri($"{appSettings.OrderUri}/api/");
-            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                configuration.Timeout = TimeSpan.FromSeconds(60);
+            }).AddCustomCertificate()
+              .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
               .AddPolicyHandler(PollyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
               .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
             services.AddHttpClient<ICustomerService, CustomerService>(configuration =>
             {
                 configuration.BaseAddress = new Uri($"{appSettings.CustomerUri}/api/customers/");
-            }).AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
+                configuration.Timeout = TimeSpan.FromSeconds(60);
+            }).AddCustomCertificate()
+              .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>()
               .AddPolicyHandler(PollyExtensions.GetHttpErrorWaitAndRetryCustomPolicy())
               .AddTransientHttpErrorPolicy(p => p.CircuitBreakerAsync(5, TimeSpan.FromSeconds(30)));
 
             services.AddHttpClient<IPaymentService, PaymentService>(configuration =>
             {
                 configuration.BaseAddress = new Uri(appSettings.PaymentUri);
+                configuration.Timeout = TimeSpan.FromSeconds(60);
             });
 
             return services;

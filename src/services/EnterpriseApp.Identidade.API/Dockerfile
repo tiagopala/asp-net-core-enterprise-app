@@ -1,5 +1,3 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
@@ -7,10 +5,13 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["src/services/EnterpriseApp.Identidade.API/EnterpriseApp.Identidade.API.csproj", "src/services/EnterpriseApp.Identidade.API/"]
-RUN dotnet restore "src/services/EnterpriseApp.Identidade.API/EnterpriseApp.Identidade.API.csproj"
+COPY ["./services/EnterpriseApp.Identidade.API/EnterpriseApp.Identidade.API.csproj", "services/EnterpriseApp.Identidade.API/"]
+COPY ["./building blocks/EnterpriseApp.Core/EnterpriseApp.Core.csproj", "building blocks/EnterpriseApp.Core/"]
+COPY ["./building blocks/EnterpriseApp.API.Core/EnterpriseApp.API.Core.csproj", "building blocks/EnterpriseApp.API.Core/"]
+COPY ["./building blocks/EnterpriseApp.MessageBus/EnterpriseApp.MessageBus.csproj", "building blocks/EnterpriseApp.MessageBus/"]
+RUN dotnet restore "services/EnterpriseApp.Identidade.API/EnterpriseApp.Identidade.API.csproj"
 COPY . .
-WORKDIR "/src/src/services/EnterpriseApp.Identidade.API"
+WORKDIR "services/EnterpriseApp.Identidade.API"
 RUN dotnet build "EnterpriseApp.Identidade.API.csproj" -c Release -o /app/build
 
 FROM build AS publish

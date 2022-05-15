@@ -54,7 +54,8 @@ namespace EnterpriseApp.Pedido.Application.Handlers
                 return request.ValidationResult;
 
             // Processar pagamento
-            if ((await ProcessPayment(order, request)) is false)
+            var processedPayment = await ProcessPayment(order, request);
+            if (processedPayment is false)
                 return request.ValidationResult;
 
             // Se pagamento tudo ok!
