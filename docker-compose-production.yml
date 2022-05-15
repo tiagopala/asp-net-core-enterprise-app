@@ -26,13 +26,16 @@ services:
 
   web-mvc:
     image: tiagopala/enterpriseapp-webappmvc:latest
-    container_name: enterpriseapp-webappmvc
+    #container_name: enterpriseapp-webappmvc
     build:
       context: ./src
       dockerfile: ./web/EnterpriseApp.WebApp.MVC/Dockerfile
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=http://*:5000
+    volumes:
+      - dpkeys:/var/data_protection_keys/
     depends_on:
       - sql-server
       - rabbitmq-enterpriseapp
@@ -49,6 +52,7 @@ services:
     build:
       context: ./src
       dockerfile: ./services/EnterpriseApp.Identidade.API/Dockerfile
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=https://+:5001;http://+5011
@@ -68,6 +72,7 @@ services:
     build:
       context: ./src
       dockerfile: ./services/EnterpriseApp.Catalogo.API/Dockerfile
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=https://+:5002;http://+5021
@@ -88,6 +93,7 @@ services:
     build:
       context: ./src
       dockerfile: ./services/EnterpriseApp.Cliente.API/Dockerfile
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=https://+:5003;http://+5031
@@ -108,6 +114,7 @@ services:
     build:
       context: ./src
       dockerfile: ./services/EnterpriseApp.Carrinho.API/Dockerfile
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=https://+:5004;http://+5041
@@ -128,6 +135,7 @@ services:
     build:
       context: ./src
       dockerfile: ./api gateways/EnterpriseApp.BFF.Compras/Dockerfile
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=https://+:5005;http://+5051
@@ -151,6 +159,7 @@ services:
     build:
       context: ./src
       dockerfile: ./services/EnterpriseApp.Pedido.API/Dockerfile
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=https://+:5006;http://+5061
@@ -171,6 +180,7 @@ services:
     build:
       context: ./src
       dockerfile: ./services/EnterpriseApp.Pagamento.API/Dockerfile
+    restart: always
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
       - ASPNETCORE_URLS=https://+:5007;http://+5071
@@ -198,6 +208,9 @@ services:
       - web-mvc
     networks:
       - enterpriseapp-network
+
+volumes:
+  dpkeys:
 
 networks:
   enterpriseapp-network:

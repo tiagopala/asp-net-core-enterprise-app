@@ -1,6 +1,7 @@
 using EnterpriseApp.WebApp.MVC.Configuration;
 using EnterpriseApp.WebApp.MVC.Extensions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Localization;
@@ -32,6 +33,10 @@ namespace EnterpriseApp.WebApp.MVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
+            services.AddDataProtection()
+                .PersistKeysToFileSystem(new System.IO.DirectoryInfo(@"/var/data_protection_keys/"))
+                .SetApplicationName("EnterpriseApp");
 
             services.Configure<ForwardedHeadersOptions>(options =>
             {
